@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>Smart</RootNamespace>
-    <CodeAnalysisRuleSet>..\Smart.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Smart.Converter.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

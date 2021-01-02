@@ -13,10 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		README.md = README.md
-		Smart.ruleset = Smart.ruleset
+		Smart.Converter.ruleset = Smart.Converter.ruleset
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Converter.Tests", "Smart.Converter.Tests\Smart.Converter.Tests.csproj", "{66D6F36F-EDDE-458F-9543-FD3C2E457226}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart.Converter.Tests", "Smart.Converter.Tests\Smart.Converter.Tests.csproj", "{66D6F36F-EDDE-458F-9543-FD3C2E457226}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

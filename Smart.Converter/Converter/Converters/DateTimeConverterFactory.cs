@@ -3,6 +3,7 @@ namespace Smart.Converter.Converters
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
     public sealed class DateTimeConverterFactory : IConverterFactory
@@ -159,7 +160,7 @@ namespace Smart.Converter.Converters
                 // DateTime to String
                 if (targetType == typeof(string))
                 {
-                    return source => ((DateTime)source).ToString();
+                    return source => ((DateTime)source).ToString(CultureInfo.CurrentCulture);
                 }
 
                 var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
@@ -182,7 +183,7 @@ namespace Smart.Converter.Converters
                 }
 
                 // DateTime to numeric
-                if (DateTimeToTickConverter.TryGetValue(underlyingTargetType, out var converter))
+                if (DateTimeToTickConverter.TryGetValue(underlyingTargetType!, out var converter))
                 {
                     return converter;
                 }
@@ -208,7 +209,7 @@ namespace Smart.Converter.Converters
                 }
 
                 // DateTimeOffset to numeric
-                if (DateTimeOffsetToTickConverter.TryGetValue(underlyingTargetType, out var converter))
+                if (DateTimeOffsetToTickConverter.TryGetValue(underlyingTargetType!, out var converter))
                 {
                     return converter;
                 }
@@ -228,7 +229,7 @@ namespace Smart.Converter.Converters
                 var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
 
                 // TimeSpan to numeric
-                if (TimeSpanToTickConverter.TryGetValue(underlyingTargetType, out var converter))
+                if (TimeSpanToTickConverter.TryGetValue(underlyingTargetType!, out var converter))
                 {
                     return converter;
                 }

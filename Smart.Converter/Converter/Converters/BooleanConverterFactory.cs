@@ -50,7 +50,7 @@ namespace Smart.Converter.Converters
                 if (targetType.IsValueType)
                 {
                     var type = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
-                    if (FromBooleanConverters.TryGetValue(type, out var converter))
+                    if (FromBooleanConverters.TryGetValue(type!, out var converter))
                     {
                         return converter;
                     }
@@ -66,7 +66,7 @@ namespace Smart.Converter.Converters
                 if (sourceType.IsValueType)
                 {
                     var type = sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType) : sourceType;
-                    if (ToBooleanConverters.TryGetValue(type, out var converter))
+                    if (ToBooleanConverters.TryGetValue(type!, out var converter))
                     {
                         return converter;
                     }

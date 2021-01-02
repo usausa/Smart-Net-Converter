@@ -3,6 +3,7 @@ namespace Smart.Converter.Converters
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
     public sealed class DecimalConverterFactory : IConverterFactory
@@ -32,7 +33,7 @@ namespace Smart.Converter.Converters
             { Tuple.Create(typeof(Decimal), typeof(double?)), x => { try { return Decimal.ToDouble((decimal)x); } catch (OverflowException) { return default(double?); } } },
             { Tuple.Create(typeof(Decimal), typeof(float)), x => { try { return Decimal.ToSingle((decimal)x); } catch (OverflowException) { return default(float); } } },
             { Tuple.Create(typeof(Decimal), typeof(float?)), x => { try { return Decimal.ToSingle((decimal)x); } catch (OverflowException) { return default(float?); } } },
-            { Tuple.Create(typeof(Decimal), typeof(string)), x => ((decimal)x).ToString() },
+            { Tuple.Create(typeof(Decimal), typeof(string)), x => ((decimal)x).ToString(CultureInfo.CurrentCulture) },
             // To Decimal
             { Tuple.Create(typeof(byte), typeof(Decimal)), x => new Decimal((byte)x) },
             { Tuple.Create(typeof(sbyte), typeof(Decimal)), x => new Decimal((sbyte)x) },

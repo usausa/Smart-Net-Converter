@@ -129,7 +129,7 @@ namespace Smart.Converter.Converters
                 if (UnderlyingTypes.Contains(sourceType))
                 {
                     var targetUnderlyingType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
-                    return source => Enum.ToObject(targetUnderlyingType, source);
+                    return source => Enum.ToObject(targetUnderlyingType!, source);
                 }
 
                 return null;

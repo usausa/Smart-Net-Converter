@@ -1,4 +1,4 @@
-namespace Smart.Converter
+﻿namespace Smart.Converter
 {
     using System;
     using System.Diagnostics;
@@ -13,7 +13,7 @@ namespace Smart.Converter
 
         private const int Factor = 3;
 
-        private static readonly Node EmptyNode = new(typeof(EmptyKey), typeof(EmptyKey), default);
+        private static readonly Node EmptyNode = new(typeof(EmptyKey), typeof(EmptyKey), default!);
 
         private readonly object sync = new();
 
@@ -266,11 +266,11 @@ namespace Smart.Converter
 
             public readonly Type TargetType;
 
-            public readonly Func<object, object>? Converter;
+            public readonly Func<object, object> Converter;
 
             public Node? Next;
 
-            public Node(Type sourceType, Type targetType, Func<object, object>? converter)
+            public Node(Type sourceType, Type targetType, Func<object, object> converter)
             {
                 SourceType = sourceType;
                 TargetType = targetType;

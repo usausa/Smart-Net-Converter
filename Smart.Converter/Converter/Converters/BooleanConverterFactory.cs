@@ -1,4 +1,4 @@
-#nullable disable
+﻿#nullable disable
 namespace Smart.Converter.Converters
 {
     using System;
@@ -26,18 +26,18 @@ namespace Smart.Converter.Converters
         // ReSharper disable RedundantTypeSpecificationInDefaultExpression
         private static readonly Dictionary<Type, Func<object, object>> ToBooleanConverters = new()
         {
-            { typeof(byte), x => (byte)x != default(byte) },
-            { typeof(sbyte), x => (sbyte)x != default(sbyte) },
-            { typeof(short), x => (short)x != default(short) },
-            { typeof(ushort), x => (ushort)x != default(ushort) },
-            { typeof(int), x => (int)x != default(int) },
-            { typeof(uint), x => (uint)x != default(uint) },
-            { typeof(long), x => (long)x != default(long) },
-            { typeof(ulong), x => (ulong)x != default(ulong) },
-            { typeof(char), x => (char)x != default(char) },
-            { typeof(double), x => (double)x != default(double) },
-            { typeof(float), x => (float)x != default(float) },
-            { typeof(decimal), x => (decimal)x != default(decimal) }
+            { typeof(byte), x => (byte)x != default },
+            { typeof(sbyte), x => (sbyte)x != default },
+            { typeof(short), x => (short)x != default },
+            { typeof(ushort), x => (ushort)x != default },
+            { typeof(int), x => (int)x != default },
+            { typeof(uint), x => (uint)x != default },
+            { typeof(long), x => (long)x != default },
+            { typeof(ulong), x => (ulong)x != default },
+            { typeof(char), x => (char)x != default },
+            { typeof(double), x => (double)x != default },
+            { typeof(float), x => (float)x != default },
+            { typeof(decimal), x => (decimal)x != default }
         };
         // ReSharper restore RedundantTypeSpecificationInDefaultExpression
         // ReSharper restore CompareOfFloatsByEqualityOperator

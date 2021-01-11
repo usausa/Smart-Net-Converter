@@ -1,4 +1,4 @@
-namespace Smart.Converter.Converters
+﻿namespace Smart.Converter.Converters
 {
     using Smart.ComponentModel;
 
@@ -10,7 +10,7 @@ namespace Smart.Converter.Converters
         public void IntToTypeHasSameTypeConstructor()
         {
             var converter = new TestObjectConverter();
-            Assert.Equal(1, ((NotificationValue<int>)(converter.Convert(1, typeof(NotificationValue<int>)))).Value);
+            Assert.Equal(1, ((NotificationValue<int>)converter.Convert(1, typeof(NotificationValue<int>))).Value);
             Assert.True(converter.UsedOnly<ConstructorConverterFactory>());
         }
 
@@ -18,7 +18,7 @@ namespace Smart.Converter.Converters
         public void IntToTypeHasSameNullableTypeConstructor()
         {
             var converter = new TestObjectConverter();
-            Assert.Equal(1, ((NotificationValue<int?>)(converter.Convert(1, typeof(NotificationValue<int?>)))).Value);
+            Assert.Equal(1, ((NotificationValue<int?>)converter.Convert(1, typeof(NotificationValue<int?>))).Value);
             Assert.True(converter.UsedOnly<ConstructorConverterFactory>());
         }
 
@@ -26,7 +26,7 @@ namespace Smart.Converter.Converters
         public void IntToTypeHasDifferentTypeConstructor()
         {
             var converter = new TestObjectConverter();
-            Assert.Equal("1", ((NotificationValue<string>)(converter.Convert(1, typeof(NotificationValue<string>)))).Value);
+            Assert.Equal("1", ((NotificationValue<string>)converter.Convert(1, typeof(NotificationValue<string>))).Value);
             Assert.True(converter.UsedIn(typeof(ConstructorConverterFactory), typeof(ToStringConverterFactory)));
         }
     }

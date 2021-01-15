@@ -1,4 +1,4 @@
-﻿namespace Smart.Converter
+namespace Smart.Converter
 {
     using System;
     using System.Diagnostics;

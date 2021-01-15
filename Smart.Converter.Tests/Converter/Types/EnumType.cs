@@ -1,4 +1,4 @@
-﻿namespace Smart.Converter.Types
+namespace Smart.Converter.Types
 {
     using System;
 

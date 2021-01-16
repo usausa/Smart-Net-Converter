@@ -5,7 +5,6 @@ namespace Smart.Converter.Converters
     using System.Linq;
     using System.Reflection;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
     public sealed class ConversionOperatorConverterFactory : IConverterFactory
     {
         private static readonly MethodInfo CreateMethod = typeof(ConversionOperatorConverterFactory).GetMethod(nameof(CreateConverter), BindingFlags.NonPublic | BindingFlags.Static);

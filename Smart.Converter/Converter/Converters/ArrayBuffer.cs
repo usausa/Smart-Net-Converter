@@ -3,7 +3,6 @@ namespace Smart.Converter.Converters
 {
     using System;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
     internal struct ArrayBuffer<T>
     {
         private T[] buffer;

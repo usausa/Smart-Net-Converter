@@ -5,7 +5,6 @@ namespace Smart.Converter.Converters
     using System.Collections.Generic;
     using System.Globalization;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
     public sealed class DecimalConverterFactory : IConverterFactory
     {
         private static readonly Dictionary<Tuple<Type, Type>, Func<object, object>> Converters = new()

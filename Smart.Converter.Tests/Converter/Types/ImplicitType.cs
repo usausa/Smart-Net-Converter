@@ -1,5 +1,7 @@
 namespace Smart.Converter.Types
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
     public struct ImplicitType
     {
         public int Value { get; init; }
@@ -15,11 +17,13 @@ namespace Smart.Converter.Types
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
     public struct NullableImplicitType
     {
         public int? Value { get; init; }
 
-        public static implicit operator int? (NullableImplicitType value)
+        public static implicit operator int?(NullableImplicitType value)
         {
             return value.Value;
         }

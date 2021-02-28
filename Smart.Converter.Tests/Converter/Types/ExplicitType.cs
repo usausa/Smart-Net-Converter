@@ -1,5 +1,7 @@
 namespace Smart.Converter.Types
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
     public struct ExplicitType
     {
         public int Value { get; init; }
@@ -15,11 +17,13 @@ namespace Smart.Converter.Types
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
     public struct NullableExplicitType
     {
         public int? Value { get; init; }
 
-        public static explicit operator int? (NullableExplicitType value)
+        public static explicit operator int?(NullableExplicitType value)
         {
             return value.Value;
         }

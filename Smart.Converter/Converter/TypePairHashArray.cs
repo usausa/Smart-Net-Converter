@@ -207,7 +207,7 @@ namespace Smart.Converter
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetValue(Type sourceType, Type targetType, [NotNullWhen(true)] out Func<object, object>? converter)
+        public bool TryGetValue(Type sourceType, Type targetType, [MaybeNullWhen(false)] out Func<object, object>? converter)
         {
             var temp = nodes;
             var node = temp[CalculateHash(sourceType, targetType) & (temp.Length - 1)];

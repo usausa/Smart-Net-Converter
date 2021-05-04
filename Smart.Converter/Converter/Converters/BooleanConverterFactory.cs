@@ -8,10 +8,12 @@ namespace Smart.Converter.Converters
     {
         private static readonly Dictionary<Type, Func<object, object>> FromBooleanConverters = new()
         {
+            // ReSharper disable RedundantCast
             { typeof(byte), x => (bool)x ? (byte)1 : (byte)0 },
             { typeof(sbyte), x => (bool)x ? (sbyte)1 : (sbyte)0 },
             { typeof(short), x => (bool)x ? (short)1 : (short)0 },
             { typeof(ushort), x => (bool)x ? (ushort)1 : (ushort)0 },
+            // ReSharper restore RedundantCast
             { typeof(int), x => (bool)x ? 1 : 0 },
             { typeof(uint), x => (bool)x ? 1U : 0U },
             { typeof(long), x => (bool)x ? 1L : 0L },
@@ -73,7 +75,7 @@ namespace Smart.Converter.Converters
 
                 if (sourceType == typeof(string))
                 {
-                    return x => Boolean.TryParse((string)x, out var result) ? (object)result : null;
+                    return x => Boolean.TryParse((string)x, out var result) ? result : null;
                 }
             }
 

@@ -21,7 +21,7 @@ namespace Smart.Converter.Converters
 
                 if (targetType == typeof(Guid?))
                 {
-                    return source => Guid.TryParse((string)source, out var result) ? result : (Guid?)null;
+                    return source => Guid.TryParse((string)source, out var result) ? result : null;
                 }
             }
 

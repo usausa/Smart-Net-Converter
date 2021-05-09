@@ -44,9 +44,10 @@ namespace Smart.Converter
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Func<object, object> FindConverter(Type sourceType, Type targetType)
         {
-            for (var i = 0; i < factories.Length; i++)
+            var factoriesLocal = factories;
+            for (var i = 0; i < factoriesLocal.Length; i++)
             {
-                var converter = factories[i].GetConverter(this, sourceType, targetType);
+                var converter = factoriesLocal[i].GetConverter(this, sourceType, targetType);
                 if (converter is not null)
                 {
                     return converter;

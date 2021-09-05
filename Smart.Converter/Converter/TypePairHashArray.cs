@@ -2,7 +2,6 @@ namespace Smart.Converter
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
     using System.Threading;
 
@@ -207,7 +206,7 @@ namespace Smart.Converter
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetValue(Type sourceType, Type targetType, [MaybeNullWhen(false)] out Func<object, object>? converter)
+        public bool TryGetValue(Type sourceType, Type targetType, out Func<object, object>? converter)
         {
             var temp = nodes;
             var node = temp[CalculateHash(sourceType, targetType) & (temp.Length - 1)];

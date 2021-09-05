@@ -2,7 +2,7 @@ namespace Smart.Converter.Types
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
-    public struct ImplicitType
+    public readonly struct ImplicitType
     {
         public int Value { get; init; }
 
@@ -19,7 +19,7 @@ namespace Smart.Converter.Types
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
-    public struct NullableImplicitType
+    public readonly struct NullableImplicitType
     {
         public int? Value { get; init; }
 

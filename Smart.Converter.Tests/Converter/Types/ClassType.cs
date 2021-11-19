@@ -1,10 +1,9 @@
-namespace Smart.Converter.Types
-{
-    public class BaseType
-    {
-    }
+namespace Smart.Converter.Types;
 
-    public class DeliveredType : BaseType
-    {
-    }
+public class BaseType
+{
+}
+
+public class DeliveredType : BaseType
+{
 }

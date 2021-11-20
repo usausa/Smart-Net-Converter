@@ -1,117 +1,116 @@
 #nullable disable
-namespace Smart.Converter.Converters
+namespace Smart.Converter.Converters;
+
+using System;
+using System.Collections.Generic;
+
+public sealed partial class EnumerableConverterFactory
 {
-    using System;
-    using System.Collections.Generic;
-
-    public sealed partial class EnumerableConverterFactory
+    private sealed class SameTypeListProvider : IEnumerableConverterProvider
     {
-        private sealed class SameTypeListProvider : IEnumerableConverterProvider
-        {
-            public static IEnumerableConverterProvider Default { get; } = new SameTypeListProvider();
+        public static IEnumerableConverterProvider Default { get; } = new SameTypeListProvider();
 
-            public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
+        public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
+        {
+            return typeof(SameTypeListFromEnumerableConverter<>);
+        }
+    }
+
+    private sealed class OtherTypeListProvider : IEnumerableConverterProvider
+    {
+        public static IEnumerableConverterProvider Default { get; } = new OtherTypeListProvider();
+
+        public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
+        {
+            return sourceEnumerableType switch
             {
-                return typeof(SameTypeListFromEnumerableConverter<>);
-            }
+                SourceEnumerableType.Array => typeof(OtherTypeListFromArrayConverter<,>),
+                SourceEnumerableType.List => typeof(OtherTypeListFromListConverter<,>),
+                SourceEnumerableType.Collection => typeof(OtherTypeListFromCollectionConverter<,>),
+                _ => typeof(OtherTypeListFromEnumerableConverter<,>)
+            };
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Same type
+    //--------------------------------------------------------------------------------
+
+    private sealed class SameTypeListFromEnumerableConverter<TDestination> : IConverter
+    {
+        public object Convert(object source)
+        {
+            return new List<TDestination>((IEnumerable<TDestination>)source);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Other type
+    //--------------------------------------------------------------------------------
+
+    private sealed class OtherTypeListFromArrayConverter<TSource, TDestination> : IConverter
+    {
+        private readonly Func<object, object> converter;
+
+        public OtherTypeListFromArrayConverter(Func<object, object> converter)
+        {
+            this.converter = converter;
         }
 
-        private sealed class OtherTypeListProvider : IEnumerableConverterProvider
+        public object Convert(object source)
         {
-            public static IEnumerableConverterProvider Default { get; } = new OtherTypeListProvider();
+            return new List<TDestination>(new ArrayConvertList<TSource, TDestination>((TSource[])source, converter));
+        }
+    }
 
-            public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
-            {
-                return sourceEnumerableType switch
-                {
-                    SourceEnumerableType.Array => typeof(OtherTypeListFromArrayConverter<,>),
-                    SourceEnumerableType.List => typeof(OtherTypeListFromListConverter<,>),
-                    SourceEnumerableType.Collection => typeof(OtherTypeListFromCollectionConverter<,>),
-                    _ => typeof(OtherTypeListFromEnumerableConverter<,>)
-                };
-            }
+    private sealed class OtherTypeListFromListConverter<TSource, TDestination> : IConverter
+    {
+        private readonly Func<object, object> converter;
+
+        public OtherTypeListFromListConverter(Func<object, object> converter)
+        {
+            this.converter = converter;
         }
 
-        //--------------------------------------------------------------------------------
-        // Same type
-        //--------------------------------------------------------------------------------
-
-        private sealed class SameTypeListFromEnumerableConverter<TDestination> : IConverter
+        public object Convert(object source)
         {
-            public object Convert(object source)
-            {
-                return new List<TDestination>((IEnumerable<TDestination>)source);
-            }
+            return new List<TDestination>(new ListConvertList<TSource, TDestination>((IList<TSource>)source, converter));
+        }
+    }
+
+    private sealed class OtherTypeListFromCollectionConverter<TSource, TDestination> : IConverter
+    {
+        private readonly Func<object, object> converter;
+
+        public OtherTypeListFromCollectionConverter(Func<object, object> converter)
+        {
+            this.converter = converter;
         }
 
-        //--------------------------------------------------------------------------------
-        // Other type
-        //--------------------------------------------------------------------------------
-
-        private sealed class OtherTypeListFromArrayConverter<TSource, TDestination> : IConverter
+        public object Convert(object source)
         {
-            private readonly Func<object, object> converter;
+            return new List<TDestination>(new CollectionConvertCollection<TSource, TDestination>((ICollection<TSource>)source, converter));
+        }
+    }
 
-            public OtherTypeListFromArrayConverter(Func<object, object> converter)
-            {
-                this.converter = converter;
-            }
+    private sealed class OtherTypeListFromEnumerableConverter<TSource, TDestination> : IConverter
+    {
+        private readonly Func<object, object> converter;
 
-            public object Convert(object source)
-            {
-                return new List<TDestination>(new ArrayConvertList<TSource, TDestination>((TSource[])source, converter));
-            }
+        public OtherTypeListFromEnumerableConverter(Func<object, object> converter)
+        {
+            this.converter = converter;
         }
 
-        private sealed class OtherTypeListFromListConverter<TSource, TDestination> : IConverter
+        public object Convert(object source)
         {
-            private readonly Func<object, object> converter;
-
-            public OtherTypeListFromListConverter(Func<object, object> converter)
+            var collection = new List<TDestination>();
+            foreach (var value in (IEnumerable<TSource>)source)
             {
-                this.converter = converter;
+                collection.Add((TDestination)converter(value));
             }
 
-            public object Convert(object source)
-            {
-                return new List<TDestination>(new ListConvertList<TSource, TDestination>((IList<TSource>)source, converter));
-            }
-        }
-
-        private sealed class OtherTypeListFromCollectionConverter<TSource, TDestination> : IConverter
-        {
-            private readonly Func<object, object> converter;
-
-            public OtherTypeListFromCollectionConverter(Func<object, object> converter)
-            {
-                this.converter = converter;
-            }
-
-            public object Convert(object source)
-            {
-                return new List<TDestination>(new CollectionConvertCollection<TSource, TDestination>((ICollection<TSource>)source, converter));
-            }
-        }
-
-        private sealed class OtherTypeListFromEnumerableConverter<TSource, TDestination> : IConverter
-        {
-            private readonly Func<object, object> converter;
-
-            public OtherTypeListFromEnumerableConverter(Func<object, object> converter)
-            {
-                this.converter = converter;
-            }
-
-            public object Convert(object source)
-            {
-                var collection = new List<TDestination>();
-                foreach (var value in (IEnumerable<TSource>)source)
-                {
-                    collection.Add((TDestination)converter(value));
-                }
-
-                return collection;
-            }
+            return collection;
         }
     }
 }

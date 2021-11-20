@@ -1,15 +1,14 @@
 #nullable disable
-namespace Smart.Converter.Converters
+namespace Smart.Converter.Converters;
+
+using System;
+
+public sealed class ToStringConverterFactory : IConverterFactory
 {
-    using System;
+    private static readonly Func<object, object> Converter = source => source.ToString();
 
-    public sealed class ToStringConverterFactory : IConverterFactory
+    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
-        private static readonly Func<object, object> Converter = source => source.ToString();
-
-        public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
-        {
-            return targetType == typeof(string) ? Converter : null;
-        }
+        return targetType == typeof(string) ? Converter : null;
     }
 }

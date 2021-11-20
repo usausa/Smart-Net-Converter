@@ -1,8 +1,7 @@
 #nullable disable
-namespace Smart.Converter.Converters
+namespace Smart.Converter.Converters;
+
+internal interface IConverter
 {
-    internal interface IConverter
-    {
-        object Convert(object source);
-    }
+    object Convert(object source);
 }

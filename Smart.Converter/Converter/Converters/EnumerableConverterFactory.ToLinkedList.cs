@@ -1,115 +1,114 @@
 #nullable disable
-namespace Smart.Converter.Converters
+namespace Smart.Converter.Converters;
+
+using System;
+using System.Collections.Generic;
+
+public sealed partial class EnumerableConverterFactory
 {
-    using System;
-    using System.Collections.Generic;
-
-    public sealed partial class EnumerableConverterFactory
+    private sealed class SameTypeLinkedListProvider : IEnumerableConverterProvider
     {
-        private sealed class SameTypeLinkedListProvider : IEnumerableConverterProvider
-        {
-            public static IEnumerableConverterProvider Default { get; } = new SameTypeLinkedListProvider();
+        public static IEnumerableConverterProvider Default { get; } = new SameTypeLinkedListProvider();
 
-            public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
+        public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
+        {
+            return typeof(SameTypeLinkedListFromEnumerable<>);
+        }
+    }
+
+    private sealed class OtherTypeLinkedListProvider : IEnumerableConverterProvider
+    {
+        public static IEnumerableConverterProvider Default { get; } = new OtherTypeLinkedListProvider();
+
+        public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
+        {
+            return sourceEnumerableType switch
             {
-                return typeof(SameTypeLinkedListFromEnumerable<>);
-            }
+                SourceEnumerableType.Array => typeof(OtherTypeLinkedListFromArrayConverter<,>),
+                SourceEnumerableType.List => typeof(OtherTypeLinkedListFromListConverter<,>),
+                _ => typeof(OtherTypeLinkedListFromEnumerableConverter<,>)
+            };
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Same type
+    //--------------------------------------------------------------------------------
+
+    private sealed class SameTypeLinkedListFromEnumerable<TDestination> : IConverter
+    {
+        public object Convert(object source)
+        {
+            return new LinkedList<TDestination>((IEnumerable<TDestination>)source);
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Other type
+    //--------------------------------------------------------------------------------
+
+    private sealed class OtherTypeLinkedListFromArrayConverter<TSource, TDestination> : IConverter
+    {
+        private readonly Func<object, object> converter;
+
+        public OtherTypeLinkedListFromArrayConverter(Func<object, object> converter)
+        {
+            this.converter = converter;
         }
 
-        private sealed class OtherTypeLinkedListProvider : IEnumerableConverterProvider
+        public object Convert(object source)
         {
-            public static IEnumerableConverterProvider Default { get; } = new OtherTypeLinkedListProvider();
-
-            public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
+            var arraySource = (TSource[])source;
+            var collection = new LinkedList<TDestination>();
+            for (var i = 0; i < arraySource.Length; i++)
             {
-                return sourceEnumerableType switch
-                {
-                    SourceEnumerableType.Array => typeof(OtherTypeLinkedListFromArrayConverter<,>),
-                    SourceEnumerableType.List => typeof(OtherTypeLinkedListFromListConverter<,>),
-                    _ => typeof(OtherTypeLinkedListFromEnumerableConverter<,>)
-                };
+                collection.AddLast((TDestination)converter(arraySource[i]));
             }
+
+            return collection;
+        }
+    }
+
+    private sealed class OtherTypeLinkedListFromListConverter<TSource, TDestination> : IConverter
+    {
+        private readonly Func<object, object> converter;
+
+        public OtherTypeLinkedListFromListConverter(Func<object, object> converter)
+        {
+            this.converter = converter;
         }
 
-        //--------------------------------------------------------------------------------
-        // Same type
-        //--------------------------------------------------------------------------------
-
-        private sealed class SameTypeLinkedListFromEnumerable<TDestination> : IConverter
+        public object Convert(object source)
         {
-            public object Convert(object source)
+            var listSource = (IList<TSource>)source;
+            var collection = new LinkedList<TDestination>();
+            for (var i = 0; i < listSource.Count; i++)
             {
-                return new LinkedList<TDestination>((IEnumerable<TDestination>)source);
+                collection.AddLast((TDestination)converter(listSource[i]));
             }
+
+            return collection;
+        }
+    }
+
+    private sealed class OtherTypeLinkedListFromEnumerableConverter<TSource, TDestination> : IConverter
+    {
+        private readonly Func<object, object> converter;
+
+        public OtherTypeLinkedListFromEnumerableConverter(Func<object, object> converter)
+        {
+            this.converter = converter;
         }
 
-        //--------------------------------------------------------------------------------
-        // Other type
-        //--------------------------------------------------------------------------------
-
-        private sealed class OtherTypeLinkedListFromArrayConverter<TSource, TDestination> : IConverter
+        public object Convert(object source)
         {
-            private readonly Func<object, object> converter;
-
-            public OtherTypeLinkedListFromArrayConverter(Func<object, object> converter)
+            var collection = new LinkedList<TDestination>();
+            foreach (var value in (IEnumerable<TSource>)source)
             {
-                this.converter = converter;
+                collection.AddLast((TDestination)converter(value));
             }
 
-            public object Convert(object source)
-            {
-                var arraySource = (TSource[])source;
-                var collection = new LinkedList<TDestination>();
-                for (var i = 0; i < arraySource.Length; i++)
-                {
-                    collection.AddLast((TDestination)converter(arraySource[i]));
-                }
-
-                return collection;
-            }
-        }
-
-        private sealed class OtherTypeLinkedListFromListConverter<TSource, TDestination> : IConverter
-        {
-            private readonly Func<object, object> converter;
-
-            public OtherTypeLinkedListFromListConverter(Func<object, object> converter)
-            {
-                this.converter = converter;
-            }
-
-            public object Convert(object source)
-            {
-                var listSource = (IList<TSource>)source;
-                var collection = new LinkedList<TDestination>();
-                for (var i = 0; i < listSource.Count; i++)
-                {
-                    collection.AddLast((TDestination)converter(listSource[i]));
-                }
-
-                return collection;
-            }
-        }
-
-        private sealed class OtherTypeLinkedListFromEnumerableConverter<TSource, TDestination> : IConverter
-        {
-            private readonly Func<object, object> converter;
-
-            public OtherTypeLinkedListFromEnumerableConverter(Func<object, object> converter)
-            {
-                this.converter = converter;
-            }
-
-            public object Convert(object source)
-            {
-                var collection = new LinkedList<TDestination>();
-                foreach (var value in (IEnumerable<TSource>)source)
-                {
-                    collection.AddLast((TDestination)converter(value));
-                }
-
-                return collection;
-            }
+            return collection;
         }
     }
 }

@@ -1,28 +1,27 @@
 #nullable disable
-namespace Smart.Converter
+namespace Smart.Converter;
+
+using System;
+
+public sealed class TestConverterFactory : IConverterFactory
 {
-    using System;
+    public IConverterFactory Factory { get; }
 
-    public sealed class TestConverterFactory : IConverterFactory
+    public bool Used { get; set; }
+
+    public TestConverterFactory(IConverterFactory factory)
     {
-        public IConverterFactory Factory { get; }
+        Factory = factory;
+    }
 
-        public bool Used { get; set; }
-
-        public TestConverterFactory(IConverterFactory factory)
+    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        var converter = Factory.GetConverter(context, sourceType, targetType);
+        if (converter is not null)
         {
-            Factory = factory;
+            Used = true;
         }
 
-        public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
-        {
-            var converter = Factory.GetConverter(context, sourceType, targetType);
-            if (converter is not null)
-            {
-                Used = true;
-            }
-
-            return converter;
-        }
+        return converter;
     }
 }

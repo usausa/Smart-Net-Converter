@@ -12,7 +12,7 @@ using BenchmarkDotNet.Running;
 
 public static class Program
 {
-    public static void Main(string[] args)
+    public static void Main()
     {
         BenchmarkRunner.Run<Benchmark>();
     }
@@ -88,9 +88,13 @@ public unsafe class Converter
         funcConverter = ObjectConvert;
     }
 
+#pragma warning disable CA1024
     public Func<int, short> GetCachedWrapPointerConverter() => cachedConverter;
+#pragma warning restore CA1024
 
+#pragma warning disable CA1024
     public Func<int, short> GetCachedFuncConverter() => funcTypedConverter;
+#pragma warning restore CA1024
 
     public short ConvertByPointer(int value) => pointerTypedConverter(value);
 

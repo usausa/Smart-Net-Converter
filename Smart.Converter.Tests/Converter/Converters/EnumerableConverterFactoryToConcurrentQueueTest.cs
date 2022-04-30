@@ -1,7 +1,6 @@
 namespace Smart.Converter.Converters;
 
 using System.Collections.Concurrent;
-using System.Linq;
 
 using Xunit;
 

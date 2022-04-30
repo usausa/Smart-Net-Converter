@@ -1,8 +1,6 @@
 #nullable disable
 namespace Smart.Converter;
 
-using System;
-
 public sealed class TestConverterFactory : IConverterFactory
 {
     public IConverterFactory Factory { get; }

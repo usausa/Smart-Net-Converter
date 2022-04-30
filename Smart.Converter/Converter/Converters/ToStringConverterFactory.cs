@@ -1,11 +1,9 @@
 #nullable disable
 namespace Smart.Converter.Converters;
 
-using System;
-
 public sealed class ToStringConverterFactory : IConverterFactory
 {
-    private static readonly Func<object, object> Converter = source => source.ToString();
+    private static readonly Func<object, object> Converter = static x => x.ToString();
 
     public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {

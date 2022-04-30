@@ -1,8 +1,6 @@
 #nullable disable
 namespace Smart.Converter.Converters;
 
-using System;
-
 using Smart.ComponentModel;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]

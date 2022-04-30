@@ -1,7 +1,5 @@
 namespace Smart.Converter.Converters;
 
-using System;
-
 using Xunit;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]

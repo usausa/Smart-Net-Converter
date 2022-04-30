@@ -1,7 +1,6 @@
 namespace Smart.Converter.Converters;
 
 using System.Collections.ObjectModel;
-using System.Linq;
 
 using Xunit;
 

@@ -1,7 +1,5 @@
 namespace Smart.Converter.Types;
 
-using System;
-
 public enum Enum1Type
 {
     Zero,

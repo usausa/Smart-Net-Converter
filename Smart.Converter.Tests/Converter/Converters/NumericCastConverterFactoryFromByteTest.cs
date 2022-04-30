@@ -1,7 +1,5 @@
 namespace Smart.Converter.Converters;
 
-using System;
-
 using Xunit;
 
 public class NumericCastConverterFactoryFromByteTest

@@ -1,9 +1,7 @@
 #nullable disable
 namespace Smart.Converter.Converters;
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 public sealed partial class EnumerableConverterFactory

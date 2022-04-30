@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netstandard2.1</TargetFrameworks>
@@ -8,9 +8,9 @@
 
   <PropertyGroup>
     <PackageId>Usa.Smart.Converter</PackageId>
-    <Title>Smart.Converter .NET</Title>
-    <Description>Smart converter library for .NET</Description>
-    <Summary>Smart converter library for .NET</Summary>
+    <Title>Smart.Converter</Title>
+    <Description>Smart converter library</Description>
+    <Summary>Smart converter library</Summary>
     <PackageTags>smart converter</PackageTags>
   </PropertyGroup>
 

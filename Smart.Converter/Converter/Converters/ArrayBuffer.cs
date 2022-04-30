@@ -1,8 +1,6 @@
 #nullable disable
 namespace Smart.Converter.Converters;
 
-using System;
-
 internal struct ArrayBuffer<T>
 {
     private T[] buffer;

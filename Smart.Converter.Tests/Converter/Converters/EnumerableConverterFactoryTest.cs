@@ -1,7 +1,5 @@
 namespace Smart.Converter.Converters;
 
-using System.Collections.Generic;
-
 using Smart.Converter.Types;
 
 using Xunit;

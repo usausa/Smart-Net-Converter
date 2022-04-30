@@ -1,8 +1,6 @@
 #nullable disable
 namespace Smart.Converter;
 
-using System;
-
 public interface IObjectConverter
 {
     bool CanConvert<T>(object value);

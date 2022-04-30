@@ -1,6 +1,5 @@
 namespace Smart.Converter.Converters;
 
-using System;
 using System.Numerics;
 
 using Xunit;

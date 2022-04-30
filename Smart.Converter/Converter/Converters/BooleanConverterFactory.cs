@@ -1,9 +1,6 @@
 #nullable disable
 namespace Smart.Converter.Converters;
 
-using System;
-using System.Collections.Generic;
-
 public sealed class BooleanConverterFactory : IConverterFactory
 {
     private static readonly object BoolFalse = false;
@@ -44,36 +41,36 @@ public sealed class BooleanConverterFactory : IConverterFactory
 
     private static readonly Dictionary<Type, Func<object, object>> FromBooleanConverters = new()
     {
-        { typeof(byte), x => (bool)x ? ByteTrue : ByteFalse },
-        { typeof(sbyte), x => (bool)x ? SByteTrue : SByteFalse },
-        { typeof(short), x => (bool)x ? Int16True : Int16False },
-        { typeof(ushort), x => (bool)x ? UInt16True : UInt16False },
-        { typeof(int), x => (bool)x ? Int32True : Int32False },
-        { typeof(uint), x => (bool)x ? UInt32True : UInt32False },
-        { typeof(long), x => (bool)x ? Int64True : Int64False },
-        { typeof(ulong), x => (bool)x ? UInt64True : UInt64False },
-        { typeof(char), x => (bool)x ? CharTrue : CharFalse },
-        { typeof(double), x => (bool)x ? DoubleTrue : DoubleFalse },
-        { typeof(float), x => (bool)x ? FloatTrue : FloatFalse },
-        { typeof(decimal), x => (bool)x ? Decimal.One : Decimal.Zero }
+        { typeof(byte), static x => (bool)x ? ByteTrue : ByteFalse },
+        { typeof(sbyte), static x => (bool)x ? SByteTrue : SByteFalse },
+        { typeof(short), static x => (bool)x ? Int16True : Int16False },
+        { typeof(ushort), static x => (bool)x ? UInt16True : UInt16False },
+        { typeof(int), static x => (bool)x ? Int32True : Int32False },
+        { typeof(uint), static x => (bool)x ? UInt32True : UInt32False },
+        { typeof(long), static x => (bool)x ? Int64True : Int64False },
+        { typeof(ulong), static x => (bool)x ? UInt64True : UInt64False },
+        { typeof(char), static x => (bool)x ? CharTrue : CharFalse },
+        { typeof(double), static x => (bool)x ? DoubleTrue : DoubleFalse },
+        { typeof(float), static x => (bool)x ? FloatTrue : FloatFalse },
+        { typeof(decimal), static x => (bool)x ? Decimal.One : Decimal.Zero }
     };
 
     private static readonly Dictionary<Type, Func<object, object>> ToBooleanConverters = new()
     {
-        { typeof(byte), x => (byte)x != default ? BoolTrue : BoolFalse },
-        { typeof(sbyte), x => (sbyte)x != default ? BoolTrue : BoolFalse },
-        { typeof(short), x => (short)x != default ? BoolTrue : BoolFalse },
-        { typeof(ushort), x => (ushort)x != default ? BoolTrue : BoolFalse },
-        { typeof(int), x => (int)x != default ? BoolTrue : BoolFalse },
-        { typeof(uint), x => (uint)x != default ? BoolTrue : BoolFalse },
-        { typeof(long), x => (long)x != default ? BoolTrue : BoolFalse },
-        { typeof(ulong), x => (ulong)x != default ? BoolTrue : BoolFalse },
-        { typeof(char), x => (char)x != default ? BoolTrue : BoolFalse },
+        { typeof(byte), static x => (byte)x != default ? BoolTrue : BoolFalse },
+        { typeof(sbyte), static x => (sbyte)x != default ? BoolTrue : BoolFalse },
+        { typeof(short), static x => (short)x != default ? BoolTrue : BoolFalse },
+        { typeof(ushort), static x => (ushort)x != default ? BoolTrue : BoolFalse },
+        { typeof(int), static x => (int)x != default ? BoolTrue : BoolFalse },
+        { typeof(uint), static x => (uint)x != default ? BoolTrue : BoolFalse },
+        { typeof(long), static x => (long)x != default ? BoolTrue : BoolFalse },
+        { typeof(ulong), static x => (ulong)x != default ? BoolTrue : BoolFalse },
+        { typeof(char), static x => (char)x != default ? BoolTrue : BoolFalse },
         // ReSharper disable CompareOfFloatsByEqualityOperator
-        { typeof(double), x => (double)x != default ? BoolTrue : BoolFalse },
-        { typeof(float), x => (float)x != default ? BoolTrue : BoolFalse },
+        { typeof(double), static x => (double)x != default ? BoolTrue : BoolFalse },
+        { typeof(float), static x => (float)x != default ? BoolTrue : BoolFalse },
         // ReSharper restore CompareOfFloatsByEqualityOperator
-        { typeof(decimal), x => (decimal)x != default ? BoolTrue : BoolFalse }
+        { typeof(decimal), static x => (decimal)x != default ? BoolTrue : BoolFalse }
     };
 
     public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
@@ -91,7 +88,7 @@ public sealed class BooleanConverterFactory : IConverterFactory
 
             if (targetType == typeof(string))
             {
-                return x => ((bool)x).ToString();
+                return static x => ((bool)x).ToString();
             }
         }
         else if ((targetType == typeof(bool)) || (targetType == typeof(bool?)))
@@ -107,7 +104,7 @@ public sealed class BooleanConverterFactory : IConverterFactory
 
             if (sourceType == typeof(string))
             {
-                return x => Boolean.TryParse((string)x, out var result) ? result : null;
+                return static x => Boolean.TryParse((string)x, out var result) ? result : null;
             }
         }
 

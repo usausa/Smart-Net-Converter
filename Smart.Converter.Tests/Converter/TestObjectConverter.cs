@@ -1,10 +1,6 @@
 #nullable disable
 namespace Smart.Converter;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using Smart.Converter.Converters;
 
 public sealed class TestObjectConverter : IObjectConverter

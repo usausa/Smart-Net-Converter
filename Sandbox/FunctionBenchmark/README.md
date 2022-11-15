@@ -1,21 +1,21 @@
 ``` ini
 
-BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19042
+BenchmarkDotNet=v0.13.2, OS=Windows 11 (10.0.22621.755)
 AMD Ryzen 9 5900X, 1 CPU, 24 logical and 12 physical cores
-.NET Core SDK=5.0.101
-  [Host]    : .NET Core 5.0.1 (CoreCLR 5.0.120.57516, CoreFX 5.0.120.57516), X64 RyuJIT
-  MediumRun : .NET Core 5.0.1 (CoreCLR 5.0.120.57516, CoreFX 5.0.120.57516), X64 RyuJIT
+.NET SDK=7.0.100
+  [Host]    : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
+  MediumRun : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
 
 Job=MediumRun  IterationCount=15  LaunchCount=2  
 WarmupCount=10  
 
 ```
-|                 Method |      Mean |     Error |    StdDev |     Median |       Min |        Max |        P90 |  Gen 0 | Gen 1 | Gen 2 | Allocated |
-|----------------------- |----------:|----------:|----------:|-----------:|----------:|-----------:|-----------:|-------:|------:|------:|----------:|
-|         ValueByPointer | 0.3682 ns | 0.0058 ns | 0.0083 ns |  0.3658 ns | 0.3555 ns |  0.3919 ns |  0.3789 ns |      - |     - |     - |         - |
-|       ValueByTypedFunc | 0.5648 ns | 0.0024 ns | 0.0035 ns |  0.5644 ns | 0.5597 ns |  0.5710 ns |  0.5690 ns |      - |     - |     - |         - |
-|    ValueByCachePointer | 0.7682 ns | 0.0035 ns | 0.0053 ns |  0.7671 ns | 0.7604 ns |  0.7799 ns |  0.7766 ns |      - |     - |     - |         - |
-|       ValueByCacheFunc | 0.6978 ns | 0.0614 ns | 0.0900 ns |  0.7763 ns | 0.5967 ns |  0.7912 ns |  0.7866 ns |      - |     - |     - |         - |
-|   ObjectValueByPointer | 5.4053 ns | 0.5838 ns | 0.8184 ns |  5.3001 ns | 3.9882 ns |  7.3063 ns |  6.6473 ns | 0.0014 |     - |     - |      24 B |
-| ObjectValueByTypedFunc | 7.4237 ns | 1.0588 ns | 1.5848 ns |  7.3618 ns | 4.9461 ns | 10.0906 ns |  9.6416 ns | 0.0014 |     - |     - |      24 B |
-|      ObjectValueByFunc | 9.9599 ns | 1.2423 ns | 1.8593 ns | 10.0910 ns | 7.5402 ns | 12.3811 ns | 11.9766 ns | 0.0029 |     - |     - |      48 B |
+|                 Method |       Mean |     Error |    StdDev |     Median |       Min |        Max |        P90 |   Gen0 | Allocated |
+|----------------------- |-----------:|----------:|----------:|-----------:|----------:|-----------:|-----------:|-------:|----------:|
+|         ValueByPointer |  0.3405 ns | 0.0052 ns | 0.0076 ns |  0.3390 ns | 0.3304 ns |  0.3598 ns |  0.3492 ns |      - |         - |
+|       ValueByTypedFunc |  0.7529 ns | 0.0095 ns | 0.0137 ns |  0.7525 ns | 0.7352 ns |  0.7853 ns |  0.7711 ns |      - |         - |
+|    ValueByCachePointer |  1.0658 ns | 0.0431 ns | 0.0631 ns |  1.0761 ns | 0.8741 ns |  1.1424 ns |  1.1273 ns |      - |         - |
+|       ValueByCacheFunc |  0.5749 ns | 0.0075 ns | 0.0110 ns |  0.5750 ns | 0.5564 ns |  0.5940 ns |  0.5906 ns |      - |         - |
+|   ObjectValueByPointer | 10.2498 ns | 1.6292 ns | 2.4385 ns | 10.8138 ns | 4.8718 ns | 13.3111 ns | 12.9444 ns | 0.0014 |      24 B |
+| ObjectValueByTypedFunc |  5.8232 ns | 0.5102 ns | 0.7636 ns |  5.8964 ns | 4.7240 ns |  6.9598 ns |  6.7431 ns | 0.0014 |      24 B |
+|      ObjectValueByFunc | 11.1047 ns | 1.6940 ns | 2.5355 ns |  9.3085 ns | 8.2578 ns | 14.9639 ns | 14.2565 ns | 0.0029 |      48 B |

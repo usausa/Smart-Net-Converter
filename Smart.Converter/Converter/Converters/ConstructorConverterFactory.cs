@@ -33,13 +33,13 @@ public sealed class ConstructorConverterFactory : IConverterFactory
         }
 
         var pair = targetType.GetConstructors()
-            .Where(x => x.GetParameters().Length == 1)
+            .Where(static x => x.GetParameters().Length == 1)
             .Select(x => new
             {
                 Constructor = x,
                 Converter = context.CreateConverter(sourceType, x.GetParameters()[0].ParameterType)
             })
-            .FirstOrDefault(x => x.Converter is not null);
+            .FirstOrDefault(static x => x.Converter is not null);
         if (pair is not null)
         {
             var method = CreateWithConvertMethod.MakeGenericMethod(pair.Constructor.GetParameters()[0].ParameterType, targetType);

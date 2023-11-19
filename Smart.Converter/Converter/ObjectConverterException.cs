@@ -1,7 +1,5 @@
 namespace Smart.Converter;
 
-using System.Runtime.Serialization;
-
 [Serializable]
 public class ObjectConverterException : Exception
 {
@@ -16,11 +14,6 @@ public class ObjectConverterException : Exception
 
     public ObjectConverterException(string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    protected ObjectConverterException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

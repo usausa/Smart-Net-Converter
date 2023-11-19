@@ -3,7 +3,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.ComponentModel;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
 public sealed class ValueHolderConverterFactory : IConverterFactory
 {
     public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)

@@ -3,7 +3,7 @@ namespace Smart.Converter.Converters;
 
 using System.Globalization;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
 public sealed class DateTimeConverterFactory : IConverterFactory
 {
     private static readonly Dictionary<Type, Func<object, object>> DateTimeToTickConverter = new()

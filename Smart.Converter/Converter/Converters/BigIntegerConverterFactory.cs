@@ -3,7 +3,7 @@ namespace Smart.Converter.Converters;
 
 using System.Numerics;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
 public sealed class BigIntegerConverterFactory : IConverterFactory
 {
     private static readonly Dictionary<Tuple<Type, Type>, Func<object, object>> Converters = new()

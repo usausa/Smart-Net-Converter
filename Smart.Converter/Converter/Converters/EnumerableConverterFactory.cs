@@ -4,7 +4,7 @@ namespace Smart.Converter.Converters;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
 public sealed partial class EnumerableConverterFactory : IConverterFactory
 {
     private enum SourceEnumerableType
@@ -133,21 +133,21 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
         };
         interfaceTypes.AddRange(type.GetInterfaces());
 
-        var interfaceType = interfaceTypes.FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IList<>));
+        var interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IList<>));
         if (interfaceType is not null)
         {
             sourceEnumerableType = SourceEnumerableType.List;
             return interfaceType.GenericTypeArguments[0];
         }
 
-        interfaceType = interfaceTypes.FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ICollection<>));
+        interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ICollection<>));
         if (interfaceType is not null)
         {
             sourceEnumerableType = SourceEnumerableType.Collection;
             return interfaceType.GenericTypeArguments[0];
         }
 
-        interfaceType = interfaceTypes.FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+        interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
         if (interfaceType is not null)
         {
             sourceEnumerableType = SourceEnumerableType.Enumerable;

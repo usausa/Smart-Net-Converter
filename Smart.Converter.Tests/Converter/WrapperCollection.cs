@@ -2,7 +2,7 @@ namespace Smart.Converter;
 
 using System.Collections;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:DoNotExposeGenericLists", Justification = "Ignore")]
 public class WrapperCollection<T> : ICollection<T>
 {
     protected List<T> List { get; }

@@ -1,7 +1,7 @@
 #nullable disable
 namespace Smart.Converter.Converters;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
 public sealed class EnumConverterFactory : IConverterFactory
 {
     private static readonly HashSet<Type> UnderlyingTypes = new()

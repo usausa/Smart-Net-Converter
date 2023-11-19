@@ -4,7 +4,7 @@ using Smart.Converter.Types;
 
 using Xunit;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
 public class DateTimeConverterFactoryTest
 {
     //--------------------------------------------------------------------------------

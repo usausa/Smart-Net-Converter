@@ -7,7 +7,7 @@ public sealed partial class EnumerableConverterFactory
 {
     private sealed class SameTypeArrayProvider : IEnumerableConverterProvider
     {
-        public static SameTypeArrayProvider Default { get; } = new SameTypeArrayProvider();
+        public static SameTypeArrayProvider Default { get; } = new();
 
         public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
         {
@@ -23,7 +23,7 @@ public sealed partial class EnumerableConverterFactory
 
     private sealed class OtherTypeArrayProvider : IEnumerableConverterProvider
     {
-        public static OtherTypeArrayProvider Default { get; } = new OtherTypeArrayProvider();
+        public static OtherTypeArrayProvider Default { get; } = new();
 
         public Type GetConverterType(SourceEnumerableType sourceEnumerableType)
         {

@@ -4,8 +4,8 @@ namespace Smart.Converter.Converters;
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
 public sealed class EnumConverterFactory : IConverterFactory
 {
-    private static readonly HashSet<Type> UnderlyingTypes = new()
-    {
+    private static readonly HashSet<Type> UnderlyingTypes =
+    [
         typeof(byte),
         typeof(sbyte),
         typeof(short),
@@ -15,7 +15,7 @@ public sealed class EnumConverterFactory : IConverterFactory
         typeof(long),
         typeof(ulong),
         typeof(char)
-    };
+    ];
 
     private static readonly Dictionary<Tuple<Type, Type>, Func<object, object>> CastOperators = new()
     {
@@ -145,12 +145,7 @@ public sealed class EnumConverterFactory : IConverterFactory
             // Enum to Numeric
             var sourceUnderlyingType = Enum.GetUnderlyingType(sourceType);
             var targetUnderlyingType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
-            if (CastOperators.TryGetValue(Tuple.Create(sourceUnderlyingType, targetUnderlyingType), out var converter))
-            {
-                return converter;
-            }
-
-            return null;
+            return CastOperators.GetValueOrDefault(Tuple.Create(sourceUnderlyingType, targetUnderlyingType));
         }
 
         return null;

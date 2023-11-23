@@ -67,11 +67,6 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
     public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var key = Tuple.Create(sourceType, targetType);
-        if (Converters.TryGetValue(key, out var converter))
-        {
-            return converter;
-        }
-
-        return null;
+        return Converters.GetValueOrDefault(key);
     }
 }

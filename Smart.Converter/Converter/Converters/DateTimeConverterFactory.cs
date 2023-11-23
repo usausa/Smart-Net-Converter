@@ -181,12 +181,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             }
 
             // DateTime to numeric
-            if (DateTimeToTickConverter.TryGetValue(underlyingTargetType!, out var converter))
-            {
-                return converter;
-            }
-
-            return null;
+            return DateTimeToTickConverter.GetValueOrDefault(underlyingTargetType!);
         }
 
         // From DateTimeOffset
@@ -207,12 +202,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             }
 
             // DateTimeOffset to numeric
-            if (DateTimeOffsetToTickConverter.TryGetValue(underlyingTargetType!, out var converter))
-            {
-                return converter;
-            }
-
-            return null;
+            return DateTimeOffsetToTickConverter.GetValueOrDefault(underlyingTargetType!);
         }
 
         // From TimeSpan
@@ -227,12 +217,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
 
             // TimeSpan to numeric
-            if (TimeSpanToTickConverter.TryGetValue(underlyingTargetType!, out var converter))
-            {
-                return converter;
-            }
-
-            return null;
+            return TimeSpanToTickConverter.GetValueOrDefault(underlyingTargetType!);
         }
 
         // From string
@@ -267,37 +252,37 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         // From Numeric to DateTime
         if (targetType == typeof(DateTime))
         {
-            return DateTimeFromTickConverter.TryGetValue(sourceType, out var converter) ? converter : null;
+            return DateTimeFromTickConverter.GetValueOrDefault(sourceType);
         }
 
         // From Numeric to DateTime?
         if (targetType == typeof(DateTime?))
         {
-            return NullableDateTimeFromTickConverter.TryGetValue(sourceType, out var converter) ? converter : null;
+            return NullableDateTimeFromTickConverter.GetValueOrDefault(sourceType);
         }
 
         // From Numeric to DateTimeOffset
         if (targetType == typeof(DateTimeOffset))
         {
-            return DateTimeOffsetFromTickConverter.TryGetValue(sourceType, out var converter) ? converter : null;
+            return DateTimeOffsetFromTickConverter.GetValueOrDefault(sourceType);
         }
 
         // From Numeric to DateTime?
         if (targetType == typeof(DateTimeOffset?))
         {
-            return NullableDateTimeOffsetFromTickConverter.TryGetValue(sourceType, out var converter) ? converter : null;
+            return NullableDateTimeOffsetFromTickConverter.GetValueOrDefault(sourceType);
         }
 
         // From Numeric to TimeSpan
         if (targetType == typeof(TimeSpan))
         {
-            return TimeSpanFromTickConverter.TryGetValue(sourceType, out var converter) ? converter : null;
+            return TimeSpanFromTickConverter.GetValueOrDefault(sourceType);
         }
 
         // From Numeric to TimeSpan?
         if (targetType == typeof(TimeSpan?))
         {
-            return NullableTimeSpanFromTickConverter.TryGetValue(sourceType, out var converter) ? converter : null;
+            return NullableTimeSpanFromTickConverter.GetValueOrDefault(sourceType);
         }
 
         return null;

@@ -10,7 +10,6 @@
     <PackageId>Usa.Smart.Converter</PackageId>
     <Title>Smart.Converter</Title>
     <Description>Smart converter library</Description>
-    <Summary>Smart converter library</Summary>
     <PackageTags>smart converter</PackageTags>
   </PropertyGroup>
 

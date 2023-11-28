@@ -5,8 +5,8 @@ public static class DefaultObjectFactories
 {
     public static IConverterFactory[] Create()
     {
-        return new IConverterFactory[]
-        {
+        return
+        [
             new DBNullConverterFactory(),               // DBNull
             new AssignableConverterFactory(),           // IsAssignableFrom
             new BooleanConverterFactory(),              // Boolean
@@ -22,6 +22,6 @@ public static class DefaultObjectFactories
             new ConversionOperatorConverterFactory(),   // Implicit/Explicit operator
             new ToStringConverterFactory(),             // ToString finally
             new ConstructorConverterFactory()           // Constructor
-        };
+        ];
     }
 }

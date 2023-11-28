@@ -9,7 +9,7 @@ internal struct ArrayBuffer<T>
 
     public ArrayBuffer(int initialSize)
     {
-        buffer = initialSize > 0 ? new T[initialSize] : Array.Empty<T>();
+        buffer = initialSize > 0 ? new T[initialSize] : [];
         size = 0;
     }
 
@@ -24,7 +24,7 @@ internal struct ArrayBuffer<T>
         size++;
     }
 
-    public T[] ToArray()
+    public readonly T[] ToArray()
     {
         if (buffer.Length == size)
         {

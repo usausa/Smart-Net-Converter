@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class NumericCastConverterFactoryFromSByteTest
+public sealed class NumericCastConverterFactoryFromSByteTest
 {
     //--------------------------------------------------------------------------------
     // SByteTo

@@ -1,7 +1,7 @@
 namespace Smart.Converter;
 
 [Serializable]
-public class ObjectConverterException : Exception
+public sealed class ObjectConverterException : Exception
 {
     public ObjectConverterException()
     {

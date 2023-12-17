@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class NumericCastConverterFactoryFromULongTest
+public sealed class NumericCastConverterFactoryFromULongTest
 {
     [Fact]
     public void ULongToByte()

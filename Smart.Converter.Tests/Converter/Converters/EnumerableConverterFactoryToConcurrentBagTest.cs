@@ -2,9 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Collections.Concurrent;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToConcurrentBagTest
+public sealed class EnumerableConverterFactoryToConcurrentBagTest
 {
     [Fact]
     public void ArrayToSameElementConcurrentBag()

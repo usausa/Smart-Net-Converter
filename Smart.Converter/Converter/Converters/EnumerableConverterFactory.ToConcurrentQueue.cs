@@ -35,6 +35,7 @@ public sealed partial class EnumerableConverterFactory
     // Same type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class SameTypeConcurrentQueueFromEnumerableConverter<TDestination> : IConverter
     {
         public object Convert(object source)
@@ -42,11 +43,13 @@ public sealed partial class EnumerableConverterFactory
             return new ConcurrentQueue<TDestination>((IEnumerable<TDestination>)source);
         }
     }
+#pragma warning restore CA1812
 
     //--------------------------------------------------------------------------------
     // Other type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class OtherTypeConcurrentQueueFromArrayConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -61,7 +64,9 @@ public sealed partial class EnumerableConverterFactory
             return new ConcurrentQueue<TDestination>(new ArrayConvertList<TSource, TDestination>((TSource[])source, converter));
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeConcurrentQueueFromListConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -76,7 +81,9 @@ public sealed partial class EnumerableConverterFactory
             return new ConcurrentQueue<TDestination>(new ListConvertList<TSource, TDestination>((IList<TSource>)source, converter));
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeConcurrentQueueFromCollectionConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -91,7 +98,9 @@ public sealed partial class EnumerableConverterFactory
             return new ConcurrentQueue<TDestination>(new CollectionConvertCollection<TSource, TDestination>((ICollection<TSource>)source, converter));
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeConcurrentQueueFromEnumerableConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -106,4 +115,5 @@ public sealed partial class EnumerableConverterFactory
             return new ConcurrentQueue<TDestination>(new EnumerableConvertEnumerable<TSource, TDestination>((IEnumerable<TSource>)source, converter));
         }
     }
+#pragma warning restore CA1812
 }

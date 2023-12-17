@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToQueueTest
+public sealed class EnumerableConverterFactoryToQueueTest
 {
     [Fact]
     public void ArrayToSameElementQueue()

@@ -41,6 +41,7 @@ public sealed partial class EnumerableConverterFactory
     // Same type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class SameTypeArrayFromCollectionConverter<TDestination> : IConverter
     {
         public object Convert(object source)
@@ -52,7 +53,9 @@ public sealed partial class EnumerableConverterFactory
             return array;
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class SameTypeArrayFromEnumerableConverter<TDestination> : IConverter
     {
         public object Convert(object source)
@@ -66,12 +69,14 @@ public sealed partial class EnumerableConverterFactory
             return buffer.ToArray();
         }
     }
+#pragma warning restore CA1812
 
     //--------------------------------------------------------------------------------
     // Builder to other type Array from Collection
     //--------------------------------------------------------------------------------
 
-    public sealed class OtherTypeArrayFromArrayConverter<TSource, TDestination> : IConverter
+#pragma warning disable CA1812
+    private sealed class OtherTypeArrayFromArrayConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
 
@@ -92,7 +97,9 @@ public sealed partial class EnumerableConverterFactory
             return array;
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeArrayFromListConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -114,7 +121,9 @@ public sealed partial class EnumerableConverterFactory
             return array;
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeArrayFromCollectionConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -138,7 +147,9 @@ public sealed partial class EnumerableConverterFactory
             return array;
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeArrayFromEnumerableConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -159,4 +170,5 @@ public sealed partial class EnumerableConverterFactory
             return buffer.ToArray();
         }
     }
+#pragma warning disable CA1812
 }

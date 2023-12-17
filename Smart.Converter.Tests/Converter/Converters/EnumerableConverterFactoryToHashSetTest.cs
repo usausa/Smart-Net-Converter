@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToHashSetTest
+public sealed class EnumerableConverterFactoryToHashSetTest
 {
     [Fact]
     public void ArrayToSameElementHashSet()

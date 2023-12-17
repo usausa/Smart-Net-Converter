@@ -3,7 +3,6 @@ namespace Smart.Converter.Converters;
 
 using System.Globalization;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
 public sealed class DateTimeConverterFactory : IConverterFactory
 {
     private static readonly Dictionary<Type, Func<object, object>> DateTimeToTickConverter = new()
@@ -190,7 +189,9 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             // DateTimeOffset to String
             if (targetType == typeof(string))
             {
+#pragma warning disable CA1305
                 return static x => ((DateTimeOffset)x).ToString();
+#pragma warning restore CA1305
             }
 
             var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;

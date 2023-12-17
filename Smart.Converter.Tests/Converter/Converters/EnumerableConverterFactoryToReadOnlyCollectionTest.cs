@@ -2,9 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Collections.ObjectModel;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToReadOnlyCollectionTest
+public sealed class EnumerableConverterFactoryToReadOnlyCollectionTest
 {
     [Fact]
     public void ArrayToSameElementReadOnlyCollection()

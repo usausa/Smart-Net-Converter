@@ -4,7 +4,6 @@ namespace Smart.Converter.Converters;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
 public sealed partial class EnumerableConverterFactory : IConverterFactory
 {
     private enum SourceEnumerableType

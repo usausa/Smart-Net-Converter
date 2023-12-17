@@ -2,9 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Collections.Concurrent;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToConcurrentQueueTest
+public sealed class EnumerableConverterFactoryToConcurrentQueueTest
 {
     [Fact]
     public void ArrayToSameElementConcurrentQueue()

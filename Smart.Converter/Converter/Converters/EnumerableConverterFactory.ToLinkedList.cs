@@ -3,6 +3,7 @@ namespace Smart.Converter.Converters;
 
 public sealed partial class EnumerableConverterFactory
 {
+#pragma warning disable CA1812
     private sealed class SameTypeLinkedListProvider : IEnumerableConverterProvider
     {
         public static IEnumerableConverterProvider Default { get; } = new SameTypeLinkedListProvider();
@@ -12,7 +13,9 @@ public sealed partial class EnumerableConverterFactory
             return typeof(SameTypeLinkedListFromEnumerable<>);
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeLinkedListProvider : IEnumerableConverterProvider
     {
         public static IEnumerableConverterProvider Default { get; } = new OtherTypeLinkedListProvider();
@@ -27,11 +30,13 @@ public sealed partial class EnumerableConverterFactory
             };
         }
     }
+#pragma warning restore CA1812
 
     //--------------------------------------------------------------------------------
     // Same type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class SameTypeLinkedListFromEnumerable<TDestination> : IConverter
     {
         public object Convert(object source)
@@ -39,11 +44,13 @@ public sealed partial class EnumerableConverterFactory
             return new LinkedList<TDestination>((IEnumerable<TDestination>)source);
         }
     }
+#pragma warning restore CA1812
 
     //--------------------------------------------------------------------------------
     // Other type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class OtherTypeLinkedListFromArrayConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -65,7 +72,9 @@ public sealed partial class EnumerableConverterFactory
             return collection;
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeLinkedListFromListConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -87,7 +96,9 @@ public sealed partial class EnumerableConverterFactory
             return collection;
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeLinkedListFromEnumerableConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -108,4 +119,5 @@ public sealed partial class EnumerableConverterFactory
             return collection;
         }
     }
+#pragma warning restore CA1812
 }

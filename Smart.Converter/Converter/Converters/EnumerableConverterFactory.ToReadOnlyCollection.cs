@@ -40,6 +40,7 @@ public sealed partial class EnumerableConverterFactory
     // Same type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class SameTypeReadOnlyCollectionFromListConverter<TDestination> : IConverter
     {
         public object Convert(object source)
@@ -47,7 +48,9 @@ public sealed partial class EnumerableConverterFactory
             return new ReadOnlyCollection<TDestination>((IList<TDestination>)source);
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class SameTypeReadOnlyCollectionFromEnumerableConverter<TDestination> : IConverter
     {
         public object Convert(object source)
@@ -55,11 +58,13 @@ public sealed partial class EnumerableConverterFactory
             return new ReadOnlyCollection<TDestination>(((IEnumerable<TDestination>)source).ToList());
         }
     }
+#pragma warning restore CA1812
 
     //--------------------------------------------------------------------------------
     // Other type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromArrayConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -74,7 +79,9 @@ public sealed partial class EnumerableConverterFactory
             return new ReadOnlyCollection<TDestination>(new ArrayConvertList<TSource, TDestination>((TSource[])source, converter));
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromListConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -89,7 +96,9 @@ public sealed partial class EnumerableConverterFactory
             return new ReadOnlyCollection<TDestination>(new ListConvertList<TSource, TDestination>((IList<TSource>)source, converter));
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromCollectionConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -111,7 +120,9 @@ public sealed partial class EnumerableConverterFactory
             return new ReadOnlyCollection<TDestination>(list);
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromEnumerableConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -132,4 +143,5 @@ public sealed partial class EnumerableConverterFactory
             return new ReadOnlyCollection<TDestination>(list);
         }
     }
+#pragma warning restore CA1812
 }

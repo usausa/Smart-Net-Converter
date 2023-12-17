@@ -2,9 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Numerics;
 
-using Xunit;
-
-public class BigIntegerConverterFactoryTest
+public sealed class BigIntegerConverterFactoryTest
 {
     private static readonly BigInteger Overflow = BigInteger.Add(new BigInteger(Decimal.MaxValue), 1);
 

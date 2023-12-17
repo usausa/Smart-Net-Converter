@@ -1,7 +1,7 @@
 namespace Smart.Converter.Types;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
+#pragma warning disable CA1815
+#pragma warning disable CA2225
 public readonly struct ExplicitType
 {
     public int Value { get; init; }
@@ -16,9 +16,11 @@ public readonly struct ExplicitType
         return new() { Value = value };
     }
 }
+#pragma warning restore CA2225
+#pragma warning restore CA1815
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Ignore")]
+#pragma warning disable CA1815
+#pragma warning disable CA2225
 public readonly struct NullableExplicitType
 {
     public int? Value { get; init; }
@@ -33,3 +35,5 @@ public readonly struct NullableExplicitType
         return new() { Value = value };
     }
 }
+#pragma warning restore CA2225
+#pragma warning restore CA1815

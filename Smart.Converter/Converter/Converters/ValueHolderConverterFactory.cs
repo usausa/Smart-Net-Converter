@@ -3,7 +3,6 @@ namespace Smart.Converter.Converters;
 
 using Smart.ComponentModel;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
 public sealed class ValueHolderConverterFactory : IConverterFactory
 {
     public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
@@ -28,6 +27,7 @@ public sealed class ValueHolderConverterFactory : IConverterFactory
         return null;
     }
 
+#pragma warning disable CA1812
     private sealed class ValueHolderConverter<T> : IConverter
     {
         public object Convert(object source)
@@ -35,7 +35,9 @@ public sealed class ValueHolderConverterFactory : IConverterFactory
             return ((IValueHolder<T>)source).Value;
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class ValueHolderWithConvertConverter<T> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -50,4 +52,5 @@ public sealed class ValueHolderConverterFactory : IConverterFactory
             return converter(((IValueHolder<T>)source).Value);
         }
     }
+#pragma warning restore CA1812
 }

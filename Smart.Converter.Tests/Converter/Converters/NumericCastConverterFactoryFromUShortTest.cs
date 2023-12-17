@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class NumericCastConverterFactoryFromUShortTest
+public sealed class NumericCastConverterFactoryFromUShortTest
 {
     [Fact]
     public void UShortToByte()

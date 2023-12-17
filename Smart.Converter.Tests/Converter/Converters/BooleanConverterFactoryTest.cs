@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class BooleanConverterFactoryTest
+public sealed class BooleanConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
     // BooleanTo

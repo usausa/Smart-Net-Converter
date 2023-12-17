@@ -4,6 +4,6 @@ public class BaseType
 {
 }
 
-public class DeliveredType : BaseType
+public sealed class DeliveredType : BaseType
 {
 }

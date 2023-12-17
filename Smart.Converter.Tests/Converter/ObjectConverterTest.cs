@@ -2,9 +2,7 @@ namespace Smart.Converter;
 
 using Smart.Converter.Types;
 
-using Xunit;
-
-public class ObjectConverterTest
+public sealed class ObjectConverterTest
 {
     //--------------------------------------------------------------------------------
     // Null

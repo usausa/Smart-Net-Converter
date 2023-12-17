@@ -1,7 +1,6 @@
 #nullable disable
 namespace Smart.Converter.Converters;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Ignore")]
 public sealed class EnumConverterFactory : IConverterFactory
 {
     private static readonly HashSet<Type> UnderlyingTypes =
@@ -151,6 +150,7 @@ public sealed class EnumConverterFactory : IConverterFactory
         return null;
     }
 
+#pragma warning disable CA1812
     private sealed class EnumToStringConverter<T> : IConverter
         where T : struct, Enum
     {
@@ -159,7 +159,9 @@ public sealed class EnumConverterFactory : IConverterFactory
             return Enums<T>.GetName((T)source);
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class StringToEnumConverter<T> : IConverter
         where T : struct, Enum
     {
@@ -168,4 +170,5 @@ public sealed class EnumConverterFactory : IConverterFactory
             return Enums<T>.TryParseValue((string)source, out var value) ? value : default;
         }
     }
+#pragma warning restore CA1812
 }

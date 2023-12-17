@@ -1,6 +1,6 @@
 namespace Smart.Converter.Types;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "Ignore")]
+#pragma warning disable CA1815
 public readonly struct StructType
 {
     public int X { get; init; }
@@ -12,3 +12,4 @@ public readonly struct StructType
         return $"({X},{Y})";
     }
 }
+#pragma warning restore CA1815

@@ -2,10 +2,8 @@ namespace Smart.Converter.Converters;
 
 using Smart.Converter.Types;
 
-using Xunit;
-
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
-public class DateTimeConverterFactoryTest
+#pragma warning disable CA1305
+public sealed class DateTimeConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
     // DateTime to

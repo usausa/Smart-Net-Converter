@@ -2,9 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.ComponentModel;
 
-using Xunit;
-
-public class ConstructorConverterFactoryTest
+public sealed class ConstructorConverterFactoryTest
 {
     [Fact]
     public void IntToTypeHasSameTypeConstructor()

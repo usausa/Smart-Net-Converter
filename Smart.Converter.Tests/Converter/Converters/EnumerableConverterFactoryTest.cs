@@ -2,9 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.Converter.Types;
 
-using Xunit;
-
-public class EnumerableConverterFactoryTest
+public sealed class EnumerableConverterFactoryTest
 {
     [Fact]
     public void CanNotConvertToArray()

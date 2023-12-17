@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class DecimalConverterFactoryTest
+public sealed class DecimalConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
     // DecimalTo

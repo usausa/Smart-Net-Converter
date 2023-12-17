@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToArrayTest
+public sealed class EnumerableConverterFactoryToArrayTest
 {
     // MEMO same array type is not converted
 

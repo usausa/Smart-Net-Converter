@@ -95,11 +95,11 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
         return (Func<object, object>)method.Invoke(null, new object[] { mi });
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Ignore")]
     private static Func<object, object> CreateConverter<TDestination>(MethodInfo mi)
     {
         return source =>
         {
+#pragma warning disable CA1031
             try
             {
                 return (TDestination)mi.Invoke(null, new[] { source });
@@ -108,6 +108,7 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
             {
                 return default(TDestination);
             }
+#pragma warning restore CA1031
         };
     }
 }

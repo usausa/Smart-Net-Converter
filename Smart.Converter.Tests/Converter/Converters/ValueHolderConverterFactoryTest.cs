@@ -3,9 +3,7 @@ namespace Smart.Converter.Converters;
 using Smart.ComponentModel;
 using Smart.Converter.Types;
 
-using Xunit;
-
-public class ValueHolderConverterFactoryTest
+public sealed class ValueHolderConverterFactoryTest
 {
     [Fact]
     public void ValueHolderToSameValueType()

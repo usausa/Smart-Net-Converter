@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class NumericCastConverterFactoryFromIntTest
+public sealed class NumericCastConverterFactoryFromIntTest
 {
     [Fact]
     public void IntToByte()

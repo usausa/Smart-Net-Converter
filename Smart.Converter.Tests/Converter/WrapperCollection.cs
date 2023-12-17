@@ -2,10 +2,11 @@ namespace Smart.Converter;
 
 using System.Collections;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:DoNotExposeGenericLists", Justification = "Ignore")]
 public class WrapperCollection<T> : ICollection<T>
 {
+#pragma warning disable CA1002
     protected List<T> List { get; }
+#pragma warning restore CA1002
 
     public WrapperCollection(IEnumerable<T> source)
     {
@@ -31,7 +32,7 @@ public class WrapperCollection<T> : ICollection<T>
     public bool IsReadOnly => false;
 }
 
-public class WrapperList<T> : WrapperCollection<T>, IList<T>
+public sealed class WrapperList<T> : WrapperCollection<T>, IList<T>
 {
     public WrapperList(IEnumerable<T> source)
         : base(source)

@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class GuidConverterFactoryTest
+public sealed class GuidConverterFactoryTest
 {
     [Fact]
     public void StringToGuid()

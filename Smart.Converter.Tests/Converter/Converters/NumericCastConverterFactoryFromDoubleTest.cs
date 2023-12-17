@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class NumericCastConverterFactoryFromDoubleTest
+public sealed class NumericCastConverterFactoryFromDoubleTest
 {
     [Fact]
     public void DoubleToByte()

@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class NumericCastConverterFactoryFromFloatTest
+public sealed class NumericCastConverterFactoryFromFloatTest
 {
     [Fact]
     public void FloatToByte()

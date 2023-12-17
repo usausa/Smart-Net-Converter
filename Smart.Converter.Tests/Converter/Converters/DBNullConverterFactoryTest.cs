@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class DBNullConverterFactoryTest
+public sealed class DBNullConverterFactoryTest
 {
     [Fact]
     public void DBNullToString()

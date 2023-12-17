@@ -1,9 +1,7 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
-public class NumericParseConverterFactoryTest
+#pragma warning disable CA1305
+public sealed class NumericParseConverterFactoryTest
 {
     [Fact]
     public void StringToByte()

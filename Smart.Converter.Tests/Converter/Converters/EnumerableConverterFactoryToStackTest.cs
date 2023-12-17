@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToStackTest
+public sealed class EnumerableConverterFactoryToStackTest
 {
     [Fact]
     public void ArrayToSameElementStack()

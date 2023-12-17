@@ -3,9 +3,9 @@ namespace Smart.Converter.Converters;
 
 using System.Numerics;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:SpecifyIFormatProvider", Justification = "Ignore")]
 public sealed class BigIntegerConverterFactory : IConverterFactory
 {
+#pragma warning disable CA1305
     private static readonly Dictionary<Tuple<Type, Type>, Func<object, object>> Converters = new()
     {
         // From decimal
@@ -63,6 +63,7 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
         { Tuple.Create(typeof(decimal), typeof(BigInteger?)), static x => { try { return new BigInteger((decimal)x); } catch (OverflowException) { return default(BigInteger?); } } },
         { Tuple.Create(typeof(string), typeof(BigInteger?)), static x => BigInteger.TryParse((string)x, out var result) ? result : default(BigInteger?) }
     };
+#pragma warning restore CA1305
 
     public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {

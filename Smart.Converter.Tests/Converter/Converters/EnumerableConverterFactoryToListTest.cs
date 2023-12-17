@@ -1,8 +1,6 @@
 namespace Smart.Converter.Converters;
 
-using Xunit;
-
-public class EnumerableConverterFactoryToListTest
+public sealed class EnumerableConverterFactoryToListTest
 {
     [Fact]
     public void ArrayToSameElementList()

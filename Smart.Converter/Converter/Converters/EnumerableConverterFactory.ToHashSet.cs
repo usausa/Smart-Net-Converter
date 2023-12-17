@@ -3,6 +3,7 @@ namespace Smart.Converter.Converters;
 
 public sealed partial class EnumerableConverterFactory
 {
+#pragma warning disable CA1812
     private sealed class SameTypeHashSetProvider : IEnumerableConverterProvider
     {
         public static IEnumerableConverterProvider Default { get; } = new SameTypeHashSetProvider();
@@ -12,7 +13,9 @@ public sealed partial class EnumerableConverterFactory
             return typeof(SameTypeHashSetFromEnumerableConverter<>);
         }
     }
+#pragma warning restore CA1812
 
+#pragma warning disable CA1812
     private sealed class OtherTypeHashSetProvider : IEnumerableConverterProvider
     {
         public static IEnumerableConverterProvider Default { get; } = new OtherTypeHashSetProvider();
@@ -22,11 +25,13 @@ public sealed partial class EnumerableConverterFactory
             return typeof(OtherTypeHashSetFromEnumerableConverter<,>);
         }
     }
+#pragma warning restore CA1812
 
     //--------------------------------------------------------------------------------
     // Same type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class SameTypeHashSetFromEnumerableConverter<TDestination> : IConverter
     {
         public object Convert(object source)
@@ -34,11 +39,13 @@ public sealed partial class EnumerableConverterFactory
             return new HashSet<TDestination>((IEnumerable<TDestination>)source);
         }
     }
+#pragma warning restore CA1812
 
     //--------------------------------------------------------------------------------
     // Other type
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1812
     private sealed class OtherTypeHashSetFromEnumerableConverter<TSource, TDestination> : IConverter
     {
         private readonly Func<object, object> converter;
@@ -59,4 +66,5 @@ public sealed partial class EnumerableConverterFactory
             return collection;
         }
     }
+#pragma warning restore CA1812
 }

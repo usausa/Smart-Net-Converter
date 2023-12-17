@@ -2,9 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.Converter.Types;
 
-using Xunit;
-
-public class ConversionOperatorConverterFactoryTest
+public sealed class ConversionOperatorConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
     // Implicit

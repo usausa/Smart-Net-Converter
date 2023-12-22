@@ -92,7 +92,7 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
     private static Func<object, object> BuildConverter(MethodInfo mi)
     {
         var method = CreateMethod.MakeGenericMethod(mi.ReturnType);
-        return (Func<object, object>)method.Invoke(null, new object[] { mi });
+        return (Func<object, object>)method.Invoke(null, [mi]);
     }
 
     private static Func<object, object> CreateConverter<TDestination>(MethodInfo mi)
@@ -102,7 +102,7 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
 #pragma warning disable CA1031
             try
             {
-                return (TDestination)mi.Invoke(null, new[] { source });
+                return (TDestination)mi.Invoke(null, [source]);
             }
             catch
             {

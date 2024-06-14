@@ -32,7 +32,7 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
     public void ListToSameElementConcurrentBag()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ConcurrentBag<int>)converter.Convert(source, typeof(ConcurrentBag<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -44,7 +44,7 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
     public void ListToOtherElementConcurrentBag()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ConcurrentBag<string>)converter.Convert(source, typeof(ConcurrentBag<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);
@@ -56,7 +56,7 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
     public void CollectionToSameElementConcurrentBag()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ConcurrentBag<int>)converter.Convert(source, typeof(ConcurrentBag<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -68,7 +68,7 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
     public void CollectionToOtherElementConcurrentBag()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ConcurrentBag<string>)converter.Convert(source, typeof(ConcurrentBag<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

@@ -44,7 +44,7 @@ public sealed class EnumerableConverterFactoryToArrayTest
     public void CollectionToSameElementArray()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (int[])converter.Convert(source, typeof(int[]));
         Assert.Equal(2, destination.Length);
         Assert.Equal(0, destination[0]);
@@ -56,7 +56,7 @@ public sealed class EnumerableConverterFactoryToArrayTest
     public void CollectionToOtherElementArray()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (string[])converter.Convert(source, typeof(string[]));
         Assert.Equal(2, destination.Length);
         Assert.Equal("0", destination[0]);

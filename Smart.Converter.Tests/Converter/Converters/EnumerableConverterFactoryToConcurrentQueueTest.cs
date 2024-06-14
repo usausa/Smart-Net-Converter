@@ -32,7 +32,7 @@ public sealed class EnumerableConverterFactoryToConcurrentQueueTest
     public void ListToSameElementConcurrentQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ConcurrentQueue<int>)converter.Convert(source, typeof(ConcurrentQueue<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -44,7 +44,7 @@ public sealed class EnumerableConverterFactoryToConcurrentQueueTest
     public void ListToOtherElementConcurrentQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ConcurrentQueue<string>)converter.Convert(source, typeof(ConcurrentQueue<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);
@@ -56,7 +56,7 @@ public sealed class EnumerableConverterFactoryToConcurrentQueueTest
     public void CollectionToSameElementConcurrentQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ConcurrentQueue<int>)converter.Convert(source, typeof(ConcurrentQueue<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -68,7 +68,7 @@ public sealed class EnumerableConverterFactoryToConcurrentQueueTest
     public void CollectionToOtherElementConcurrentQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ConcurrentQueue<string>)converter.Convert(source, typeof(ConcurrentQueue<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

@@ -30,7 +30,7 @@ public sealed class EnumerableConverterFactoryToQueueTest
     public void ListToSameElementQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (Queue<int>)converter.Convert(source, typeof(Queue<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -42,7 +42,7 @@ public sealed class EnumerableConverterFactoryToQueueTest
     public void ListToOtherElementQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (Queue<string>)converter.Convert(source, typeof(Queue<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);
@@ -54,7 +54,7 @@ public sealed class EnumerableConverterFactoryToQueueTest
     public void CollectionToSameElementQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (Queue<int>)converter.Convert(source, typeof(Queue<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -66,7 +66,7 @@ public sealed class EnumerableConverterFactoryToQueueTest
     public void CollectionToOtherElementQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (Queue<string>)converter.Convert(source, typeof(Queue<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

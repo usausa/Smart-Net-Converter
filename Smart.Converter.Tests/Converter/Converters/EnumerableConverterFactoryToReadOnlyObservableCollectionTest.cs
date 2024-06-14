@@ -32,7 +32,7 @@ public sealed class EnumerableConverterFactoryToReadOnlyObservableCollectionTest
     public void ListToSameElementReadOnlyObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ReadOnlyObservableCollection<int>)converter.Convert(source, typeof(ReadOnlyObservableCollection<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -44,7 +44,7 @@ public sealed class EnumerableConverterFactoryToReadOnlyObservableCollectionTest
     public void ListToOtherElementReadOnlyObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ReadOnlyObservableCollection<string>)converter.Convert(source, typeof(ReadOnlyObservableCollection<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);
@@ -56,7 +56,7 @@ public sealed class EnumerableConverterFactoryToReadOnlyObservableCollectionTest
     public void CollectionToSameElementReadOnlyObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ReadOnlyObservableCollection<int>)converter.Convert(source, typeof(ReadOnlyObservableCollection<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -68,7 +68,7 @@ public sealed class EnumerableConverterFactoryToReadOnlyObservableCollectionTest
     public void CollectionToOtherElementReadOnlyObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ReadOnlyObservableCollection<string>)converter.Convert(source, typeof(ReadOnlyObservableCollection<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

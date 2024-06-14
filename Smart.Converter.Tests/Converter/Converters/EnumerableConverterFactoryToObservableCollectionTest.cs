@@ -32,7 +32,7 @@ public sealed class EnumerableConverterFactoryToObservableCollectionTest
     public void ListToSameElementObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ObservableCollection<int>)converter.Convert(source, typeof(ObservableCollection<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -44,7 +44,7 @@ public sealed class EnumerableConverterFactoryToObservableCollectionTest
     public void ListToOtherElementObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (ObservableCollection<string>)converter.Convert(source, typeof(ObservableCollection<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);
@@ -56,7 +56,7 @@ public sealed class EnumerableConverterFactoryToObservableCollectionTest
     public void CollectionToSameElementObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ObservableCollection<int>)converter.Convert(source, typeof(ObservableCollection<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -68,7 +68,7 @@ public sealed class EnumerableConverterFactoryToObservableCollectionTest
     public void CollectionToOtherElementObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (ObservableCollection<string>)converter.Convert(source, typeof(ObservableCollection<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

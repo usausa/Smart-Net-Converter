@@ -30,7 +30,7 @@ public sealed class EnumerableConverterFactoryToHashSetTest
     public void ListToSameElementHashSet()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (HashSet<int>)converter.Convert(source, typeof(HashSet<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -42,7 +42,7 @@ public sealed class EnumerableConverterFactoryToHashSetTest
     public void ListToOtherElementHashSet()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (HashSet<string>)converter.Convert(source, typeof(HashSet<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);
@@ -54,7 +54,7 @@ public sealed class EnumerableConverterFactoryToHashSetTest
     public void CollectionToSameElementHashSet()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (HashSet<int>)converter.Convert(source, typeof(HashSet<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -66,7 +66,7 @@ public sealed class EnumerableConverterFactoryToHashSetTest
     public void CollectionToOtherElementHashSet()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (HashSet<string>)converter.Convert(source, typeof(HashSet<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

@@ -30,7 +30,7 @@ public sealed class EnumerableConverterFactoryToLinkedListTest
     public void LinkedListToSameElementLinkedList()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (LinkedList<int>)converter.Convert(source, typeof(LinkedList<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -42,7 +42,7 @@ public sealed class EnumerableConverterFactoryToLinkedListTest
     public void LinkedListToOtherElementLinkedList()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperList<int>(new[] { 0, 1 });
+        var source = new WrapperList<int>([0, 1]);
         var destination = (LinkedList<string>)converter.Convert(source, typeof(LinkedList<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);
@@ -54,7 +54,7 @@ public sealed class EnumerableConverterFactoryToLinkedListTest
     public void CollectionToSameElementLinkedList()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (LinkedList<int>)converter.Convert(source, typeof(LinkedList<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -66,7 +66,7 @@ public sealed class EnumerableConverterFactoryToLinkedListTest
     public void CollectionToOtherElementLinkedList()
     {
         var converter = new TestObjectConverter();
-        var source = new WrapperCollection<int>(new[] { 0, 1 });
+        var source = new WrapperCollection<int>([0, 1]);
         var destination = (LinkedList<string>)converter.Convert(source, typeof(LinkedList<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

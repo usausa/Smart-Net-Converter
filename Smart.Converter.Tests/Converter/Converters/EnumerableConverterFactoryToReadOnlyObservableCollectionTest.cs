@@ -80,7 +80,7 @@ public sealed class EnumerableConverterFactoryToReadOnlyObservableCollectionTest
     public void EnumerableToSameElementReadOnlyObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ReadOnlyObservableCollection<int>)converter.Convert(source, typeof(ReadOnlyObservableCollection<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -92,7 +92,7 @@ public sealed class EnumerableConverterFactoryToReadOnlyObservableCollectionTest
     public void EnumerableToOtherElementReadOnlyObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ReadOnlyObservableCollection<string>)converter.Convert(source, typeof(ReadOnlyObservableCollection<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

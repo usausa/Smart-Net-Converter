@@ -80,7 +80,7 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
     public void EnumerableToSameElementConcurrentBag()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ConcurrentBag<int>)converter.Convert(source, typeof(ConcurrentBag<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -92,7 +92,7 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
     public void EnumerableToOtherElementConcurrentBag()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ConcurrentBag<string>)converter.Convert(source, typeof(ConcurrentBag<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

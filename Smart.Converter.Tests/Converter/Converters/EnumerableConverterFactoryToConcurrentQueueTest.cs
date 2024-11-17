@@ -80,7 +80,7 @@ public sealed class EnumerableConverterFactoryToConcurrentQueueTest
     public void EnumerableToSameElementConcurrentQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ConcurrentQueue<int>)converter.Convert(source, typeof(ConcurrentQueue<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -92,7 +92,7 @@ public sealed class EnumerableConverterFactoryToConcurrentQueueTest
     public void EnumerableToOtherElementConcurrentQueue()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ConcurrentQueue<string>)converter.Convert(source, typeof(ConcurrentQueue<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

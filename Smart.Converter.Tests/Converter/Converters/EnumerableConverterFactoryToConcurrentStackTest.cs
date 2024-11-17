@@ -80,7 +80,7 @@ public sealed class EnumerableConverterFactoryToConcurrentStackTest
     public void EnumerableToSameElementConcurrentStack()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ConcurrentStack<int>)converter.Convert(source, typeof(ConcurrentStack<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -92,7 +92,7 @@ public sealed class EnumerableConverterFactoryToConcurrentStackTest
     public void EnumerableToOtherElementConcurrentStack()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (ConcurrentStack<string>)converter.Convert(source, typeof(ConcurrentStack<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

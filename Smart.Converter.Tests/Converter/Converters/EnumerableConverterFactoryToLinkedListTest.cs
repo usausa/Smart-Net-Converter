@@ -78,7 +78,7 @@ public sealed class EnumerableConverterFactoryToLinkedListTest
     public void EnumerableToSameElementLinkedList()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (LinkedList<int>)converter.Convert(source, typeof(LinkedList<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -90,7 +90,7 @@ public sealed class EnumerableConverterFactoryToLinkedListTest
     public void EnumerableToOtherElementLinkedList()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (LinkedList<string>)converter.Convert(source, typeof(LinkedList<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

@@ -78,7 +78,7 @@ public sealed class EnumerableConverterFactoryToHashSetTest
     public void EnumerableToSameElementHashSet()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (HashSet<int>)converter.Convert(source, typeof(HashSet<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -90,7 +90,7 @@ public sealed class EnumerableConverterFactoryToHashSetTest
     public void EnumerableToOtherElementHashSet()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.AsEnumerable();
+        var source = new[] { 0, 1 }.Select(static x => x);
         var destination = (HashSet<string>)converter.Convert(source, typeof(HashSet<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

@@ -1,5 +1,7 @@
 namespace Smart.Converter.Converters;
 
+using System.Globalization;
+
 using Smart.Converter.Types;
 
 #pragma warning disable CA1305
@@ -13,7 +15,7 @@ public sealed class DateTimeConverterFactoryTest
     public void DateTimeToString()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal("2000/01/01 00:00:00", converter.Convert(new DateTime(2000, 1, 1), typeof(string)));
+        Assert.Equal(new DateTime(2000, 1, 1).ToString(CultureInfo.CurrentCulture), converter.Convert(new DateTime(2000, 1, 1), typeof(string)));
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 

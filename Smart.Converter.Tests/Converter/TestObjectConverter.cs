@@ -10,19 +10,19 @@ public sealed class TestObjectConverter : IObjectConverter
     private readonly ObjectConverter objectConverter;
 
     public TestObjectConverter()
-        : this(x => x)
+        : this(static x => x)
     {
     }
 
     public TestObjectConverter(Func<IConverterFactory[], IEnumerable<IConverterFactory>> func)
     {
-        converterFactories = func(DefaultObjectFactories.Create()).Select(x => new TestConverterFactory(x)).ToArray();
+        converterFactories = func(DefaultObjectFactories.Create()).Select(static x => new TestConverterFactory(x)).ToArray();
         objectConverter = new ObjectConverter(converterFactories);
     }
 
     public bool NotUsed()
     {
-        return !converterFactories.Any(x => x.Used);
+        return !converterFactories.Any(static x => x.Used);
     }
 
     public bool UsedOnly<T>()

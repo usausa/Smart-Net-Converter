@@ -78,7 +78,7 @@ public sealed class EnumerableConverterFactoryToListTest
     public void EnumerableToSameElementList()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (List<int>)converter.Convert(source, typeof(List<int>));
         Assert.Equal(2, destination.Count);
         Assert.Equal(0, destination[0]);
@@ -90,7 +90,7 @@ public sealed class EnumerableConverterFactoryToListTest
     public void EnumerableToOtherElementList()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (List<string>)converter.Convert(source, typeof(List<string>));
         Assert.Equal(2, destination.Count);
         Assert.Equal("0", destination[0]);

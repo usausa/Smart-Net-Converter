@@ -68,7 +68,7 @@ public sealed class EnumerableConverterFactoryToArrayTest
     public void EnumerableToSameElementArray()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (int[])converter.Convert(source, typeof(int[]));
         Assert.Equal(2, destination.Length);
         Assert.Equal(0, destination[0]);
@@ -80,7 +80,7 @@ public sealed class EnumerableConverterFactoryToArrayTest
     public void EnumerableToOtherElementArray()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (string[])converter.Convert(source, typeof(string[]));
         Assert.Equal(2, destination.Length);
         Assert.Equal("0", destination[0]);

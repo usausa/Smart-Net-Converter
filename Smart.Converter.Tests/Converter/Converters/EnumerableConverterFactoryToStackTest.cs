@@ -78,7 +78,7 @@ public sealed class EnumerableConverterFactoryToStackTest
     public void EnumerableToSameElementStack()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (Stack<int>)converter.Convert(source, typeof(Stack<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -90,7 +90,7 @@ public sealed class EnumerableConverterFactoryToStackTest
     public void EnumerableToOtherElementStack()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (Stack<string>)converter.Convert(source, typeof(Stack<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

@@ -80,7 +80,7 @@ public sealed class EnumerableConverterFactoryToObservableCollectionTest
     public void EnumerableToSameElementObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (ObservableCollection<int>)converter.Convert(source, typeof(ObservableCollection<int>));
         Assert.Equal(2, destination.Count);
         Assert.Contains(0, destination);
@@ -92,7 +92,7 @@ public sealed class EnumerableConverterFactoryToObservableCollectionTest
     public void EnumerableToOtherElementObservableCollection()
     {
         var converter = new TestObjectConverter();
-        var source = new[] { 0, 1 }.Select(x => x);
+        var source = new[] { 0, 1 }.AsEnumerable();
         var destination = (ObservableCollection<string>)converter.Convert(source, typeof(ObservableCollection<string>));
         Assert.Equal(2, destination.Count);
         Assert.Contains("0", destination);

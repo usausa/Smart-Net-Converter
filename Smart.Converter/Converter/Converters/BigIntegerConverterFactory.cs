@@ -67,7 +67,6 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
 
     public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
-        var key = ((sourceType, targetType);
-        return Converters.GetValueOrDefault(key);
+        return Converters.GetValueOrDefault((sourceType, targetType));
     }
 }

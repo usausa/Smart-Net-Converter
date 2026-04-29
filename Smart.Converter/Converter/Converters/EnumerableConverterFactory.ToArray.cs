@@ -89,9 +89,11 @@ public sealed partial class EnumerableConverterFactory
         {
             var sourceArray = (TSource[])source;
             var array = new TDestination[sourceArray.Length];
-            for (var i = 0; i < sourceArray.Length; i++)
+            var sourceSpan = sourceArray.AsSpan();
+            var destinationSpan = array.AsSpan();
+            for (var i = 0; i < sourceSpan.Length; i++)
             {
-                array[i] = (TDestination)converter(sourceArray[i]);
+                destinationSpan[i] = (TDestination)converter(sourceSpan[i]);
             }
 
             return array;

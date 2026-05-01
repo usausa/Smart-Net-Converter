@@ -211,7 +211,8 @@ public sealed class TypePairHashArray
     public bool TryGetValue(Type sourceType, Type targetType, out Func<object, object>? converter)
     {
         var temp = nodes;
-        var node = temp[CalculateHash(sourceType, targetType) & (temp.Length - 1)];
+        var hash = CalculateHash(sourceType, targetType);
+        var node = temp[hash & (temp.Length - 1)];
         do
         {
             if ((node.SourceType == sourceType) && (node.TargetType == targetType))

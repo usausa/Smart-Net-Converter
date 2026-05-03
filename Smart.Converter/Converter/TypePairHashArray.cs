@@ -60,6 +60,26 @@ public sealed class TypePairHashArray
         return length;
     }
 
+    private static int CalculateCount(Node[] targetNodes)
+    {
+        var count = 0;
+        for (var i = 0; i < targetNodes.Length; i++)
+        {
+            var node = targetNodes[i];
+            if (node != EmptyNode)
+            {
+                do
+                {
+                    count++;
+                    node = node.Next;
+                }
+                while (node is not null);
+            }
+        }
+
+        return count;
+    }
+
     private static int CalculateDepth(Node[] targetNodes)
     {
         var depth = 0;
@@ -111,55 +131,54 @@ public sealed class TypePairHashArray
         }
     }
 
-    private static void RelocateNodes(Node[] nodes, Node[] oldNodes, int count)
+    private static void RelocateNodes(Node[] newNodes, Node[] oldNodes, int count)
     {
         var remaining = count;
         for (var i = 0; (i < oldNodes.Length) && (remaining > 0); i++)
         {
-            var node = oldNodes[i];
-            if (node == EmptyNode)
+            var current = oldNodes[i];
+            if (current == EmptyNode)
             {
                 continue;
             }
 
             do
             {
-                var next = node.Next;
-                node.Next = null;
+                UpdateLink(ref newNodes[CalculateHash(current.SourceType, current.TargetType) & (newNodes.Length - 1)], new Node(current.SourceType, current.TargetType, current.Converter));
 
-                UpdateLink(ref nodes[CalculateHash(node.SourceType, node.TargetType) & (nodes.Length - 1)], node);
-
-                node = next;
+                current = current.Next;
                 remaining--;
             }
-            while (node is not null);
+            while (current is not null);
         }
     }
 
     private void AddNode(Node node)
     {
+        var currentNodes = nodes;
+
         var requestSize = Math.Max(InitialSize, (count + 1) * Factor);
         var size = CalculateSize(requestSize);
-        if (size > nodes.Length)
+        if (size > currentNodes.Length)
         {
             var newNodes = new Node[size];
             newNodes.AsSpan().Fill(EmptyNode);
 
-            RelocateNodes(newNodes, nodes, count);
+            RelocateNodes(newNodes, currentNodes, count);
 
             UpdateLink(ref newNodes[CalculateHash(node.SourceType, node.TargetType) & (newNodes.Length - 1)], node);
 
             nodes = newNodes;
             depth = CalculateDepth(newNodes);
-            count++;
+            count = CalculateCount(newNodes);
         }
         else
         {
             Interlocked.MemoryBarrier();
 
-            UpdateLink(ref nodes[CalculateHash(node.SourceType, node.TargetType) & (nodes.Length - 1)], node);
+            UpdateLink(ref currentNodes[CalculateHash(node.SourceType, node.TargetType) & (currentNodes.Length - 1)], node);
 
-            depth = Math.Max(CalculateDepth(nodes[CalculateHash(node.SourceType, node.TargetType) & (nodes.Length - 1)]), depth);
+            depth = Math.Max(CalculateDepth(currentNodes[CalculateHash(node.SourceType, node.TargetType) & (currentNodes.Length - 1)]), depth);
             count++;
         }
     }

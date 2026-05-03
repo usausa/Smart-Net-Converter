@@ -11,6 +11,7 @@
     <Title>Smart.Converter</Title>
     <Description>Smart converter library</Description>
     <PackageTags>smart converter</PackageTags>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

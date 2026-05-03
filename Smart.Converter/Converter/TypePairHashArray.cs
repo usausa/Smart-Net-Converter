@@ -1,6 +1,7 @@
 namespace Smart.Converter;
 
 using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 [DebuggerDisplay("{" + nameof(Diagnostics) + "}")]
@@ -18,7 +19,7 @@ public sealed class TypePairHashArray
     private readonly object sync = new();
 #endif
 
-    private Node[] nodes;
+    private volatile Node[] nodes;
 
     private int depth;
 
@@ -77,25 +78,13 @@ public sealed class TypePairHashArray
 
     private static int CalculateSize(int requestSize)
     {
-        uint size = 0;
-
-        for (var i = 1L; i < requestSize; i *= 2)
-        {
-            size = (size << 1) + 1;
-        }
-
-        return (int)(size + 1);
+        return (int)BitOperations.RoundUpToPowerOf2((uint)requestSize);
     }
 
     private static Node[] CreateInitialTable()
     {
         var newNodes = new Node[InitialSize];
-
-        for (var i = 0; i < newNodes.Length; i++)
-        {
-            newNodes[i] = EmptyNode;
-        }
-
+        newNodes.AsSpan().Fill(EmptyNode);
         return newNodes;
     }
 
@@ -122,9 +111,10 @@ public sealed class TypePairHashArray
         }
     }
 
-    private static void RelocateNodes(Node[] nodes, Node[] oldNodes)
+    private static void RelocateNodes(Node[] nodes, Node[] oldNodes, int count)
     {
-        for (var i = 0; i < oldNodes.Length; i++)
+        var remaining = count;
+        for (var i = 0; (i < oldNodes.Length) && (remaining > 0); i++)
         {
             var node = oldNodes[i];
             if (node == EmptyNode)
@@ -140,6 +130,7 @@ public sealed class TypePairHashArray
                 UpdateLink(ref nodes[CalculateHash(node.SourceType, node.TargetType) & (nodes.Length - 1)], node);
 
                 node = next;
+                remaining--;
             }
             while (node is not null);
         }
@@ -152,16 +143,11 @@ public sealed class TypePairHashArray
         if (size > nodes.Length)
         {
             var newNodes = new Node[size];
-            for (var i = 0; i < newNodes.Length; i++)
-            {
-                newNodes[i] = EmptyNode;
-            }
+            newNodes.AsSpan().Fill(EmptyNode);
 
-            RelocateNodes(newNodes, nodes);
+            RelocateNodes(newNodes, nodes, count);
 
             UpdateLink(ref newNodes[CalculateHash(node.SourceType, node.TargetType) & (newNodes.Length - 1)], node);
-
-            Interlocked.MemoryBarrier();
 
             nodes = newNodes;
             depth = CalculateDepth(newNodes);
@@ -199,14 +185,13 @@ public sealed class TypePairHashArray
         {
             var newNodes = CreateInitialTable();
 
-            Interlocked.MemoryBarrier();
-
             nodes = newNodes;
             depth = 0;
             count = 0;
         }
     }
 
+    [SkipLocalsInit]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetValue(Type sourceType, Type targetType, out Func<object, object>? converter)
     {

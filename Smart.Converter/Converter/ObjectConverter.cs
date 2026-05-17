@@ -120,7 +120,7 @@ public sealed class ObjectConverter : IObjectConverter
         return converter(value);
     }
 
-    public Func<object, object?>? CreateConverter(Type sourceType, Type targetType)
+    public Func<object?, object?>? CreateConverter(Type sourceType, Type targetType)
     {
         var converter = GetConverter(sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType)! : sourceType, targetType);
         if (converter is null)
@@ -134,7 +134,7 @@ public sealed class ObjectConverter : IObjectConverter
             converter);
     }
 
-    private static Func<object, object?> CreateConverter(object? defaultValue, Type targetType, Func<object, object?> converter)
+    private static Func<object?, object?> CreateConverter(object? defaultValue, Type targetType, Func<object, object?> converter)
     {
         return value => value is null
             ? defaultValue

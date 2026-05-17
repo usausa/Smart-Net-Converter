@@ -2,13 +2,20 @@ namespace Smart.Converter.Converters;
 
 using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 public sealed partial class EnumerableConverterFactory
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static TDestination ConvertValue<TSource, TDestination>(Func<object, object?> converter, TSource value)
     {
-        object? boxedValue = value;
-        return (TDestination)(converter(boxedValue!) ?? default(TDestination)!);
+        var boxed = typeof(TSource).IsValueType
+            ? (object)value!
+            : Unsafe.As<TSource, object>(ref value);
+        var result = converter(boxed)!;
+        return typeof(TDestination).IsValueType
+            ? (TDestination)result
+            : Unsafe.As<object, TDestination>(ref result);
     }
 
     //--------------------------------------------------------------------------------

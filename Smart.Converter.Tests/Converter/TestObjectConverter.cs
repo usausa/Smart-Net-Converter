@@ -96,7 +96,7 @@ public sealed class TestObjectConverter : IObjectConverter
         return objectConverter.Convert(value, targetType)!;
     }
 
-    public Func<object, object?>? CreateConverter(Type sourceType, Type targetType)
+    public Func<object?, object?>? CreateConverter(Type sourceType, Type targetType)
     {
         return objectConverter.CreateConverter(sourceType, targetType);
     }

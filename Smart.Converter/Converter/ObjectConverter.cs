@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter;
 
 using System.Runtime.CompilerServices;
@@ -39,7 +38,7 @@ public sealed class ObjectConverter : IObjectConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private Func<object, object> FindConverter(Type sourceType, Type targetType)
+    private Func<object, object?>? FindConverter(Type sourceType, Type targetType)
     {
         var factoriesLocal = factories;
         for (var i = 0; i < factoriesLocal.Length; i++)
@@ -55,7 +54,7 @@ public sealed class ObjectConverter : IObjectConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private Func<object, object> GetConverter(Type sourceType, Type targetType)
+    private Func<object, object?>? GetConverter(Type sourceType, Type targetType)
     {
         if (!converterCache.TryGetValue(sourceType, targetType, out var converter))
         {
@@ -65,12 +64,12 @@ public sealed class ObjectConverter : IObjectConverter
         return converter;
     }
 
-    public bool CanConvert<T>(object value)
+    public bool CanConvert<T>(object? value)
     {
         return CanConvert(value, typeof(T));
     }
 
-    public bool CanConvert(object value, Type targetType)
+    public bool CanConvert(object? value, Type targetType)
     {
         if (value is null)
         {
@@ -78,7 +77,7 @@ public sealed class ObjectConverter : IObjectConverter
         }
 
         var sourceType = value.GetType();
-        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
+        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType))
         {
             return true;
         }
@@ -88,16 +87,16 @@ public sealed class ObjectConverter : IObjectConverter
 
     public bool CanConvert(Type sourceType, Type targetType)
     {
-        return GetConverter(sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType) : sourceType, targetType) is not null;
+        return GetConverter(sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType)! : sourceType, targetType) is not null;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T Convert<T>(object value)
+    public T? Convert<T>(object? value)
     {
-        return (T)Convert(value, typeof(T));
+        return (T?)Convert(value, typeof(T));
     }
 
-    public object Convert(object value, Type targetType)
+    public object? Convert(object? value, Type targetType)
     {
         // Specialized null
         if (value is null)
@@ -107,7 +106,7 @@ public sealed class ObjectConverter : IObjectConverter
 
         // Specialized same type for performance (Nullable is excluded because operation is slow)
         var sourceType = value.GetType();
-        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
+        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType))
         {
             return value;
         }
@@ -121,9 +120,9 @@ public sealed class ObjectConverter : IObjectConverter
         return converter(value);
     }
 
-    public Func<object, object> CreateConverter(Type sourceType, Type targetType)
+    public Func<object, object?>? CreateConverter(Type sourceType, Type targetType)
     {
-        var converter = GetConverter(sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType) : sourceType, targetType);
+        var converter = GetConverter(sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType)! : sourceType, targetType);
         if (converter is null)
         {
             return null;
@@ -131,11 +130,11 @@ public sealed class ObjectConverter : IObjectConverter
 
         return CreateConverter(
             targetType.GetDefaultValue(),
-            targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType,
+            targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType,
             converter);
     }
 
-    private static Func<object, object> CreateConverter(object defaultValue, Type targetType, Func<object, object> converter)
+    private static Func<object, object?> CreateConverter(object? defaultValue, Type targetType, Func<object, object?> converter)
     {
         return value => value is null
             ? defaultValue

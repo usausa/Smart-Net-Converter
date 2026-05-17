@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed partial class EnumerableConverterFactory
@@ -50,9 +49,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeListFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeListFromArrayConverter(Func<object, object> converter)
+        public OtherTypeListFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -67,9 +66,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeListFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeListFromListConverter(Func<object, object> converter)
+        public OtherTypeListFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -84,9 +83,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeListFromCollectionConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeListFromCollectionConverter(Func<object, object> converter)
+        public OtherTypeListFromCollectionConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -101,9 +100,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeListFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeListFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeListFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -113,7 +112,7 @@ public sealed partial class EnumerableConverterFactory
             var collection = new List<TDestination>();
             foreach (var value in (IEnumerable<TSource>)source)
             {
-                collection.Add((TDestination)converter(value));
+                collection.Add(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return collection;

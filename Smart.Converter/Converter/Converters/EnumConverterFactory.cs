@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed class EnumConverterFactory : IConverterFactory
@@ -16,7 +15,7 @@ public sealed class EnumConverterFactory : IConverterFactory
         typeof(char)
     ];
 
-    private static readonly Dictionary<(Type, Type), Func<object, object>> CastOperators = new()
+    private static readonly Dictionary<(Type, Type), Func<object, object?>> CastOperators = new()
     {
         // byte
         { (typeof(byte), typeof(byte)), static x => (byte)x },
@@ -100,7 +99,7 @@ public sealed class EnumConverterFactory : IConverterFactory
         { (typeof(ulong), typeof(char)), static x => (char)(ulong)x }
     };
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var sourceEnumType = sourceType.GetEnumType();
         var targetEnumType = targetType.GetEnumType();
@@ -118,14 +117,14 @@ public sealed class EnumConverterFactory : IConverterFactory
             // String to Enum
             if (sourceType == typeof(string))
             {
-                return ((IConverter)Activator.CreateInstance(typeof(StringToEnumConverter<>).MakeGenericType(targetEnumType))).Convert;
+                return ((IConverter)Activator.CreateInstance(typeof(StringToEnumConverter<>).MakeGenericType(targetEnumType))!).Convert;
             }
 
             // Assignable
             if (UnderlyingTypes.Contains(sourceType))
             {
-                var targetUnderlyingType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
-                return source => Enum.ToObject(targetUnderlyingType!, source);
+                var targetUnderlyingType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
+                return source => Enum.ToObject(targetUnderlyingType, source);
             }
 
             return null;
@@ -138,12 +137,12 @@ public sealed class EnumConverterFactory : IConverterFactory
             // Enum to String
             if (targetType == typeof(string))
             {
-                return ((IConverter)Activator.CreateInstance(typeof(EnumToStringConverter<>).MakeGenericType(sourceEnumType))).Convert;
+                return ((IConverter)Activator.CreateInstance(typeof(EnumToStringConverter<>).MakeGenericType(sourceEnumType))!).Convert;
             }
 
             // Enum to Numeric
             var sourceUnderlyingType = Enum.GetUnderlyingType(sourceType);
-            var targetUnderlyingType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
+            var targetUnderlyingType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
             return CastOperators.GetValueOrDefault((sourceUnderlyingType, targetUnderlyingType));
         }
 

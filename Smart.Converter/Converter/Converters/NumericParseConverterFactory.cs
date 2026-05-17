@@ -1,9 +1,8 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed class NumericParseConverterFactory : IConverterFactory
 {
-    private static readonly Dictionary<Type, Func<object, object>> Converters = new()
+    private static readonly Dictionary<Type, Func<object, object?>> Converters = new()
     {
         { typeof(byte), static x => Byte.TryParse((string)x, out var result) ? result : default },
         { typeof(byte?), static x => Byte.TryParse((string)x, out var result) ? result : default(byte?) },
@@ -29,7 +28,7 @@ public sealed class NumericParseConverterFactory : IConverterFactory
         { typeof(float?), static x => Single.TryParse((string)x, out var result) ? result : default(float?) }
     };
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         if ((sourceType == typeof(string)) &&
             Converters.TryGetValue(targetType, out var converter))

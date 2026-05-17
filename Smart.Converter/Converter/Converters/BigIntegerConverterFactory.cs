@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Numerics;
@@ -6,7 +5,7 @@ using System.Numerics;
 public sealed class BigIntegerConverterFactory : IConverterFactory
 {
 #pragma warning disable CA1305
-    private static readonly Dictionary<(Type, Type), Func<object, object>> Converters = new()
+    private static readonly Dictionary<(Type, Type), Func<object, object?>> Converters = new()
     {
         // From decimal
         { (typeof(BigInteger), typeof(byte)), static x => { try { return (byte)(BigInteger)x; } catch (OverflowException) { return default(byte); } } },
@@ -65,7 +64,7 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
     };
 #pragma warning restore CA1305
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         return Converters.GetValueOrDefault((sourceType, targetType));
     }

@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Collections;
@@ -78,9 +77,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeArrayFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeArrayFromArrayConverter(Func<object, object> converter)
+        public OtherTypeArrayFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -93,7 +92,7 @@ public sealed partial class EnumerableConverterFactory
             var destinationSpan = array.AsSpan();
             for (var i = 0; i < sourceSpan.Length; i++)
             {
-                destinationSpan[i] = (TDestination)converter(sourceSpan[i]);
+                destinationSpan[i] = ConvertValue<TSource, TDestination>(converter, sourceSpan[i]);
             }
 
             return array;
@@ -104,9 +103,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeArrayFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeArrayFromListConverter(Func<object, object> converter)
+        public OtherTypeArrayFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -117,7 +116,7 @@ public sealed partial class EnumerableConverterFactory
             var array = new TDestination[sourceList.Count];
             for (var i = 0; i < sourceList.Count; i++)
             {
-                array[i] = (TDestination)converter(sourceList[i]);
+                array[i] = ConvertValue<TSource, TDestination>(converter, sourceList[i]);
             }
 
             return array;
@@ -128,9 +127,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeArrayFromCollectionConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeArrayFromCollectionConverter(Func<object, object> converter)
+        public OtherTypeArrayFromCollectionConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -142,7 +141,7 @@ public sealed partial class EnumerableConverterFactory
             var index = 0;
             foreach (var value in sourceCollection)
             {
-                array[index] = (TDestination)converter(value);
+                array[index] = ConvertValue<TSource, TDestination>(converter, value);
                 index++;
             }
 
@@ -154,9 +153,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeArrayFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeArrayFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeArrayFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -166,7 +165,7 @@ public sealed partial class EnumerableConverterFactory
             var buffer = new ArrayBuffer<TDestination>(0);
             foreach (var value in (IEnumerable<TSource>)source)
             {
-                buffer.Add((TDestination)converter(value));
+                buffer.Add(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return buffer.ToArray();

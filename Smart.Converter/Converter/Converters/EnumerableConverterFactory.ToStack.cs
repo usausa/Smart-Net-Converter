@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed partial class EnumerableConverterFactory
@@ -54,9 +53,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeStackFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeStackFromArrayConverter(Func<object, object> converter)
+        public OtherTypeStackFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -71,9 +70,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeStackFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeStackFromListConverter(Func<object, object> converter)
+        public OtherTypeStackFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -88,9 +87,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeStackFromCollectionConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeStackFromCollectionConverter(Func<object, object> converter)
+        public OtherTypeStackFromCollectionConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -105,9 +104,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeStackFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeStackFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeStackFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -117,7 +116,7 @@ public sealed partial class EnumerableConverterFactory
             var collection = new Stack<TDestination>();
             foreach (var value in (IEnumerable<TSource>)source)
             {
-                collection.Push((TDestination)converter(value));
+                collection.Push(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return collection;

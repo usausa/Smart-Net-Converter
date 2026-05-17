@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed partial class EnumerableConverterFactory
@@ -48,9 +47,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeHashSetFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeHashSetFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeHashSetFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -60,7 +59,7 @@ public sealed partial class EnumerableConverterFactory
             var collection = new HashSet<TDestination>();
             foreach (var value in (IEnumerable<TSource>)source)
             {
-                collection.Add((TDestination)converter(value));
+                collection.Add(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return collection;

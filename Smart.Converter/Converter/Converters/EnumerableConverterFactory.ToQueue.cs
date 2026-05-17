@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed partial class EnumerableConverterFactory
@@ -50,9 +49,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeQueueFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeQueueFromArrayConverter(Func<object, object> converter)
+        public OtherTypeQueueFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -67,9 +66,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeQueueFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeQueueFromListConverter(Func<object, object> converter)
+        public OtherTypeQueueFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -84,9 +83,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeQueueFromCollectionConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeQueueFromCollectionConverter(Func<object, object> converter)
+        public OtherTypeQueueFromCollectionConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -101,9 +100,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeQueueFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeQueueFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeQueueFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -113,7 +112,7 @@ public sealed partial class EnumerableConverterFactory
             var collection = new Queue<TDestination>();
             foreach (var value in (IEnumerable<TSource>)source)
             {
-                collection.Enqueue((TDestination)converter(value));
+                collection.Enqueue(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return collection;

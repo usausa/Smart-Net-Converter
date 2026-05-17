@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Collections.Concurrent;
@@ -54,12 +53,12 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
         { typeof(ConcurrentBag<>), new ProviderPair(SameTypeConcurrentBagProvider.Default, OtherTypeConcurrentBagProvider.Default) }
     };
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         // To Array
         if (targetType.IsArray)
         {
-            var targetElementType = targetType.GetElementType();
+            var targetElementType = targetType.GetElementType()!;
             var sourceElementType = ResolveEnumerableType(sourceType, out var enumerableType);
             if (sourceElementType is not null)
             {
@@ -67,7 +66,7 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
                 {
                     // IE<T> to T[]
                     return ((IConverter)Activator.CreateInstance(
-                        SameTypeArrayProvider.Default.GetConverterType(enumerableType).MakeGenericType(targetElementType))).Convert;
+                        SameTypeArrayProvider.Default.GetConverterType(enumerableType).MakeGenericType(targetElementType))!).Convert;
                 }
 
                 var converter = context.CreateConverter(sourceElementType, targetElementType);
@@ -76,7 +75,7 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
                     // IE<T1> to T2[]
                     return ((IConverter)Activator.CreateInstance(
                         OtherTypeArrayProvider.Default.GetConverterType(enumerableType).MakeGenericType(sourceElementType, targetElementType),
-                        converter)).Convert;
+                        converter)!).Convert;
                 }
             }
 
@@ -95,7 +94,7 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
                 {
                     // IE<T> to IE<T>
                     return ((IConverter)Activator.CreateInstance(
-                        providerPair.SameTypeProvider.GetConverterType(enumerableType).MakeGenericType(targetElementType))).Convert;
+                        providerPair.SameTypeProvider.GetConverterType(enumerableType).MakeGenericType(targetElementType))!).Convert;
                 }
 
                 var converter = context.CreateConverter(sourceElementType, targetElementType);
@@ -104,7 +103,7 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
                     // IE<T1> to IE<T2>
                     return ((IConverter)Activator.CreateInstance(
                         providerPair.OtherTypeProvider.GetConverterType(enumerableType).MakeGenericType(sourceElementType, targetElementType),
-                        converter)).Convert;
+                        converter)!).Convert;
                 }
             }
 
@@ -118,12 +117,12 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static Type ResolveEnumerableType(Type type, out SourceEnumerableType sourceEnumerableType)
+    private static Type? ResolveEnumerableType(Type type, out SourceEnumerableType sourceEnumerableType)
     {
         if (type.IsArray)
         {
             sourceEnumerableType = SourceEnumerableType.Array;
-            return type.GetElementType();
+            return type.GetElementType()!;
         }
 
         var interfaceTypes = new List<Type>

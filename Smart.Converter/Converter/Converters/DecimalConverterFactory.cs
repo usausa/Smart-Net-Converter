@@ -1,11 +1,10 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Globalization;
 
 public sealed class DecimalConverterFactory : IConverterFactory
 {
-    private static readonly Dictionary<(Type, Type), Func<object, object>> Converters = new()
+    private static readonly Dictionary<(Type, Type), Func<object, object?>> Converters = new()
     {
         // From decimal
         { (typeof(decimal), typeof(byte)), static x => { try { return Decimal.ToByte((decimal)x); } catch (OverflowException) { return default(byte); } } },
@@ -59,7 +58,7 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(string), typeof(decimal?)), static x => Decimal.TryParse((string)x, out var result) ? result : default(decimal?) }
     };
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var key = (sourceType, targetType);
         return Converters.GetValueOrDefault(key);

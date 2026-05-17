@@ -212,7 +212,7 @@ public sealed class TypePairHashArray
 
     [SkipLocalsInit]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(Type sourceType, Type targetType, out Func<object, object>? converter)
+    public bool TryGetValue(Type sourceType, Type targetType, out Func<object, object?>? converter)
     {
         var temp = nodes;
         var hash = CalculateHash(sourceType, targetType);
@@ -232,7 +232,7 @@ public sealed class TypePairHashArray
         return false;
     }
 
-    public Func<object, object> AddIfNotExist(Type sourceType, Type targetType, Func<Type, Type, Func<object, object>> valueFactory)
+    public Func<object, object?>? AddIfNotExist(Type sourceType, Type targetType, Func<Type, Type, Func<object, object?>?> valueFactory)
     {
         lock (sync)
         {
@@ -273,11 +273,11 @@ public sealed class TypePairHashArray
 
         public readonly Type TargetType;
 
-        public readonly Func<object, object> Converter;
+        public readonly Func<object, object?>? Converter;
 
         public Node? Next;
 
-        public Node(Type sourceType, Type targetType, Func<object, object> converter)
+        public Node(Type sourceType, Type targetType, Func<object, object?>? converter)
         {
             SourceType = sourceType;
             TargetType = targetType;

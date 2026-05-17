@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Collections.ObjectModel;
@@ -55,9 +54,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyObservableCollectionFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyObservableCollectionFromArrayConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyObservableCollectionFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -74,9 +73,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyObservableCollectionFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyObservableCollectionFromListConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyObservableCollectionFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -93,9 +92,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyObservableCollectionFromCollectionConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyObservableCollectionFromCollectionConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyObservableCollectionFromCollectionConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -108,9 +107,9 @@ public sealed partial class EnumerableConverterFactory
 
     private sealed class OtherTypeReadOnlyObservableCollectionFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyObservableCollectionFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyObservableCollectionFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }

@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Collections.Concurrent;
@@ -52,9 +51,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeConcurrentStackFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeConcurrentStackFromArrayConverter(Func<object, object> converter)
+        public OtherTypeConcurrentStackFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -69,9 +68,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeConcurrentStackFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeConcurrentStackFromListConverter(Func<object, object> converter)
+        public OtherTypeConcurrentStackFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -86,9 +85,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeConcurrentStackFromCollectionConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeConcurrentStackFromCollectionConverter(Func<object, object> converter)
+        public OtherTypeConcurrentStackFromCollectionConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -103,9 +102,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeConcurrentStackFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeConcurrentStackFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeConcurrentStackFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }

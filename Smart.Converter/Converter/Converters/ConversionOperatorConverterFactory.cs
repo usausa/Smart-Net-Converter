@@ -1,15 +1,14 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Reflection;
 
 public sealed class ConversionOperatorConverterFactory : IConverterFactory
 {
-    private static readonly MethodInfo CreateMethod = typeof(ConversionOperatorConverterFactory).GetMethod(nameof(CreateConverter), BindingFlags.NonPublic | BindingFlags.Static);
+    private static readonly MethodInfo CreateMethod = typeof(ConversionOperatorConverterFactory).GetMethod(nameof(CreateConverter), BindingFlags.NonPublic | BindingFlags.Static)!;
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
-        var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
+        var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
 
         var methodInfo = GetImplicitConversionOperator(sourceType, underlyingTargetType);
         if (methodInfo is not null)
@@ -44,7 +43,7 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
         return null;
     }
 
-    private static MethodInfo GetImplicitConversionOperator(Type sourceType, Type targetType)
+    private static MethodInfo? GetImplicitConversionOperator(Type sourceType, Type targetType)
     {
         var sourceTypeMethod = sourceType
             .GetMethods()
@@ -63,7 +62,7 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
                        IsMatchParameterType(mi.GetParameters()[0].ParameterType, sourceType));
     }
 
-    private static MethodInfo GetExplicitConversionOperator(Type sourceType, Type targetType)
+    private static MethodInfo? GetExplicitConversionOperator(Type sourceType, Type targetType)
     {
         var sourceTypeMethod = sourceType
             .GetMethods()
@@ -89,20 +88,20 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
             : parameterType == sourceType;
     }
 
-    private static Func<object, object> BuildConverter(MethodInfo mi)
+    private static Func<object, object?> BuildConverter(MethodInfo mi)
     {
         var method = CreateMethod.MakeGenericMethod(mi.ReturnType);
-        return (Func<object, object>)method.Invoke(null, [mi]);
+        return (Func<object, object?>)method.Invoke(null, [mi])!;
     }
 
-    private static Func<object, object> CreateConverter<TDestination>(MethodInfo mi)
+    private static Func<object, object?> CreateConverter<TDestination>(MethodInfo mi)
     {
         return source =>
         {
 #pragma warning disable CA1031
             try
             {
-                return (TDestination)mi.Invoke(null, [source]);
+                return (TDestination?)mi.Invoke(null, [source]);
             }
             catch
             {

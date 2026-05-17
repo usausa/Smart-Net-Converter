@@ -1,26 +1,25 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using Smart.ComponentModel;
 
 public sealed class ValueHolderConverterFactory : IConverterFactory
 {
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var isSourceValueType = ValueHolderHelper.IsValueHolderType(sourceType);
         if (isSourceValueType)
         {
-            var sourceValueType = ValueHolderHelper.GetValueTypeProperty(sourceType).PropertyType;
-            var type = sourceType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
+            var sourceValueType = ValueHolderHelper.GetValueTypeProperty(sourceType)!.PropertyType;
+            var type = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
             if (sourceValueType == type)
             {
-                return ((IConverter)Activator.CreateInstance(typeof(ValueHolderConverter<>).MakeGenericType(sourceValueType))).Convert;
+                return ((IConverter)Activator.CreateInstance(typeof(ValueHolderConverter<>).MakeGenericType(sourceValueType))!).Convert;
             }
 
             var converter = context.CreateConverter(sourceValueType, targetType);
             if (converter != null)
             {
-                return ((IConverter)Activator.CreateInstance(typeof(ValueHolderWithConvertConverter<>).MakeGenericType(sourceValueType), converter)).Convert;
+                return ((IConverter)Activator.CreateInstance(typeof(ValueHolderWithConvertConverter<>).MakeGenericType(sourceValueType), converter)!).Convert;
             }
         }
 
@@ -30,7 +29,7 @@ public sealed class ValueHolderConverterFactory : IConverterFactory
 #pragma warning disable CA1812
     private sealed class ValueHolderConverter<T> : IConverter
     {
-        public object Convert(object source)
+        public object? Convert(object source)
         {
             return ((IValueHolder<T>)source).Value;
         }
@@ -40,16 +39,17 @@ public sealed class ValueHolderConverterFactory : IConverterFactory
 #pragma warning disable CA1812
     private sealed class ValueHolderWithConvertConverter<T> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public ValueHolderWithConvertConverter(Func<object, object> converter)
+        public ValueHolderWithConvertConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
 
-        public object Convert(object source)
+        public object? Convert(object source)
         {
-            return converter(((IValueHolder<T>)source).Value);
+            object? value = ((IValueHolder<T>)source).Value;
+            return converter(value!);
         }
     }
 #pragma warning restore CA1812

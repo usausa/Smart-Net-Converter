@@ -1,9 +1,8 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed class NumericCastConverterFactory : IConverterFactory
 {
-    private static readonly Dictionary<(Type, Type), Func<object, object>> Converters = new()
+    private static readonly Dictionary<(Type, Type), Func<object, object?>> Converters = new()
     {
         // byte
         { (typeof(byte), typeof(sbyte)), static x => (sbyte)(byte)x },
@@ -128,11 +127,11 @@ public sealed class NumericCastConverterFactory : IConverterFactory
         { (typeof(float), typeof(double)), static x => (double)(float)x }
     };
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         if (sourceType.IsValueType && targetType.IsValueType)
         {
-            var key = (sourceType, targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType);
+            var key = (sourceType, targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType);
             if (Converters.TryGetValue(key, out var converter))
             {
                 return converter;

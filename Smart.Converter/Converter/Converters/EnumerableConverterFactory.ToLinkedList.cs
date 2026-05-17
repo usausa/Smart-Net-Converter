@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed partial class EnumerableConverterFactory
@@ -53,9 +52,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeLinkedListFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeLinkedListFromArrayConverter(Func<object, object> converter)
+        public OtherTypeLinkedListFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -66,7 +65,7 @@ public sealed partial class EnumerableConverterFactory
             var collection = new LinkedList<TDestination>();
             for (var i = 0; i < arraySource.Length; i++)
             {
-                collection.AddLast((TDestination)converter(arraySource[i]));
+                collection.AddLast(ConvertValue<TSource, TDestination>(converter, arraySource[i]));
             }
 
             return collection;
@@ -77,9 +76,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeLinkedListFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeLinkedListFromListConverter(Func<object, object> converter)
+        public OtherTypeLinkedListFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -90,7 +89,7 @@ public sealed partial class EnumerableConverterFactory
             var collection = new LinkedList<TDestination>();
             for (var i = 0; i < listSource.Count; i++)
             {
-                collection.AddLast((TDestination)converter(listSource[i]));
+                collection.AddLast(ConvertValue<TSource, TDestination>(converter, listSource[i]));
             }
 
             return collection;
@@ -101,9 +100,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeLinkedListFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeLinkedListFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeLinkedListFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -113,7 +112,7 @@ public sealed partial class EnumerableConverterFactory
             var collection = new LinkedList<TDestination>();
             foreach (var value in (IEnumerable<TSource>)source)
             {
-                collection.AddLast((TDestination)converter(value));
+                collection.AddLast(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return collection;

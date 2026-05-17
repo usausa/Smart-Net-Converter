@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 public sealed class BooleanConverterFactory : IConverterFactory
@@ -39,7 +38,7 @@ public sealed class BooleanConverterFactory : IConverterFactory
     private static readonly object FloatFalse = 0.0f;
     private static readonly object FloatTrue = 1.0f;
 
-    private static readonly Dictionary<Type, Func<object, object>> FromBooleanConverters = new()
+    private static readonly Dictionary<Type, Func<object, object?>> FromBooleanConverters = new()
     {
         { typeof(byte), static x => (bool)x ? ByteTrue : ByteFalse },
         { typeof(sbyte), static x => (bool)x ? SByteTrue : SByteFalse },
@@ -55,7 +54,7 @@ public sealed class BooleanConverterFactory : IConverterFactory
         { typeof(decimal), static x => (bool)x ? Decimal.One : Decimal.Zero }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> ToBooleanConverters = new()
+    private static readonly Dictionary<Type, Func<object, object?>> ToBooleanConverters = new()
     {
         { typeof(byte), static x => (byte)x != default ? BoolTrue : BoolFalse },
         { typeof(sbyte), static x => (sbyte)x != default ? BoolTrue : BoolFalse },
@@ -73,7 +72,7 @@ public sealed class BooleanConverterFactory : IConverterFactory
         { typeof(decimal), static x => (decimal)x != default ? BoolTrue : BoolFalse }
     };
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         if (sourceType == typeof(bool))
         {

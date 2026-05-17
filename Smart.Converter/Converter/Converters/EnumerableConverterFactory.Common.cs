@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Collections;
@@ -6,6 +5,12 @@ using System.Runtime.CompilerServices;
 
 public sealed partial class EnumerableConverterFactory
 {
+    private static TDestination ConvertValue<TSource, TDestination>(Func<object, object?> converter, TSource value)
+    {
+        object? boxedValue = value;
+        return (TDestination)(converter(boxedValue!) ?? default(TDestination)!);
+    }
+
     //--------------------------------------------------------------------------------
     // ArrayConvertEnumerator
     //--------------------------------------------------------------------------------
@@ -14,11 +19,11 @@ public sealed partial class EnumerableConverterFactory
     {
         private readonly TSource[] source;
 
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
         private int index;
 
-        public ArrayConvertEnumerator(TSource[] source, Func<object, object> converter)
+        public ArrayConvertEnumerator(TSource[] source, Func<object, object?> converter)
         {
             this.source = source;
             this.converter = converter;
@@ -37,10 +42,10 @@ public sealed partial class EnumerableConverterFactory
         public TDestination Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (TDestination)converter(source[index]);
+            get => ConvertValue<TSource, TDestination>(converter, source[index]);
         }
 
-        object IEnumerator.Current => Current;
+        object? IEnumerator.Current => Current;
 
         public void Dispose()
         {
@@ -51,9 +56,9 @@ public sealed partial class EnumerableConverterFactory
     {
         private readonly TSource[] source;
 
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public ArrayConvertList(TSource[] source, Func<object, object> converter)
+        public ArrayConvertList(TSource[] source, Func<object, object?> converter)
         {
             this.source = source;
             this.converter = converter;
@@ -73,7 +78,7 @@ public sealed partial class EnumerableConverterFactory
         {
             for (var i = 0; i < source.Length; i++)
             {
-                array[arrayIndex + i] = (TDestination)converter(source[i]);
+                array[arrayIndex + i] = ConvertValue<TSource, TDestination>(converter, source[i]);
             }
         }
 
@@ -91,7 +96,7 @@ public sealed partial class EnumerableConverterFactory
 
         public TDestination this[int index]
         {
-            get => (TDestination)converter(source[index]);
+            get => ConvertValue<TSource, TDestination>(converter, source[index]);
             set => throw new NotSupportedException();
         }
     }
@@ -104,11 +109,11 @@ public sealed partial class EnumerableConverterFactory
     {
         private readonly IList<TSource> source;
 
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
         private int index;
 
-        public ListConvertEnumerator(IList<TSource> source, Func<object, object> converter)
+        public ListConvertEnumerator(IList<TSource> source, Func<object, object?> converter)
         {
             this.source = source;
             this.converter = converter;
@@ -127,10 +132,10 @@ public sealed partial class EnumerableConverterFactory
         public TDestination Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (TDestination)converter(source[index]);
+            get => ConvertValue<TSource, TDestination>(converter, source[index]);
         }
 
-        object IEnumerator.Current => Current;
+        object? IEnumerator.Current => Current;
 
         public void Dispose()
         {
@@ -141,9 +146,9 @@ public sealed partial class EnumerableConverterFactory
     {
         private readonly IList<TSource> source;
 
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public ListConvertList(IList<TSource> source, Func<object, object> converter)
+        public ListConvertList(IList<TSource> source, Func<object, object?> converter)
         {
             this.source = source;
             this.converter = converter;
@@ -163,7 +168,7 @@ public sealed partial class EnumerableConverterFactory
         {
             for (var i = 0; i < source.Count; i++)
             {
-                array[arrayIndex + i] = (TDestination)converter(source[i]);
+                array[arrayIndex + i] = ConvertValue<TSource, TDestination>(converter, source[i]);
             }
         }
 
@@ -181,7 +186,7 @@ public sealed partial class EnumerableConverterFactory
 
         public TDestination this[int index]
         {
-            get => (TDestination)converter(source[index]);
+            get => ConvertValue<TSource, TDestination>(converter, source[index]);
             set => throw new NotSupportedException();
         }
     }
@@ -194,9 +199,9 @@ public sealed partial class EnumerableConverterFactory
     {
         private readonly ICollection<TSource> source;
 
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public CollectionConvertCollection(ICollection<TSource> source, Func<object, object> converter)
+        public CollectionConvertCollection(ICollection<TSource> source, Func<object, object?> converter)
         {
             this.source = source;
             this.converter = converter;
@@ -217,7 +222,7 @@ public sealed partial class EnumerableConverterFactory
             var i = 0;
             foreach (var value in source)
             {
-                array[arrayIndex + i] = (TDestination)converter(value);
+                array[arrayIndex + i] = ConvertValue<TSource, TDestination>(converter, value);
                 i++;
             }
         }
@@ -237,9 +242,9 @@ public sealed partial class EnumerableConverterFactory
     {
         private readonly IEnumerator<TSource> source;
 
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public EnumerableConvertEnumerator(IEnumerator<TSource> source, Func<object, object> converter)
+        public EnumerableConvertEnumerator(IEnumerator<TSource> source, Func<object, object?> converter)
         {
             this.source = source;
             this.converter = converter;
@@ -253,10 +258,10 @@ public sealed partial class EnumerableConverterFactory
         public TDestination Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (TDestination)converter(source.Current);
+            get => ConvertValue<TSource, TDestination>(converter, source.Current);
         }
 
-        object IEnumerator.Current => Current;
+        object? IEnumerator.Current => Current;
 
         public void Dispose()
         {
@@ -268,9 +273,9 @@ public sealed partial class EnumerableConverterFactory
     {
         private readonly IEnumerable<TSource> source;
 
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public EnumerableConvertEnumerable(IEnumerable<TSource> source, Func<object, object> converter)
+        public EnumerableConvertEnumerable(IEnumerable<TSource> source, Func<object, object?> converter)
         {
             this.source = source;
             this.converter = converter;

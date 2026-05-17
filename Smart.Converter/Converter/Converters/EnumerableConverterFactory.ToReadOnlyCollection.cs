@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Collections.ObjectModel;
@@ -67,9 +66,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromArrayConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyCollectionFromArrayConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyCollectionFromArrayConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -84,9 +83,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromListConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyCollectionFromListConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyCollectionFromListConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -101,9 +100,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromCollectionConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyCollectionFromCollectionConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyCollectionFromCollectionConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -114,7 +113,7 @@ public sealed partial class EnumerableConverterFactory
             var list = new List<TDestination>(sourceCollection.Count);
             foreach (var value in sourceCollection)
             {
-                list.Add((TDestination)converter(value));
+                list.Add(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return new ReadOnlyCollection<TDestination>(list);
@@ -125,9 +124,9 @@ public sealed partial class EnumerableConverterFactory
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyCollectionFromEnumerableConverter<TSource, TDestination> : IConverter
     {
-        private readonly Func<object, object> converter;
+        private readonly Func<object, object?> converter;
 
-        public OtherTypeReadOnlyCollectionFromEnumerableConverter(Func<object, object> converter)
+        public OtherTypeReadOnlyCollectionFromEnumerableConverter(Func<object, object?> converter)
         {
             this.converter = converter;
         }
@@ -137,7 +136,7 @@ public sealed partial class EnumerableConverterFactory
             var list = new List<TDestination>();
             foreach (var value in (IEnumerable<TSource>)source)
             {
-                list.Add((TDestination)converter(value));
+                list.Add(ConvertValue<TSource, TDestination>(converter, value));
             }
 
             return new ReadOnlyCollection<TDestination>(list);

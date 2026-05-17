@@ -1,11 +1,10 @@
-#nullable disable
 namespace Smart.Converter.Converters;
 
 using System.Globalization;
 
 public sealed class DateTimeConverterFactory : IConverterFactory
 {
-    private static readonly Dictionary<Type, Func<object, object>> DateTimeToTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> DateTimeToTickConverter = new()
     {
         { typeof(byte), static x => (byte)((DateTime)x).Ticks },
         { typeof(sbyte), static x => (sbyte)((DateTime)x).Ticks },
@@ -21,7 +20,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => (decimal)((DateTime)x).Ticks }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> DateTimeOffsetToTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> DateTimeOffsetToTickConverter = new()
     {
         { typeof(byte), static x => (byte)((DateTimeOffset)x).Ticks },
         { typeof(sbyte), static x => (sbyte)((DateTimeOffset)x).Ticks },
@@ -37,7 +36,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => (decimal)((DateTimeOffset)x).Ticks }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> TimeSpanToTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> TimeSpanToTickConverter = new()
     {
         { typeof(byte), static x => (byte)((TimeSpan)x).Ticks },
         { typeof(sbyte), static x => (sbyte)((TimeSpan)x).Ticks },
@@ -53,7 +52,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => (decimal)((TimeSpan)x).Ticks }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> DateTimeFromTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> DateTimeFromTickConverter = new()
     {
         { typeof(byte), static x => { try { return new DateTime((byte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
         { typeof(sbyte), static x => { try { return new DateTime((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
@@ -69,7 +68,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => { try { return new DateTime((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> NullableDateTimeFromTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> NullableDateTimeFromTickConverter = new()
     {
         { typeof(byte), static x => { try { return new DateTime((byte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
         { typeof(sbyte), static x => { try { return new DateTime((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
@@ -85,7 +84,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => { try { return new DateTime((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> DateTimeOffsetFromTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> DateTimeOffsetFromTickConverter = new()
     {
         { typeof(byte), static x => { try { return new DateTimeOffset(new DateTime((byte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
         { typeof(sbyte), static x => { try { return new DateTimeOffset(new DateTime((sbyte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
@@ -101,7 +100,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => { try { return new DateTimeOffset(new DateTime((long)(decimal)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> NullableDateTimeOffsetFromTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> NullableDateTimeOffsetFromTickConverter = new()
     {
         { typeof(byte), static x => { try { return new DateTimeOffset(new DateTime((byte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
         { typeof(sbyte), static x => { try { return new DateTimeOffset(new DateTime((sbyte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
@@ -117,7 +116,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => { try { return new DateTimeOffset(new DateTime((long)(decimal)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> TimeSpanFromTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> TimeSpanFromTickConverter = new()
     {
         { typeof(byte), static x => { try { return new TimeSpan((byte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
         { typeof(sbyte), static x => { try { return new TimeSpan((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
@@ -133,7 +132,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => { try { return new TimeSpan((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } }
     };
 
-    private static readonly Dictionary<Type, Func<object, object>> NullableTimeSpanFromTickConverter = new()
+    private static readonly Dictionary<Type, Func<object, object?>> NullableTimeSpanFromTickConverter = new()
     {
         { typeof(byte), static x => { try { return new TimeSpan((byte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
         { typeof(sbyte), static x => { try { return new TimeSpan((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
@@ -149,7 +148,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => { try { return new TimeSpan((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } }
     };
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         // From DateTime
         if (sourceType == typeof(DateTime))
@@ -215,16 +214,16 @@ public sealed class DateTimeConverterFactory : IConverterFactory
                 return static x => ((TimeSpan)x).ToString();
             }
 
-            var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
+            var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
 
             // TimeSpan to numeric
-            return TimeSpanToTickConverter.GetValueOrDefault(underlyingTargetType!);
+            return TimeSpanToTickConverter.GetValueOrDefault(underlyingTargetType);
         }
 
         // From string
         if (sourceType == typeof(string))
         {
-            var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
+            var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
 
             // String to DateTime(Nullable)
             if (underlyingTargetType == typeof(DateTime))

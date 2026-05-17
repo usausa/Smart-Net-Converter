@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter;
 
 using Smart.Converter.Converters;
@@ -72,12 +71,12 @@ public sealed class TestObjectConverter : IObjectConverter
         return true;
     }
 
-    public bool CanConvert<T>(object value)
+    public bool CanConvert<T>(object? value)
     {
         return objectConverter.CanConvert<T>(value);
     }
 
-    public bool CanConvert(object value, Type targetType)
+    public bool CanConvert(object? value, Type targetType)
     {
         return objectConverter.CanConvert(value, targetType);
     }
@@ -87,17 +86,17 @@ public sealed class TestObjectConverter : IObjectConverter
         return objectConverter.CanConvert(sourceType, targetType);
     }
 
-    public T Convert<T>(object value)
+    public T Convert<T>(object? value)
     {
-        return objectConverter.Convert<T>(value);
+        return objectConverter.Convert<T>(value)!;
     }
 
-    public object Convert(object value, Type targetType)
+    public object Convert(object? value, Type targetType)
     {
-        return objectConverter.Convert(value, targetType);
+        return objectConverter.Convert(value, targetType)!;
     }
 
-    public Func<object, object> CreateConverter(Type sourceType, Type targetType)
+    public Func<object, object?>? CreateConverter(Type sourceType, Type targetType)
     {
         return objectConverter.CreateConverter(sourceType, targetType);
     }

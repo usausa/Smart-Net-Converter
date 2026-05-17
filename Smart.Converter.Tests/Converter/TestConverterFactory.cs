@@ -1,4 +1,3 @@
-#nullable disable
 namespace Smart.Converter;
 
 public sealed class TestConverterFactory : IConverterFactory
@@ -12,7 +11,7 @@ public sealed class TestConverterFactory : IConverterFactory
         Factory = factory;
     }
 
-    public Func<object, object> GetConverter(IObjectConverter context, Type sourceType, Type targetType)
+    public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var converter = Factory.GetConverter(context, sourceType, targetType);
         if (converter is not null)

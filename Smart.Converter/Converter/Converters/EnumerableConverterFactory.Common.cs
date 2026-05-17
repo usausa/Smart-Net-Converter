@@ -2,7 +2,6 @@ namespace Smart.Converter.Converters;
 
 using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 public sealed partial class EnumerableConverterFactory
 {
@@ -10,7 +9,7 @@ public sealed partial class EnumerableConverterFactory
     private static TDestination ConvertValue<TSource, TDestination>(Func<object, object?> converter, TSource value)
     {
         var boxed = typeof(TSource).IsValueType
-            ? (object)value!
+            ? value!
             : Unsafe.As<TSource, object>(ref value);
         var result = converter(boxed)!;
         return typeof(TDestination).IsValueType

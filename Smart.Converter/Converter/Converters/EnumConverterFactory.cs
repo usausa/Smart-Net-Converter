@@ -1,5 +1,7 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
+
 public sealed class EnumConverterFactory : IConverterFactory
 {
     private static readonly HashSet<Type> UnderlyingTypes =
@@ -99,6 +101,8 @@ public sealed class EnumConverterFactory : IConverterFactory
         { (typeof(ulong), typeof(char)), static x => (char)(ulong)x }
     };
 
+    [RequiresDynamicCode("EnumConverterFactory uses MakeGenericType at runtime.")]
+    [RequiresUnreferencedCode("EnumConverterFactory uses reflection on enum types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var sourceEnumType = sourceType.GetEnumType();

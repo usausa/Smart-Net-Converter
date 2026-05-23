@@ -1,14 +1,17 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using Smart.Reflection;
 
 public sealed class ConstructorConverterFactory : IConverterFactory
 {
+#pragma warning disable IL2026, IL3050
     private static readonly MethodInfo CreateMethod = typeof(ConstructorConverterFactory).GetMethod(nameof(CreateConverter), BindingFlags.NonPublic | BindingFlags.Static)!;
 
     private static readonly MethodInfo CreateWithConvertMethod = typeof(ConstructorConverterFactory).GetMethod(nameof(CreateConverterWithConvert), BindingFlags.NonPublic | BindingFlags.Static)!;
+#pragma warning restore IL2026, IL3050
 
     private readonly IDelegateFactory delegateFactory;
 
@@ -22,6 +25,8 @@ public sealed class ConstructorConverterFactory : IConverterFactory
         this.delegateFactory = delegateFactory;
     }
 
+    [RequiresDynamicCode("ConstructorConverterFactory uses MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("ConstructorConverterFactory uses reflection to find constructors at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var ci = targetType.GetConstructor([sourceType]);
@@ -48,12 +53,16 @@ public sealed class ConstructorConverterFactory : IConverterFactory
         return null;
     }
 
+    [RequiresDynamicCode("ConstructorConverterFactory uses MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("ConstructorConverterFactory uses reflection to find constructors at runtime.")]
     private static Func<object, object?> CreateConverter<TParameter, TTarget>(IDelegateFactory delegateFactory)
     {
         var factory = delegateFactory.CreateFactory<TParameter, TTarget>();
         return x => factory((TParameter)x);
     }
 
+    [RequiresDynamicCode("ConstructorConverterFactory uses MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("ConstructorConverterFactory uses reflection to find constructors at runtime.")]
     private static Func<object, object?> CreateConverterWithConvert<TParameter, TTarget>(IDelegateFactory delegateFactory, Func<object, object?> converter)
     {
         var factory = delegateFactory.CreateFactory<TParameter, TTarget>();

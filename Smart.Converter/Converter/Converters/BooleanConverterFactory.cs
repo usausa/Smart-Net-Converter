@@ -1,5 +1,7 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
+
 public sealed class BooleanConverterFactory : IConverterFactory
 {
     private static readonly object BoolFalse = false;
@@ -72,6 +74,8 @@ public sealed class BooleanConverterFactory : IConverterFactory
         { typeof(decimal), static x => (decimal)x != default ? BoolTrue : BoolFalse }
     };
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         if (sourceType == typeof(bool))

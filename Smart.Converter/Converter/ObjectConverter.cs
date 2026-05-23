@@ -1,17 +1,22 @@
 namespace Smart.Converter;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 using Smart.Converter.Converters;
 
 public sealed class ObjectConverter : IObjectConverter
 {
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Default instance is created intentionally with reflection-based factories.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Default instance is created intentionally with reflection-based factories.")]
     public static ObjectConverter Default { get; } = new();
 
     private readonly TypePairHashArray converterCache = new();
 
     private IConverterFactory[] factories;
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public ObjectConverter()
     {
         factories = DefaultObjectFactories.Create();
@@ -38,6 +43,8 @@ public sealed class ObjectConverter : IObjectConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     private Func<object, object?>? FindConverter(Type sourceType, Type targetType)
     {
         var factoriesLocal = factories;
@@ -54,6 +61,8 @@ public sealed class ObjectConverter : IObjectConverter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     private Func<object, object?>? GetConverter(Type sourceType, Type targetType)
     {
         if (!converterCache.TryGetValue(sourceType, targetType, out var converter))
@@ -64,11 +73,15 @@ public sealed class ObjectConverter : IObjectConverter
         return converter;
     }
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public bool CanConvert<T>(object? value)
     {
         return CanConvert(value, typeof(T));
     }
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public bool CanConvert(object? value, Type targetType)
     {
         if (value is null)
@@ -85,17 +98,23 @@ public sealed class ObjectConverter : IObjectConverter
         return GetConverter(sourceType, targetType) is not null;
     }
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public bool CanConvert(Type sourceType, Type targetType)
     {
         return GetConverter(sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType)! : sourceType, targetType) is not null;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public T? Convert<T>(object? value)
     {
         return (T?)Convert(value, typeof(T));
     }
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public object? Convert(object? value, Type targetType)
     {
         // Specialized null
@@ -120,6 +139,8 @@ public sealed class ObjectConverter : IObjectConverter
         return converter(value);
     }
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object?, object?>? CreateConverter(Type sourceType, Type targetType)
     {
         var converter = GetConverter(sourceType.IsNullableType() ? Nullable.GetUnderlyingType(sourceType)! : sourceType, targetType);

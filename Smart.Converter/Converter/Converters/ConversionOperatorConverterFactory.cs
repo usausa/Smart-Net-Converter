@@ -1,11 +1,16 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 public sealed class ConversionOperatorConverterFactory : IConverterFactory
 {
+#pragma warning disable IL2026, IL3050
     private static readonly MethodInfo CreateMethod = typeof(ConversionOperatorConverterFactory).GetMethod(nameof(CreateConverter), BindingFlags.NonPublic | BindingFlags.Static)!;
+#pragma warning restore IL2026, IL3050
 
+    [RequiresDynamicCode("ConversionOperatorConverterFactory uses MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("ConversionOperatorConverterFactory uses reflection to find conversion operators at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
@@ -43,6 +48,7 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
         return null;
     }
 
+    [RequiresUnreferencedCode("ConversionOperatorConverterFactory uses reflection to find conversion operators at runtime.")]
     private static MethodInfo? GetImplicitConversionOperator(Type sourceType, Type targetType)
     {
         var sourceTypeMethod = sourceType
@@ -62,6 +68,7 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
                        IsMatchParameterType(mi.GetParameters()[0].ParameterType, sourceType));
     }
 
+    [RequiresUnreferencedCode("ConversionOperatorConverterFactory uses reflection to find conversion operators at runtime.")]
     private static MethodInfo? GetExplicitConversionOperator(Type sourceType, Type targetType)
     {
         var sourceTypeMethod = sourceType
@@ -88,9 +95,12 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
             : parameterType == sourceType;
     }
 
+    [RequiresDynamicCode("ConversionOperatorConverterFactory uses MakeGenericMethod at runtime.")]
     private static Func<object, object?> BuildConverter(MethodInfo mi)
     {
+#pragma warning disable IL2060
         var method = CreateMethod.MakeGenericMethod(mi.ReturnType);
+#pragma warning restore IL2060
         return (Func<object, object?>)method.Invoke(null, [mi])!;
     }
 

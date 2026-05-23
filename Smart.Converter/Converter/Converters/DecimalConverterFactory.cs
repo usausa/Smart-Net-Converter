@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 public sealed class DecimalConverterFactory : IConverterFactory
@@ -58,6 +59,8 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(string), typeof(decimal?)), static x => Decimal.TryParse((string)x, out var result) ? result : default(decimal?) }
     };
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var key = (sourceType, targetType);

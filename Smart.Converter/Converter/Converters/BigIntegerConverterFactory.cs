@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 public sealed class BigIntegerConverterFactory : IConverterFactory
@@ -64,6 +65,8 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
     };
 #pragma warning restore CA1305
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         return Converters.GetValueOrDefault((sourceType, targetType));

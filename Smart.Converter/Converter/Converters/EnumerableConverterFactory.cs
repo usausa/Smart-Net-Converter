@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 public sealed partial class EnumerableConverterFactory : IConverterFactory
 {
@@ -53,6 +54,8 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
         { typeof(ConcurrentBag<>), new ProviderPair(SameTypeConcurrentBagProvider.Default, OtherTypeConcurrentBagProvider.Default) }
     };
 
+    [RequiresDynamicCode("EnumerableConverterFactory uses MakeGenericType at runtime.")]
+    [RequiresUnreferencedCode("EnumerableConverterFactory uses reflection on enumerable types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         // To Array
@@ -117,6 +120,7 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
     // Helper
     //--------------------------------------------------------------------------------
 
+    [RequiresUnreferencedCode("EnumerableConverterFactory uses reflection on enumerable types at runtime.")]
     private static Type? ResolveEnumerableType(Type type, out SourceEnumerableType sourceEnumerableType)
     {
         if (type.IsArray)

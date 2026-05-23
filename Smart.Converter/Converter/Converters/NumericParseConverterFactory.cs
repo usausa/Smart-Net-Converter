@@ -1,5 +1,7 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
+
 public sealed class NumericParseConverterFactory : IConverterFactory
 {
     private static readonly Dictionary<Type, Func<object, object?>> Converters = new()
@@ -28,6 +30,8 @@ public sealed class NumericParseConverterFactory : IConverterFactory
         { typeof(float?), static x => Single.TryParse((string)x, out var result) ? result : default(float?) }
     };
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         if ((sourceType == typeof(string)) &&

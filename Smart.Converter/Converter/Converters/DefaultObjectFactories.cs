@@ -1,7 +1,11 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
+
 public static class DefaultObjectFactories
 {
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public static IConverterFactory[] Create()
     {
         return

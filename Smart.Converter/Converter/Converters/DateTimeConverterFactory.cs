@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 public sealed class DateTimeConverterFactory : IConverterFactory
@@ -148,6 +149,8 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => { try { return new TimeSpan((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } }
     };
 
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         // From DateTime

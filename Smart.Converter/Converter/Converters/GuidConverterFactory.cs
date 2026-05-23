@@ -1,7 +1,11 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
+
 public sealed class GuidConverterFactory : IConverterFactory
 {
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         if ((sourceType == typeof(Guid)) && (targetType == typeof(string)))

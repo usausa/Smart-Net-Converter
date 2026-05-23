@@ -1,9 +1,13 @@
 namespace Smart.Converter.Converters;
 
+using System.Diagnostics.CodeAnalysis;
+
 using Smart.ComponentModel;
 
 public sealed class ValueHolderConverterFactory : IConverterFactory
 {
+    [RequiresDynamicCode("ValueHolderConverterFactory uses MakeGenericType at runtime.")]
+    [RequiresUnreferencedCode("ValueHolderConverterFactory uses reflection on ValueHolder types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         var isSourceValueType = ValueHolderHelper.IsValueHolderType(sourceType);

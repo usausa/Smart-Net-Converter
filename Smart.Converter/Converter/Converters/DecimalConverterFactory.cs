@@ -7,7 +7,7 @@ public sealed class DecimalConverterFactory : IConverterFactory
 {
     private static readonly Dictionary<(Type, Type), Func<object, object?>> Converters = new()
     {
-        // From decimal
+        // From decimal to integer (kept as try/catch: Decimal.ToXxx rounds and throws at the range
         { (typeof(decimal), typeof(byte)), static x => { try { return Decimal.ToByte((decimal)x); } catch (OverflowException) { return default(byte); } } },
         { (typeof(decimal), typeof(byte?)), static x => { try { return Decimal.ToByte((decimal)x); } catch (OverflowException) { return default(byte?); } } },
         { (typeof(decimal), typeof(sbyte)), static x => { try { return Decimal.ToSByte((decimal)x); } catch (OverflowException) { return default(sbyte); } } },
@@ -26,10 +26,11 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(decimal), typeof(ulong?)), static x => { try { return Decimal.ToUInt64((decimal)x); } catch (OverflowException) { return default(ulong?); } } },
         { (typeof(decimal), typeof(char)), static x => { try { return (char)Decimal.ToUInt16((decimal)x); } catch (OverflowException) { return default(char); } } },
         { (typeof(decimal), typeof(char?)), static x => { try { return (char)Decimal.ToUInt16((decimal)x); } catch (OverflowException) { return default(char?); } } },
-        { (typeof(decimal), typeof(double)), static x => { try { return Decimal.ToDouble((decimal)x); } catch (OverflowException) { return default(double); } } },
-        { (typeof(decimal), typeof(double?)), static x => { try { return Decimal.ToDouble((decimal)x); } catch (OverflowException) { return default(double?); } } },
-        { (typeof(decimal), typeof(float)), static x => { try { return Decimal.ToSingle((decimal)x); } catch (OverflowException) { return default(float); } } },
-        { (typeof(decimal), typeof(float?)), static x => { try { return Decimal.ToSingle((decimal)x); } catch (OverflowException) { return default(float?); } } },
+        // decimal to double/float: double/float have a wider range than decimal, so Decimal.ToDouble/ToSingle never overflow (no catch needed)
+        { (typeof(decimal), typeof(double)), static x => Decimal.ToDouble((decimal)x) },
+        { (typeof(decimal), typeof(double?)), static x => Decimal.ToDouble((decimal)x) },
+        { (typeof(decimal), typeof(float)), static x => Decimal.ToSingle((decimal)x) },
+        { (typeof(decimal), typeof(float?)), static x => Decimal.ToSingle((decimal)x) },
         { (typeof(decimal), typeof(string)), static x => ((decimal)x).ToString(CultureInfo.CurrentCulture) },
         // To Decimal
         { (typeof(byte), typeof(decimal)), static x => new decimal((byte)x) },
@@ -41,6 +42,7 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(long), typeof(decimal)), static x => new decimal((long)x) },
         { (typeof(ulong), typeof(decimal)), static x => new decimal((ulong)x) },
         { (typeof(char), typeof(decimal)), static x => new decimal((char)x) },
+        // double/float to decimal (kept as try/catch: new decimal(double/float) throws when out of range
         { (typeof(double), typeof(decimal)), static x => { try { return new decimal((double)x); } catch (OverflowException) { return default(decimal); } } },
         { (typeof(float), typeof(decimal)), static x => { try { return new decimal((float)x); } catch (OverflowException) { return default(decimal); } } },
         { (typeof(string), typeof(decimal)), static x => Decimal.TryParse((string)x, out var result) ? result : default },

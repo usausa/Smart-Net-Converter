@@ -5,6 +5,8 @@ using System.Globalization;
 
 public sealed class DateTimeConverterFactory : IConverterFactory
 {
+    private static readonly long DateTimeMaxTicks = DateTime.MaxValue.Ticks;
+
     private static readonly Dictionary<Type, Func<object, object?>> DateTimeToTickConverter = new()
     {
         { typeof(byte), static x => (byte)((DateTime)x).Ticks },
@@ -53,101 +55,151 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => (decimal)((TimeSpan)x).Ticks }
     };
 
+    // Numeric to DateTime: new DateTime(ticks) throws for ticks outside [0, DateTime.MaxValue.Ticks].
+    // The range is pre-checked (out-of-range returns default) so the hot path avoids try/catch.
     private static readonly Dictionary<Type, Func<object, object?>> DateTimeFromTickConverter = new()
     {
-        { typeof(byte), static x => { try { return new DateTime((byte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(sbyte), static x => { try { return new DateTime((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(short), static x => { try { return new DateTime((short)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(ushort), static x => { try { return new DateTime((ushort)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(int), static x => { try { return new DateTime((int)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(uint), static x => { try { return new DateTime((uint)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(long), static x => { try { return new DateTime((long)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(ulong), static x => { try { return new DateTime((long)(ulong)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(char), static x => { try { return new DateTime((char)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(double), static x => { try { return new DateTime((long)(double)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(float), static x => { try { return new DateTime((long)(float)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } },
-        { typeof(decimal), static x => { try { return new DateTime((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(DateTime); } } }
+        { typeof(byte), static x => DateTimeFromTicks((byte)x) },
+        { typeof(sbyte), static x => DateTimeFromTicks((sbyte)x) },
+        { typeof(short), static x => DateTimeFromTicks((short)x) },
+        { typeof(ushort), static x => DateTimeFromTicks((ushort)x) },
+        { typeof(int), static x => DateTimeFromTicks((int)x) },
+        { typeof(uint), static x => DateTimeFromTicks((uint)x) },
+        { typeof(long), static x => DateTimeFromTicks((long)x) },
+        { typeof(ulong), static x => DateTimeFromTicks((long)(ulong)x) },
+        { typeof(char), static x => DateTimeFromTicks((char)x) },
+        { typeof(double), static x => DateTimeFromTicks((long)(double)x) },
+        { typeof(float), static x => DateTimeFromTicks((long)(float)x) },
+        { typeof(decimal), static x => DateTimeFromTicks((long)(decimal)x) }
     };
 
     private static readonly Dictionary<Type, Func<object, object?>> NullableDateTimeFromTickConverter = new()
     {
-        { typeof(byte), static x => { try { return new DateTime((byte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(sbyte), static x => { try { return new DateTime((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(short), static x => { try { return new DateTime((short)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(ushort), static x => { try { return new DateTime((ushort)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(int), static x => { try { return new DateTime((int)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(uint), static x => { try { return new DateTime((uint)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(long), static x => { try { return new DateTime((long)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(ulong), static x => { try { return new DateTime((long)(ulong)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(char), static x => { try { return new DateTime((char)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(double), static x => { try { return new DateTime((long)(double)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(float), static x => { try { return new DateTime((long)(float)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } },
-        { typeof(decimal), static x => { try { return new DateTime((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(DateTime?); } } }
+        { typeof(byte), static x => NullableDateTimeFromTicks((byte)x) },
+        { typeof(sbyte), static x => NullableDateTimeFromTicks((sbyte)x) },
+        { typeof(short), static x => NullableDateTimeFromTicks((short)x) },
+        { typeof(ushort), static x => NullableDateTimeFromTicks((ushort)x) },
+        { typeof(int), static x => NullableDateTimeFromTicks((int)x) },
+        { typeof(uint), static x => NullableDateTimeFromTicks((uint)x) },
+        { typeof(long), static x => NullableDateTimeFromTicks((long)x) },
+        { typeof(ulong), static x => NullableDateTimeFromTicks((long)(ulong)x) },
+        { typeof(char), static x => NullableDateTimeFromTicks((char)x) },
+        { typeof(double), static x => NullableDateTimeFromTicks((long)(double)x) },
+        { typeof(float), static x => NullableDateTimeFromTicks((long)(float)x) },
+        { typeof(decimal), static x => NullableDateTimeFromTicks((long)(decimal)x) }
     };
 
+    // Numeric to DateTimeOffset: the DateTime ticks are pre-checked to remove the bulk of the
+    // out-of-range exceptions; a thin catch remains only for the local-offset boundary (see helper).
     private static readonly Dictionary<Type, Func<object, object?>> DateTimeOffsetFromTickConverter = new()
     {
-        { typeof(byte), static x => { try { return new DateTimeOffset(new DateTime((byte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(sbyte), static x => { try { return new DateTimeOffset(new DateTime((sbyte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(short), static x => { try { return new DateTimeOffset(new DateTime((short)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(ushort), static x => { try { return new DateTimeOffset(new DateTime((ushort)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(int), static x => { try { return new DateTimeOffset(new DateTime((int)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(uint), static x => { try { return new DateTimeOffset(new DateTime((uint)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(long), static x => { try { return new DateTimeOffset(new DateTime((long)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(ulong), static x => { try { return new DateTimeOffset(new DateTime((long)(ulong)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(char), static x => { try { return new DateTimeOffset(new DateTime((char)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(double), static x => { try { return new DateTimeOffset(new DateTime((long)(double)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(float), static x => { try { return new DateTimeOffset(new DateTime((long)(float)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } },
-        { typeof(decimal), static x => { try { return new DateTimeOffset(new DateTime((long)(decimal)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset); } } }
+        { typeof(byte), static x => DateTimeOffsetFromTicks((byte)x) },
+        { typeof(sbyte), static x => DateTimeOffsetFromTicks((sbyte)x) },
+        { typeof(short), static x => DateTimeOffsetFromTicks((short)x) },
+        { typeof(ushort), static x => DateTimeOffsetFromTicks((ushort)x) },
+        { typeof(int), static x => DateTimeOffsetFromTicks((int)x) },
+        { typeof(uint), static x => DateTimeOffsetFromTicks((uint)x) },
+        { typeof(long), static x => DateTimeOffsetFromTicks((long)x) },
+        { typeof(ulong), static x => DateTimeOffsetFromTicks((long)(ulong)x) },
+        { typeof(char), static x => DateTimeOffsetFromTicks((char)x) },
+        { typeof(double), static x => DateTimeOffsetFromTicks((long)(double)x) },
+        { typeof(float), static x => DateTimeOffsetFromTicks((long)(float)x) },
+        { typeof(decimal), static x => DateTimeOffsetFromTicks((long)(decimal)x) }
     };
 
     private static readonly Dictionary<Type, Func<object, object?>> NullableDateTimeOffsetFromTickConverter = new()
     {
-        { typeof(byte), static x => { try { return new DateTimeOffset(new DateTime((byte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(sbyte), static x => { try { return new DateTimeOffset(new DateTime((sbyte)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(short), static x => { try { return new DateTimeOffset(new DateTime((short)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(ushort), static x => { try { return new DateTimeOffset(new DateTime((ushort)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(int), static x => { try { return new DateTimeOffset(new DateTime((int)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(uint), static x => { try { return new DateTimeOffset(new DateTime((uint)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(long), static x => { try { return new DateTimeOffset(new DateTime((long)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(ulong), static x => { try { return new DateTimeOffset(new DateTime((long)(ulong)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(char), static x => { try { return new DateTimeOffset(new DateTime((char)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(double), static x => { try { return new DateTimeOffset(new DateTime((long)(double)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(float), static x => { try { return new DateTimeOffset(new DateTime((long)(float)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } },
-        { typeof(decimal), static x => { try { return new DateTimeOffset(new DateTime((long)(decimal)x)); } catch (ArgumentOutOfRangeException) { return default(DateTimeOffset?); } } }
+        { typeof(byte), static x => NullableDateTimeOffsetFromTicks((byte)x) },
+        { typeof(sbyte), static x => NullableDateTimeOffsetFromTicks((sbyte)x) },
+        { typeof(short), static x => NullableDateTimeOffsetFromTicks((short)x) },
+        { typeof(ushort), static x => NullableDateTimeOffsetFromTicks((ushort)x) },
+        { typeof(int), static x => NullableDateTimeOffsetFromTicks((int)x) },
+        { typeof(uint), static x => NullableDateTimeOffsetFromTicks((uint)x) },
+        { typeof(long), static x => NullableDateTimeOffsetFromTicks((long)x) },
+        { typeof(ulong), static x => NullableDateTimeOffsetFromTicks((long)(ulong)x) },
+        { typeof(char), static x => NullableDateTimeOffsetFromTicks((char)x) },
+        { typeof(double), static x => NullableDateTimeOffsetFromTicks((long)(double)x) },
+        { typeof(float), static x => NullableDateTimeOffsetFromTicks((long)(float)x) },
+        { typeof(decimal), static x => NullableDateTimeOffsetFromTicks((long)(decimal)x) }
     };
 
+    // Numeric to TimeSpan: new TimeSpan(long) accepts every long value and never throws, so the
+    // previous try/catch(ArgumentOutOfRangeException) was unreachable dead code and is removed.
     private static readonly Dictionary<Type, Func<object, object?>> TimeSpanFromTickConverter = new()
     {
-        { typeof(byte), static x => { try { return new TimeSpan((byte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(sbyte), static x => { try { return new TimeSpan((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(short), static x => { try { return new TimeSpan((short)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(ushort), static x => { try { return new TimeSpan((ushort)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(int), static x => { try { return new TimeSpan((int)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(uint), static x => { try { return new TimeSpan((uint)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(long), static x => { try { return new TimeSpan((long)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(ulong), static x => { try { return new TimeSpan((long)(ulong)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(char), static x => { try { return new TimeSpan((char)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(double), static x => { try { return new TimeSpan((long)(double)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(float), static x => { try { return new TimeSpan((long)(float)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } },
-        { typeof(decimal), static x => { try { return new TimeSpan((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan); } } }
+        { typeof(byte), static x => new TimeSpan((byte)x) },
+        { typeof(sbyte), static x => new TimeSpan((sbyte)x) },
+        { typeof(short), static x => new TimeSpan((short)x) },
+        { typeof(ushort), static x => new TimeSpan((ushort)x) },
+        { typeof(int), static x => new TimeSpan((int)x) },
+        { typeof(uint), static x => new TimeSpan((uint)x) },
+        { typeof(long), static x => new TimeSpan((long)x) },
+        { typeof(ulong), static x => new TimeSpan((long)(ulong)x) },
+        { typeof(char), static x => new TimeSpan((char)x) },
+        { typeof(double), static x => new TimeSpan((long)(double)x) },
+        { typeof(float), static x => new TimeSpan((long)(float)x) },
+        { typeof(decimal), static x => new TimeSpan((long)(decimal)x) }
     };
 
     private static readonly Dictionary<Type, Func<object, object?>> NullableTimeSpanFromTickConverter = new()
     {
-        { typeof(byte), static x => { try { return new TimeSpan((byte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(sbyte), static x => { try { return new TimeSpan((sbyte)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(short), static x => { try { return new TimeSpan((short)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(ushort), static x => { try { return new TimeSpan((ushort)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(int), static x => { try { return new TimeSpan((int)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(uint), static x => { try { return new TimeSpan((uint)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(long), static x => { try { return new TimeSpan((long)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(ulong), static x => { try { return new TimeSpan((long)(ulong)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(char), static x => { try { return new TimeSpan((char)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(double), static x => { try { return new TimeSpan((long)(double)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(float), static x => { try { return new TimeSpan((long)(float)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } },
-        { typeof(decimal), static x => { try { return new TimeSpan((long)(decimal)x); } catch (ArgumentOutOfRangeException) { return default(TimeSpan?); } } }
+        { typeof(byte), static x => new TimeSpan((byte)x) },
+        { typeof(sbyte), static x => new TimeSpan((sbyte)x) },
+        { typeof(short), static x => new TimeSpan((short)x) },
+        { typeof(ushort), static x => new TimeSpan((ushort)x) },
+        { typeof(int), static x => new TimeSpan((int)x) },
+        { typeof(uint), static x => new TimeSpan((uint)x) },
+        { typeof(long), static x => new TimeSpan((long)x) },
+        { typeof(ulong), static x => new TimeSpan((long)(ulong)x) },
+        { typeof(char), static x => new TimeSpan((char)x) },
+        { typeof(double), static x => new TimeSpan((long)(double)x) },
+        { typeof(float), static x => new TimeSpan((long)(float)x) },
+        { typeof(decimal), static x => new TimeSpan((long)(decimal)x) }
     };
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private static DateTime DateTimeFromTicks(long ticks) =>
+        (ulong)ticks <= (ulong)DateTimeMaxTicks ? new DateTime(ticks) : default;
+
+    private static DateTime? NullableDateTimeFromTicks(long ticks) =>
+        (ulong)ticks <= (ulong)DateTimeMaxTicks ? new DateTime(ticks) : default(DateTime?);
+
+    private static DateTimeOffset DateTimeOffsetFromTicks(long ticks)
+    {
+        if ((ulong)ticks > (ulong)DateTimeMaxTicks)
+        {
+            return default;
+        }
+
+        try
+        {
+            return new DateTimeOffset(new DateTime(ticks));
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return default;
+        }
+    }
+
+    private static DateTimeOffset? NullableDateTimeOffsetFromTicks(long ticks)
+    {
+        if ((ulong)ticks > (ulong)DateTimeMaxTicks)
+        {
+            return default;
+        }
+
+        try
+        {
+            return new DateTimeOffset(new DateTime(ticks));
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return default;
+        }
+    }
 
     [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
     [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]

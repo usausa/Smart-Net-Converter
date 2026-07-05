@@ -56,7 +56,7 @@ public sealed partial class EnumerableConverterFactory
 
         public object Convert(object source)
         {
-            var collection = new HashSet<TDestination>();
+            var collection = source is ICollection<TSource> sourceCollection ? new HashSet<TDestination>(sourceCollection.Count) : new HashSet<TDestination>();
             foreach (var value in (IEnumerable<TSource>)source)
             {
                 collection.Add(ConvertValue<TSource, TDestination>(converter, value));

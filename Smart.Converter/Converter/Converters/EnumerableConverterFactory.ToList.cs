@@ -1,5 +1,8 @@
 namespace Smart.Converter.Converters;
 
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 public sealed partial class EnumerableConverterFactory
 {
     private sealed class SameTypeListProvider : IEnumerableConverterProvider
@@ -58,7 +61,15 @@ public sealed partial class EnumerableConverterFactory
 
         public object Convert(object source)
         {
-            return new List<TDestination>(new ArrayConvertList<TSource, TDestination>((TSource[])source, converter));
+            var sourceArray = (TSource[])source;
+            var list = new List<TDestination>(sourceArray.Length);
+            ref var sourceReference = ref MemoryMarshal.GetArrayDataReference(sourceArray);
+            for (var i = 0; i < sourceArray.Length; i++)
+            {
+                list.Add(ConvertValue<TSource, TDestination>(converter, Unsafe.Add(ref sourceReference, i)));
+            }
+
+            return list;
         }
     }
 #pragma warning restore CA1812
@@ -75,7 +86,15 @@ public sealed partial class EnumerableConverterFactory
 
         public object Convert(object source)
         {
-            return new List<TDestination>(new ListConvertList<TSource, TDestination>((IList<TSource>)source, converter));
+            var sourceList = (IList<TSource>)source;
+            var count = sourceList.Count;
+            var list = new List<TDestination>(count);
+            for (var i = 0; i < count; i++)
+            {
+                list.Add(ConvertValue<TSource, TDestination>(converter, sourceList[i]));
+            }
+
+            return list;
         }
     }
 #pragma warning restore CA1812

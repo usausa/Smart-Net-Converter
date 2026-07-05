@@ -1,6 +1,8 @@
 namespace Smart.Converter.Converters;
 
-using System.Collections;
+using System.Buffers;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 public sealed partial class EnumerableConverterFactory
 {
@@ -59,12 +61,18 @@ public sealed partial class EnumerableConverterFactory
     {
         public object Convert(object source)
         {
-            var buffer = new ArrayBuffer<TDestination>(0);
-            foreach (var value in (IEnumerable)source)
+            if (source is ICollection<TDestination> sourceCollection)
             {
-                buffer.Add((TDestination)value);
+                var array = new TDestination[sourceCollection.Count];
+                sourceCollection.CopyTo(array, 0);
+                return array;
             }
 
+            using var buffer = new ArrayBuffer<TDestination>(0);
+            foreach (var value in (IEnumerable<TDestination>)source)
+            {
+                buffer.Add(value);
+            }
             return buffer.ToArray();
         }
     }
@@ -88,11 +96,11 @@ public sealed partial class EnumerableConverterFactory
         {
             var sourceArray = (TSource[])source;
             var array = new TDestination[sourceArray.Length];
-            var sourceSpan = sourceArray.AsSpan();
-            var destinationSpan = array.AsSpan();
-            for (var i = 0; i < sourceSpan.Length; i++)
+            ref var sourceReference = ref MemoryMarshal.GetArrayDataReference(sourceArray);
+            ref var destinationReference = ref MemoryMarshal.GetArrayDataReference(array);
+            for (var i = 0; i < sourceArray.Length; i++)
             {
-                destinationSpan[i] = ConvertValue<TSource, TDestination>(converter, sourceSpan[i]);
+                Unsafe.Add(ref destinationReference, i) = ConvertValue<TSource, TDestination>(converter, Unsafe.Add(ref sourceReference, i));
             }
 
             return array;
@@ -113,8 +121,9 @@ public sealed partial class EnumerableConverterFactory
         public object Convert(object source)
         {
             var sourceList = (IList<TSource>)source;
-            var array = new TDestination[sourceList.Count];
-            for (var i = 0; i < sourceList.Count; i++)
+            var count = sourceList.Count;
+            var array = new TDestination[count];
+            for (var i = 0; i < count; i++)
             {
                 array[i] = ConvertValue<TSource, TDestination>(converter, sourceList[i]);
             }
@@ -137,12 +146,21 @@ public sealed partial class EnumerableConverterFactory
         public object Convert(object source)
         {
             var sourceCollection = (ICollection<TSource>)source;
-            var array = new TDestination[sourceCollection.Count];
-            var index = 0;
-            foreach (var value in sourceCollection)
+            var count = sourceCollection.Count;
+            var array = new TDestination[count];
+
+            var buffer = ArrayPool<TSource>.Shared.Rent(count);
+            try
             {
-                array[index] = ConvertValue<TSource, TDestination>(converter, value);
-                index++;
+                sourceCollection.CopyTo(buffer, 0);
+                for (var i = 0; i < count; i++)
+                {
+                    array[i] = ConvertValue<TSource, TDestination>(converter, buffer[i]);
+                }
+            }
+            finally
+            {
+                ArrayPool<TSource>.Shared.Return(buffer, RuntimeHelpers.IsReferenceOrContainsReferences<TSource>());
             }
 
             return array;
@@ -162,14 +180,13 @@ public sealed partial class EnumerableConverterFactory
 
         public object Convert(object source)
         {
-            var buffer = new ArrayBuffer<TDestination>(0);
+            using var buffer = new ArrayBuffer<TDestination>(0);
             foreach (var value in (IEnumerable<TSource>)source)
             {
                 buffer.Add(ConvertValue<TSource, TDestination>(converter, value));
             }
-
             return buffer.ToArray();
         }
     }
-#pragma warning disable CA1812
+#pragma warning restore CA1812
 }

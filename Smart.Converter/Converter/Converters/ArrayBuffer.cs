@@ -1,6 +1,9 @@
 namespace Smart.Converter.Converters;
 
-internal struct ArrayBuffer<T>
+using System.Buffers;
+using System.Runtime.CompilerServices;
+
+internal struct ArrayBuffer<T> : IDisposable
 {
     private T[] buffer;
 
@@ -8,7 +11,7 @@ internal struct ArrayBuffer<T>
 
     public ArrayBuffer(int initialSize)
     {
-        buffer = initialSize > 0 ? new T[initialSize] : [];
+        buffer = initialSize > 0 ? ArrayPool<T>.Shared.Rent(initialSize) : [];
         size = 0;
     }
 
@@ -16,22 +19,39 @@ internal struct ArrayBuffer<T>
     {
         if (size >= buffer.Length)
         {
-            Array.Resize(ref buffer, size == 0 ? 4 : size << 1);
+            var newBuffer = ArrayPool<T>.Shared.Rent(size == 0 ? 4 : size << 1);
+            buffer.AsSpan(0, size).CopyTo(newBuffer);
+            if (buffer.Length > 0)
+            {
+                ArrayPool<T>.Shared.Return(buffer, RuntimeHelpers.IsReferenceOrContainsReferences<T>());
+            }
+
+            buffer = newBuffer;
         }
 
-        buffer[size] = value;
-        size++;
+        buffer[size++] = value;
     }
 
     public readonly T[] ToArray()
     {
-        if (buffer.Length == size)
+        if (size == 0)
         {
-            return buffer;
+            return [];
         }
 
         var array = new T[size];
-        Array.Copy(buffer, array, size);
+        buffer.AsSpan(0, size).CopyTo(array);
         return array;
+    }
+
+    public void Dispose()
+    {
+        if (buffer.Length > 0)
+        {
+            ArrayPool<T>.Shared.Return(buffer, RuntimeHelpers.IsReferenceOrContainsReferences<T>());
+        }
+
+        buffer = [];
+        size = 0;
     }
 }

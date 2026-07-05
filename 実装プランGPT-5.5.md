@@ -30,34 +30,6 @@
 
 ---
 
-## フェーズ 5: 負例キャッシュの診断情報追加（非破壊・加算のみ）
-
-**対象:** `Smart.Converter/Converter/TypePairHashArray.cs` / `Smart.Converter/Converter/ObjectConverter.cs`
-**レビュー対応:** 「中: 変換不可もキャッシュするためキャッシュが肥大化」「低: 診断情報の内訳が少ない」
-**狙い:** 正例/負例の内訳を可視化し、未知型ペアが多い環境でのキャッシュ肥大の原因分析を容易にする。挙動（負例もキャッシュ）は維持。
-
-### 実装詳細
-
-- `TypePairHashArray` に負例件数（`Converter is null` のノード数）を管理。
-  - フィールド `negativeCount` を追加。非リサイズ分岐で追加ノードが負例なら `negativeCount++`。リサイズ／`Clear` で `CalculateNegativeCount(Node[])` により再計算／リセット。
-  - `DiagnosticsInfo` に `NegativeCount`（必要なら `PositiveCount = Count - NegativeCount`）を追加。既存 `Width/Depth/Count` は維持しコンストラクタを拡張（内部生成のみ）。
-- `ObjectConverter.DiagnosticsInfo` に `NegativeCacheCount` を追加し `Diagnostics` で反映。既存プロパティは維持。
-- 併せて `AddNode` の `CalculateHash` 二重呼び出し（`__★パフォーマンス改善候補.md` #6）を index 変数化（軽微最適化）。
-
-### チェックリスト
-
-- [x] `TypePairHashArray` に `negativeCount` 管理を追加
-- [x] `CalculateNegativeCount(Node[])` を追加し、リサイズ/Clear で整合
-- [x] `TypePairHashArray.DiagnosticsInfo` に `NegativeCount`（＋任意 `PositiveCount`）を追加
-- [x] `ObjectConverter.DiagnosticsInfo` に `NegativeCacheCount` を追加
-- [x] `AddNode` の `CalculateHash` 二重呼び出しを index 変数化
-- [x] テスト追加: 未知型ペアを多数 `CanConvert` し `NegativeCacheCount` が増加することを検証（レビュー テスト提案 5）
-- [x] ビルド警告ゼロ（フェーズ5分）・全テスト成功 ※`ToHashSet.cs` の IDE0028 は別途要相談
-
-> 補足: 「負例キャッシュ無効化オプション」「上限付きキャッシュ」は確定方針（保守的・挙動維持）に沿って今回は診断追加に留める。
-
----
-
 ## フェーズ 6: unchecked 数値キャストの仕様明記＋境界テスト
 
 **対象:** `NumericCastConverterFactory.cs` / `EnumConverterFactory.cs` / `README.md`
@@ -72,12 +44,12 @@
 
 ### チェックリスト
 
-- [ ] README に unchecked 折り返し仕様を明記
-- [ ] `NumericCastConverterFactory` 境界値テスト（範囲外の折り返し）
-- [ ] 負数→ unsigned 変換テスト
-- [ ] long→int 等の上位ビット切り捨てテスト
-- [ ] （該当すれば）Enum 数値キャストの境界テスト
-- [ ] ビルド警告ゼロ・全テスト成功
+- [~] README に unchecked 折り返し仕様を明記（**スキップ**：ドキュメント対応不要）
+- [x] `NumericCastConverterFactory` 境界値テスト（範囲外の折り返し）
+- [x] 負数→ unsigned 変換テスト
+- [x] long→int 等の上位ビット切り捨てテスト
+- [x] （該当すれば）Enum 数値キャストの境界テスト
+- [x] ビルド警告ゼロ（フェーズ6分）・全テスト成功 ※`ToHashSet.cs` IDE0028 はユーザー対応中
 
 ---
 

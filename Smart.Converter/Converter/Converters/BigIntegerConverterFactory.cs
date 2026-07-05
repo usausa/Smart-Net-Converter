@@ -1,6 +1,7 @@
 namespace Smart.Converter.Converters;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Numerics;
 
 public sealed class BigIntegerConverterFactory : IConverterFactory
@@ -9,7 +10,6 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
 
     private static readonly BigInteger DecimalMaxValue = new(Decimal.MaxValue);
 
-#pragma warning disable CA1305
     private static readonly Dictionary<(Type, Type), Func<object, object?>> Converters = new()
     {
         // From BigInteger to integer (range pre-checked; out-of-range returns default instead of catching OverflowException)
@@ -39,7 +39,7 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
         // From BigInteger to decimal (range pre-checked against the cached decimal bounds)
         { (typeof(BigInteger), typeof(decimal)), static x => x is BigInteger b && (b >= DecimalMinValue) && (b <= DecimalMaxValue) ? (decimal)b : default },
         { (typeof(BigInteger), typeof(decimal?)), static x => x is BigInteger b && (b >= DecimalMinValue) && (b <= DecimalMaxValue) ? (decimal)b : default(decimal?) },
-        { (typeof(BigInteger), typeof(string)), static x => ((BigInteger)x).ToString() },
+        { (typeof(BigInteger), typeof(string)), static x => ((BigInteger)x).ToString(CultureInfo.InvariantCulture) },
         // To BigInteger
         { (typeof(byte), typeof(BigInteger)), static x => new BigInteger((byte)x) },
         { (typeof(sbyte), typeof(BigInteger)), static x => new BigInteger((sbyte)x) },
@@ -55,7 +55,7 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
         { (typeof(float), typeof(BigInteger)), static x => Single.IsFinite((float)x) ? new BigInteger((float)x) : default },
         // decimal to BigInteger (new BigInteger(decimal) never throws, so no catch is needed)
         { (typeof(decimal), typeof(BigInteger)), static x => new BigInteger((decimal)x) },
-        { (typeof(string), typeof(BigInteger)), static x => BigInteger.TryParse((string)x, out var result) ? result : default },
+        { (typeof(string), typeof(BigInteger)), static x => BigInteger.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : default },
         // To BigInteger?
         { (typeof(byte), typeof(BigInteger?)), static x => new BigInteger((byte)x) },
         { (typeof(sbyte), typeof(BigInteger?)), static x => new BigInteger((sbyte)x) },
@@ -69,9 +69,8 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
         { (typeof(double), typeof(BigInteger?)), static x => Double.IsFinite((double)x) ? new BigInteger((double)x) : default(BigInteger?) },
         { (typeof(float), typeof(BigInteger?)), static x => Single.IsFinite((float)x) ? new BigInteger((float)x) : default(BigInteger?) },
         { (typeof(decimal), typeof(BigInteger?)), static x => new BigInteger((decimal)x) },
-        { (typeof(string), typeof(BigInteger?)), static x => BigInteger.TryParse((string)x, out var result) ? result : default(BigInteger?) }
+        { (typeof(string), typeof(BigInteger?)), static x => BigInteger.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : default(BigInteger?) }
     };
-#pragma warning restore CA1305
 
     [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
     [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]

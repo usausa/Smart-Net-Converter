@@ -4,7 +4,6 @@ using System.Globalization;
 
 using Smart.Converter.Types;
 
-#pragma warning disable CA1305
 public sealed class DateTimeConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
@@ -15,7 +14,7 @@ public sealed class DateTimeConverterFactoryTest
     public void DateTimeToString()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(new DateTime(2000, 1, 1).ToString(CultureInfo.CurrentCulture), converter.Convert(new DateTime(2000, 1, 1), typeof(string)));
+        Assert.Equal(new DateTime(2000, 1, 1).ToString(CultureInfo.InvariantCulture), converter.Convert(new DateTime(2000, 1, 1), typeof(string)));
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 
@@ -144,7 +143,7 @@ public sealed class DateTimeConverterFactoryTest
     public void DateTimeOffsetToString()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(new DateTimeOffset(new DateTime(2000, 1, 1)).ToString(), converter.Convert(new DateTimeOffset(new DateTime(2000, 1, 1)), typeof(string)));
+        Assert.Equal(new DateTimeOffset(new DateTime(2000, 1, 1)).ToString(CultureInfo.InvariantCulture), converter.Convert(new DateTimeOffset(new DateTime(2000, 1, 1)), typeof(string)));
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 
@@ -211,7 +210,7 @@ public sealed class DateTimeConverterFactoryTest
     public void StringToDateTimeOffset()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(new DateTimeOffset(new DateTime(2000, 1, 1)), converter.Convert("2000/01/01 0:00:00", typeof(DateTimeOffset)));
+        Assert.Equal(new DateTimeOffset(new DateTime(2000, 1, 1)), converter.Convert("2000-01-01T00:00:00", typeof(DateTimeOffset)));
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 
@@ -219,7 +218,7 @@ public sealed class DateTimeConverterFactoryTest
     public void StringToNullableDateTimeOffset()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(new DateTimeOffset(new DateTime(2000, 1, 1)), converter.Convert("2000/01/01 0:00:00", typeof(DateTimeOffset?)));
+        Assert.Equal(new DateTimeOffset(new DateTime(2000, 1, 1)), converter.Convert("2000-01-01T00:00:00", typeof(DateTimeOffset?)));
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 

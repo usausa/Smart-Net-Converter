@@ -211,7 +211,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             // DateTime to String
             if (targetType == typeof(string))
             {
-                return static x => ((DateTime)x).ToString(CultureInfo.CurrentCulture);
+                return static x => ((DateTime)x).ToString(CultureInfo.InvariantCulture);
             }
 
             var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
@@ -243,9 +243,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             // DateTimeOffset to String
             if (targetType == typeof(string))
             {
-#pragma warning disable CA1305
-                return static x => ((DateTimeOffset)x).ToString();
-#pragma warning restore CA1305
+                return static x => ((DateTimeOffset)x).ToString(CultureInfo.InvariantCulture);
             }
 
             var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
@@ -284,21 +282,21 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             if (underlyingTargetType == typeof(DateTime))
             {
                 var defaultValue = targetType.IsNullableType() ? null : (object)default(DateTime);
-                return x => DateTime.TryParse((string)x, out var result) ? result : defaultValue;
+                return x => DateTime.TryParse((string)x, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : defaultValue;
             }
 
             // String to DateTimeOffset(Nullable)
             if (underlyingTargetType == typeof(DateTimeOffset))
             {
                 var defaultValue = targetType.IsNullableType() ? null : (object)default(DateTimeOffset);
-                return x => DateTimeOffset.TryParse((string)x, out var result) ? result : defaultValue;
+                return x => DateTimeOffset.TryParse((string)x, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : defaultValue;
             }
 
             // String to TimeSpan(Nullable)
             if (underlyingTargetType == typeof(TimeSpan))
             {
                 var defaultValue = targetType.IsNullableType() ? null : (object)default(TimeSpan);
-                return x => TimeSpan.TryParse((string)x, out var result) ? result : defaultValue;
+                return x => TimeSpan.TryParse((string)x, CultureInfo.InvariantCulture, out var result) ? result : defaultValue;
             }
 
             return null;

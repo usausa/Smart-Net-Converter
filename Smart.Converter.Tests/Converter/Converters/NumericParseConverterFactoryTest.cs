@@ -1,5 +1,7 @@
 namespace Smart.Converter.Converters;
 
+using System.Globalization;
+
 #pragma warning disable CA1305
 public sealed class NumericParseConverterFactoryTest
 {
@@ -187,8 +189,8 @@ public sealed class NumericParseConverterFactoryTest
     public void StringToDouble()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(Double.MinValue, converter.Convert(Double.MinValue.ToString("R"), typeof(double)));
-        Assert.Equal(Double.MaxValue, converter.Convert(Double.MaxValue.ToString("R"), typeof(double)));
+        Assert.Equal(Double.MinValue, converter.Convert(Double.MinValue.ToString("R", CultureInfo.InvariantCulture), typeof(double)));
+        Assert.Equal(Double.MaxValue, converter.Convert(Double.MaxValue.ToString("R", CultureInfo.InvariantCulture), typeof(double)));
         Assert.Equal(default(double), converter.Convert(string.Empty, typeof(double)));
         Assert.True(converter.UsedOnly<NumericParseConverterFactory>());
     }
@@ -197,8 +199,8 @@ public sealed class NumericParseConverterFactoryTest
     public void StringToNullableDouble()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(Double.MinValue, converter.Convert(Double.MinValue.ToString("R"), typeof(double?)));
-        Assert.Equal(Double.MaxValue, converter.Convert(Double.MaxValue.ToString("R"), typeof(double?)));
+        Assert.Equal(Double.MinValue, converter.Convert(Double.MinValue.ToString("R", CultureInfo.InvariantCulture), typeof(double?)));
+        Assert.Equal(Double.MaxValue, converter.Convert(Double.MaxValue.ToString("R", CultureInfo.InvariantCulture), typeof(double?)));
         Assert.Null(converter.Convert(string.Empty, typeof(double?)));
         Assert.True(converter.UsedOnly<NumericParseConverterFactory>());
     }
@@ -207,8 +209,8 @@ public sealed class NumericParseConverterFactoryTest
     public void StringToFloat()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(Single.MinValue, converter.Convert(Single.MinValue.ToString("R"), typeof(float)));
-        Assert.Equal(Single.MaxValue, converter.Convert(Single.MaxValue.ToString("R"), typeof(float)));
+        Assert.Equal(Single.MinValue, converter.Convert(Single.MinValue.ToString("R", CultureInfo.InvariantCulture), typeof(float)));
+        Assert.Equal(Single.MaxValue, converter.Convert(Single.MaxValue.ToString("R", CultureInfo.InvariantCulture), typeof(float)));
         Assert.Equal(default(float), converter.Convert(string.Empty, typeof(float)));
         Assert.True(converter.UsedOnly<NumericParseConverterFactory>());
     }
@@ -217,8 +219,8 @@ public sealed class NumericParseConverterFactoryTest
     public void StringToNullableFloat()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal(Single.MinValue, converter.Convert(Single.MinValue.ToString("R"), typeof(float?)));
-        Assert.Equal(Single.MaxValue, converter.Convert(Single.MaxValue.ToString("R"), typeof(float?)));
+        Assert.Equal(Single.MinValue, converter.Convert(Single.MinValue.ToString("R", CultureInfo.InvariantCulture), typeof(float?)));
+        Assert.Equal(Single.MaxValue, converter.Convert(Single.MaxValue.ToString("R", CultureInfo.InvariantCulture), typeof(float?)));
         Assert.Null(converter.Convert(string.Empty, typeof(float?)));
         Assert.True(converter.UsedOnly<NumericParseConverterFactory>());
     }

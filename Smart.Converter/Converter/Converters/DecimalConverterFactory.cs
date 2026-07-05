@@ -31,7 +31,7 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(decimal), typeof(double?)), static x => Decimal.ToDouble((decimal)x) },
         { (typeof(decimal), typeof(float)), static x => Decimal.ToSingle((decimal)x) },
         { (typeof(decimal), typeof(float?)), static x => Decimal.ToSingle((decimal)x) },
-        { (typeof(decimal), typeof(string)), static x => ((decimal)x).ToString(CultureInfo.CurrentCulture) },
+        { (typeof(decimal), typeof(string)), static x => ((decimal)x).ToString(CultureInfo.InvariantCulture) },
         // To Decimal
         { (typeof(byte), typeof(decimal)), static x => new decimal((byte)x) },
         { (typeof(sbyte), typeof(decimal)), static x => new decimal((sbyte)x) },
@@ -45,7 +45,7 @@ public sealed class DecimalConverterFactory : IConverterFactory
         // double/float to decimal (kept as try/catch: new decimal(double/float) throws when out of range
         { (typeof(double), typeof(decimal)), static x => { try { return new decimal((double)x); } catch (OverflowException) { return default(decimal); } } },
         { (typeof(float), typeof(decimal)), static x => { try { return new decimal((float)x); } catch (OverflowException) { return default(decimal); } } },
-        { (typeof(string), typeof(decimal)), static x => Decimal.TryParse((string)x, out var result) ? result : default },
+        { (typeof(string), typeof(decimal)), static x => Decimal.TryParse((string)x, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : default },
         // To Decimal?
         { (typeof(byte), typeof(decimal?)), static x => new decimal((byte)x) },
         { (typeof(sbyte), typeof(decimal?)), static x => new decimal((sbyte)x) },
@@ -58,7 +58,7 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(char), typeof(decimal?)), static x => new decimal((char)x) },
         { (typeof(double), typeof(decimal?)), static x => { try { return new decimal((double)x); } catch (OverflowException) { return default(decimal?); } } },
         { (typeof(float), typeof(decimal?)), static x => { try { return new decimal((float)x); } catch (OverflowException) { return default(decimal?); } } },
-        { (typeof(string), typeof(decimal?)), static x => Decimal.TryParse((string)x, out var result) ? result : default(decimal?) }
+        { (typeof(string), typeof(decimal?)), static x => Decimal.TryParse((string)x, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : default(decimal?) }
     };
 
     [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]

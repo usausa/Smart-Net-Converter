@@ -10,10 +10,10 @@ public sealed class ValueHolderConverterFactory : IConverterFactory
     [RequiresUnreferencedCode("ValueHolderConverterFactory uses reflection on ValueHolder types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
-        var isSourceValueType = ValueHolderHelper.IsValueHolderType(sourceType);
+        var isSourceValueType = sourceType.IsValueHolderType();
         if (isSourceValueType)
         {
-            var sourceValueType = ValueHolderHelper.GetValueTypeProperty(sourceType)!.PropertyType;
+            var sourceValueType = sourceType.GetValueHolderProperty()!.PropertyType;
             var type = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType;
             if (sourceValueType == type)
             {

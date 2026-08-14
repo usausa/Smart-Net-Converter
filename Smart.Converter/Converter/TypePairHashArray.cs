@@ -43,7 +43,7 @@ public sealed class TypePairHashArray
     {
         unchecked
         {
-            return sourceType.GetHashCode() ^ (targetType.GetHashCode() * 397);
+            return RuntimeHelpers.GetHashCode(sourceType) ^ (RuntimeHelpers.GetHashCode(targetType) * 397);
         }
     }
 

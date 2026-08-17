@@ -39,11 +39,14 @@ public sealed class TypePairHashArray
     //--------------------------------------------------------------------------------
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int TypeHash(Type type) => (int)(type.TypeHandle.Value >> 4);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int CalculateHash(Type sourceType, Type targetType)
     {
         unchecked
         {
-            return RuntimeHelpers.GetHashCode(sourceType) ^ (RuntimeHelpers.GetHashCode(targetType) * 397);
+            return TypeHash(sourceType) ^ (TypeHash(targetType) * 397);
         }
     }
 

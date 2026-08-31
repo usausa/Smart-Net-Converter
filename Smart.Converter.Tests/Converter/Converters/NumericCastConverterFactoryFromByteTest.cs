@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class NumericCastConverterFactoryFromByteTest
 {
     [Fact]
@@ -200,3 +201,4 @@ public sealed class NumericCastConverterFactoryFromByteTest
     //    Assert.True(converter.UsedOnly<NumericConverterFactory>());
     //}
 }
+#pragma warning restore CA2263

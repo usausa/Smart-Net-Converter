@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.Converter.Types;
 
+#pragma warning disable CA2263
 public sealed class AssignableConverterFactoryTest
 {
     [Fact]
@@ -20,3 +21,4 @@ public sealed class AssignableConverterFactoryTest
         Assert.Throws<ObjectConverterException>(() => converter.Convert(new BaseType(), typeof(DeliveredType)));
     }
 }
+#pragma warning restore CA2263

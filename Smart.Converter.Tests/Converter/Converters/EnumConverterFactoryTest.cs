@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.Converter.Types;
 
+#pragma warning disable CA2263
 public sealed class EnumConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
@@ -368,3 +369,4 @@ public sealed class EnumConverterFactoryTest
         Assert.False(converter.CanConvert(typeof(Enum1Type), typeof(StructType)));
     }
 }
+#pragma warning restore CA2263

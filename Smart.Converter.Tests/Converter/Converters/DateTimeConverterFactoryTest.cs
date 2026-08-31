@@ -4,6 +4,7 @@ using System.Globalization;
 
 using Smart.Converter.Types;
 
+#pragma warning disable CA2263
 public sealed class DateTimeConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
@@ -368,3 +369,4 @@ public sealed class DateTimeConverterFactoryTest
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 }
+#pragma warning restore CA2263

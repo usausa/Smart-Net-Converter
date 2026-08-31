@@ -2,6 +2,7 @@ namespace Smart.Converter;
 
 using Smart.Converter.Types;
 
+#pragma warning disable CA2263
 public sealed class ObjectConverterTest
 {
     //--------------------------------------------------------------------------------
@@ -605,3 +606,4 @@ public sealed class ObjectConverterTest
         Assert.True(converter.NotUsed());
     }
 }
+#pragma warning restore CA2263

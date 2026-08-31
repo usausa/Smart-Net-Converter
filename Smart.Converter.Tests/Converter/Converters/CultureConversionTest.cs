@@ -3,6 +3,7 @@ namespace Smart.Converter.Converters;
 using System.Globalization;
 using System.Numerics;
 
+#pragma warning disable CA2263
 public sealed class CultureConversionTest
 {
     private sealed class CultureScope : IDisposable
@@ -73,3 +74,4 @@ public sealed class CultureConversionTest
         Assert.Equal(value.ToString(CultureInfo.InvariantCulture), converter.Convert(value, typeof(string)));
     }
 }
+#pragma warning restore CA2263

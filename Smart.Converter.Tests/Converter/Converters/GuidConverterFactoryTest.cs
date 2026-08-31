@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class GuidConverterFactoryTest
 {
     [Fact]
@@ -19,3 +20,4 @@ public sealed class GuidConverterFactoryTest
         Assert.True(converter.UsedOnly<GuidConverterFactory>());
     }
 }
+#pragma warning restore CA2263

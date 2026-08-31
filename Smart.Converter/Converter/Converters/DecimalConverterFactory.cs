@@ -5,6 +5,7 @@ using System.Globalization;
 
 public sealed class DecimalConverterFactory : IConverterFactory
 {
+#pragma warning disable SA1501
     private static readonly Dictionary<(Type, Type), Func<object, object?>> Converters = new()
     {
         // From decimal to integer (kept as try/catch: Decimal.ToXxx rounds and throws at the range
@@ -68,4 +69,5 @@ public sealed class DecimalConverterFactory : IConverterFactory
         var key = (sourceType, targetType);
         return Converters.GetValueOrDefault(key);
     }
+#pragma warning restore SA1501
 }

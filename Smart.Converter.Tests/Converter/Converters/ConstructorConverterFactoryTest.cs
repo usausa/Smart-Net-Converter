@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.ComponentModel;
 
+#pragma warning disable CA2263
 public sealed class ConstructorConverterFactoryTest
 {
     [Fact]
@@ -28,3 +29,4 @@ public sealed class ConstructorConverterFactoryTest
         Assert.True(converter.UsedIn(typeof(ConstructorConverterFactory), typeof(ToStringConverterFactory)));
     }
 }
+#pragma warning restore CA2263

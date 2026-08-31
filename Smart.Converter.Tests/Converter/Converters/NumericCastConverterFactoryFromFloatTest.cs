@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class NumericCastConverterFactoryFromFloatTest
 {
     [Fact]
@@ -182,3 +183,4 @@ public sealed class NumericCastConverterFactoryFromFloatTest
         Assert.True(converter.UsedOnly<NumericCastConverterFactory>());
     }
 }
+#pragma warning restore CA2263

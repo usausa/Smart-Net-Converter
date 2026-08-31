@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.Converter.Types;
 
+#pragma warning disable CA2263
 public sealed class EnumConverterFactoryWrapAroundTest
 {
     [Fact]
@@ -14,3 +15,4 @@ public sealed class EnumConverterFactoryWrapAroundTest
         Assert.True(converter.UsedOnly<EnumConverterFactory>());
     }
 }
+#pragma warning restore CA2263

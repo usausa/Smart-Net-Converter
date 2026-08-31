@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class DecimalConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
@@ -453,3 +454,4 @@ public sealed class DecimalConverterFactoryTest
         Assert.True(converter.UsedOnly<DecimalConverterFactory>());
     }
 }
+#pragma warning restore CA2263

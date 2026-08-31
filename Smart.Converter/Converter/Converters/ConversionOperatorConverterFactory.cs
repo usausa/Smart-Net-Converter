@@ -56,15 +56,15 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
             .FirstOrDefault(mi =>
                 mi.IsPublic &&
                 mi.IsStatic &&
-                mi.Name == "op_Implicit" &&
-                mi.ReturnType == targetType);
+                (mi.Name == "op_Implicit") &&
+                (mi.ReturnType == targetType));
         return sourceTypeMethod ?? targetType
                    .GetMethods()
                    .FirstOrDefault(mi =>
                        mi.IsPublic &&
                        mi.IsStatic &&
-                       mi.Name == "op_Implicit" &&
-                       mi.GetParameters().Length == 1 &&
+                       (mi.Name == "op_Implicit") &&
+                       (mi.GetParameters().Length == 1) &&
                        IsMatchParameterType(mi.GetParameters()[0].ParameterType, sourceType));
     }
 
@@ -76,15 +76,15 @@ public sealed class ConversionOperatorConverterFactory : IConverterFactory
             .FirstOrDefault(mi =>
                 mi.IsPublic &&
                 mi.IsStatic &&
-                mi.Name == "op_Explicit" &&
-                mi.ReturnType == targetType);
+                (mi.Name == "op_Explicit") &&
+                (mi.ReturnType == targetType));
         return sourceTypeMethod ?? targetType
             .GetMethods()
             .FirstOrDefault(mi =>
                        mi.IsPublic &&
                        mi.IsStatic &&
-                       mi.Name == "op_Explicit" &&
-                       mi.GetParameters().Length == 1 &&
+                       (mi.Name == "op_Explicit") &&
+                       (mi.GetParameters().Length == 1) &&
                        IsMatchParameterType(mi.GetParameters()[0].ParameterType, sourceType));
     }
 

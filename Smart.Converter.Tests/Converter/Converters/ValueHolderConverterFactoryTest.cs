@@ -3,6 +3,7 @@ namespace Smart.Converter.Converters;
 using Smart.ComponentModel;
 using Smart.Converter.Types;
 
+#pragma warning disable CA2263
 public sealed class ValueHolderConverterFactoryTest
 {
     [Fact]
@@ -28,3 +29,4 @@ public sealed class ValueHolderConverterFactoryTest
         Assert.False(converter.CanConvert(new NotificationValue<DateTime>(), typeof(StructType)));
     }
 }
+#pragma warning restore CA2263

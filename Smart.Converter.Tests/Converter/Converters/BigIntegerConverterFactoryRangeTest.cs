@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Numerics;
 
+#pragma warning disable CA2263
 public sealed class BigIntegerConverterFactoryRangeTest
 {
     //--------------------------------------------------------------------------------
@@ -104,3 +105,4 @@ public sealed class BigIntegerConverterFactoryRangeTest
         Assert.True(converter.UsedOnly<BigIntegerConverterFactory>());
     }
 }
+#pragma warning restore CA2263

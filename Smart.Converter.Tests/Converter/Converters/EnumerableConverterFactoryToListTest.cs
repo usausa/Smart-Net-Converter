@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class EnumerableConverterFactoryToListTest
 {
     [Fact]
@@ -74,6 +75,7 @@ public sealed class EnumerableConverterFactoryToListTest
         Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
     }
 
+#pragma warning disable CA1861
     [Fact]
     public void EnumerableToSameElementList()
     {
@@ -85,7 +87,9 @@ public sealed class EnumerableConverterFactoryToListTest
         Assert.Equal(1, destination[1]);
         Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
     }
+#pragma warning restore CA1861
 
+#pragma warning disable CA1861
     [Fact]
     public void EnumerableToOtherElementList()
     {
@@ -97,4 +101,6 @@ public sealed class EnumerableConverterFactoryToListTest
         Assert.Equal("1", destination[1]);
         Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
     }
+#pragma warning restore CA1861
 }
+#pragma warning restore CA2263

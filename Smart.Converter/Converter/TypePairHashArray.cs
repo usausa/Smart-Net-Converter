@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
+#pragma warning disable CA1034
 [DebuggerDisplay("{" + nameof(Diagnostics) + "}")]
 public sealed class TypePairHashArray
 {
@@ -11,7 +12,7 @@ public sealed class TypePairHashArray
 
     private const int Factor = 3;
 
-    private static readonly Node EmptyNode = new(typeof(EmptyKey), typeof(EmptyKey), default!);
+    private static readonly Node EmptyNode = new(typeof(EmptyKey), typeof(EmptyKey), default);
 
 #if NET9_0_OR_GREATER
     private readonly Lock sync = new();
@@ -242,7 +243,7 @@ public sealed class TypePairHashArray
             // Double-checked locking
             if (TryGetValue(sourceType, targetType, out var currentValue))
             {
-                return currentValue!;
+                return currentValue;
             }
 
             var value = valueFactory(sourceType, targetType);
@@ -250,7 +251,7 @@ public sealed class TypePairHashArray
             // Check if added by recursive
             if (TryGetValue(sourceType, targetType, out currentValue))
             {
-                return currentValue!;
+                return currentValue;
             }
 
             AddNode(new Node(sourceType, targetType, value));
@@ -311,3 +312,4 @@ public sealed class TypePairHashArray
         public override string ToString() => $"Count={Count}, Width={Width}, Depth={Depth}";
     }
 }
+#pragma warning restore CA1034

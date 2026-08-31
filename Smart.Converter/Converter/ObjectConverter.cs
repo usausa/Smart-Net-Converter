@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 using Smart.Converter.Converters;
 
+#pragma warning disable CA1034
 public sealed class ObjectConverter : IObjectConverter
 {
     [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Default instance is created intentionally with reflection-based factories.")]
@@ -90,7 +91,7 @@ public sealed class ObjectConverter : IObjectConverter
         }
 
         var sourceType = value.GetType();
-        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType))
+        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
         {
             return true;
         }
@@ -125,7 +126,7 @@ public sealed class ObjectConverter : IObjectConverter
 
         // Specialized same type for performance (Nullable is excluded because operation is slow)
         var sourceType = value.GetType();
-        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType))
+        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
         {
             return value;
         }
@@ -199,3 +200,4 @@ public sealed class ObjectConverter : IObjectConverter
         }
     }
 }
+#pragma warning restore CA1034

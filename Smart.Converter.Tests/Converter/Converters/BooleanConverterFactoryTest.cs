@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class BooleanConverterFactoryTest
 {
     //--------------------------------------------------------------------------------
@@ -476,3 +477,4 @@ public sealed class BooleanConverterFactoryTest
         Assert.True(converter.UsedOnly<BooleanConverterFactory>());
     }
 }
+#pragma warning restore CA2263

@@ -3,6 +3,7 @@ namespace Smart.Converter.Converters;
 using System.Globalization;
 
 #pragma warning disable CA1305
+#pragma warning disable CA2263
 public sealed class NumericParseConverterFactoryTest
 {
     [Fact]
@@ -225,3 +226,4 @@ public sealed class NumericParseConverterFactoryTest
         Assert.True(converter.UsedOnly<NumericParseConverterFactory>());
     }
 }
+#pragma warning restore CA2263

@@ -1,11 +1,13 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class EnumerableConverterFactoryNullElementTest
 {
     //--------------------------------------------------------------------------------
     // Array
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1861
     [Fact]
     public void ArrayWithNullElementToValueElementArray()
     {
@@ -14,6 +16,7 @@ public sealed class EnumerableConverterFactoryNullElementTest
         var destination = (int[])converter.Convert(source, typeof(int[]));
         Assert.Equal(new[] { 1, 0, 3 }, destination);
     }
+#pragma warning restore CA1861
 
     [Fact]
     public void ArrayWithNullElementToNullableElementArray()
@@ -28,6 +31,7 @@ public sealed class EnumerableConverterFactoryNullElementTest
     // List
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1861
     [Fact]
     public void ListWithNullElementToValueElementArray()
     {
@@ -36,6 +40,7 @@ public sealed class EnumerableConverterFactoryNullElementTest
         var destination = (int[])converter.Convert(source, typeof(int[]));
         Assert.Equal(new[] { 1, 0, 3 }, destination);
     }
+#pragma warning restore CA1861
 
     [Fact]
     public void ListWithNullElementToNullableElementArray()
@@ -50,6 +55,7 @@ public sealed class EnumerableConverterFactoryNullElementTest
     // Enumerable
     //--------------------------------------------------------------------------------
 
+#pragma warning disable CA1861
     [Fact]
     public void EnumerableWithNullElementToValueElementList()
     {
@@ -58,6 +64,7 @@ public sealed class EnumerableConverterFactoryNullElementTest
         var destination = (List<int>)converter.Convert(source, typeof(List<int>));
         Assert.Equal(new[] { 1, 0, 3 }, destination);
     }
+#pragma warning restore CA1861
 
     [Fact]
     public void EnumerableWithNullElementToNullableElementArray()
@@ -68,3 +75,4 @@ public sealed class EnumerableConverterFactoryNullElementTest
         Assert.Equal<int?>([1, null, 3], destination);
     }
 }
+#pragma warning restore CA2263

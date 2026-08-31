@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Collections.ObjectModel;
 
+#pragma warning disable CA2263
 public sealed class EnumerableConverterFactoryToReadOnlyCollectionTest
 {
     [Fact]
@@ -76,6 +77,7 @@ public sealed class EnumerableConverterFactoryToReadOnlyCollectionTest
         Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
     }
 
+#pragma warning disable CA1861
     [Fact]
     public void EnumerableToSameElementReadOnlyCollection()
     {
@@ -87,7 +89,9 @@ public sealed class EnumerableConverterFactoryToReadOnlyCollectionTest
         Assert.Equal(1, destination[1]);
         Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
     }
+#pragma warning restore CA1861
 
+#pragma warning disable CA1861
     [Fact]
     public void EnumerableToOtherElementReadOnlyCollection()
     {
@@ -99,4 +103,6 @@ public sealed class EnumerableConverterFactoryToReadOnlyCollectionTest
         Assert.Equal("1", destination[1]);
         Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
     }
+#pragma warning restore CA1861
 }
+#pragma warning restore CA2263

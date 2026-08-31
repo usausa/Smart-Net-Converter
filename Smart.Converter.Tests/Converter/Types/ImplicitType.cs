@@ -6,15 +6,9 @@ public readonly struct ImplicitType
 {
     public int Value { get; init; }
 
-    public static implicit operator int(ImplicitType value)
-    {
-        return value.Value;
-    }
+    public static implicit operator int(ImplicitType value) => value.Value;
 
-    public static implicit operator ImplicitType(int value)
-    {
-        return new() { Value = value };
-    }
+    public static implicit operator ImplicitType(int value) => new() { Value = value };
 }
 #pragma warning restore CA2225
 #pragma warning restore CA1815
@@ -25,15 +19,9 @@ public readonly struct NullableImplicitType
 {
     public int? Value { get; init; }
 
-    public static implicit operator int?(NullableImplicitType value)
-    {
-        return value.Value;
-    }
+    public static implicit operator int?(NullableImplicitType value) => value.Value;
 
-    public static implicit operator NullableImplicitType(int? value)
-    {
-        return new() { Value = value };
-    }
+    public static implicit operator NullableImplicitType(int? value) => new() { Value = value };
 }
 #pragma warning restore CA2225
 #pragma warning restore CA1815

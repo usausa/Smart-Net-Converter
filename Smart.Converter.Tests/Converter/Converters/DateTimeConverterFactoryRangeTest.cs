@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class DateTimeConverterFactoryRangeTest
 {
     //--------------------------------------------------------------------------------
@@ -82,3 +83,4 @@ public sealed class DateTimeConverterFactoryRangeTest
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 }
+#pragma warning restore CA2263

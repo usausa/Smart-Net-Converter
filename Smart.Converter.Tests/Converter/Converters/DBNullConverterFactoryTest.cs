@@ -1,5 +1,6 @@
 namespace Smart.Converter.Converters;
 
+#pragma warning disable CA2263
 public sealed class DBNullConverterFactoryTest
 {
     [Fact]
@@ -26,3 +27,4 @@ public sealed class DBNullConverterFactoryTest
         Assert.True(converter.UsedOnly<DBNullConverterFactory>());
     }
 }
+#pragma warning restore CA2263

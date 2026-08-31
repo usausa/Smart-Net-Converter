@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Collections.Concurrent;
 
+#pragma warning disable CA2263
 public sealed class EnumerableConverterFactoryToConcurrentBagTest
 {
     [Fact]
@@ -76,6 +77,7 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
         Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
     }
 
+#pragma warning disable CA1861
     [Fact]
     public void EnumerableToSameElementConcurrentBag()
     {
@@ -87,7 +89,9 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
         Assert.Contains(1, destination);
         Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
     }
+#pragma warning restore CA1861
 
+#pragma warning disable CA1861
     [Fact]
     public void EnumerableToOtherElementConcurrentBag()
     {
@@ -99,4 +103,6 @@ public sealed class EnumerableConverterFactoryToConcurrentBagTest
         Assert.Contains("1", destination);
         Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
     }
+#pragma warning restore CA1861
 }
+#pragma warning restore CA2263

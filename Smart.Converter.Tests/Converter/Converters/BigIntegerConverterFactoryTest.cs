@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using System.Numerics;
 
+#pragma warning disable CA2263
 public sealed class BigIntegerConverterFactoryTest
 {
     private static readonly BigInteger Overflow = BigInteger.Add(new BigInteger(Decimal.MaxValue), 1);
@@ -495,3 +496,4 @@ public sealed class BigIntegerConverterFactoryTest
         Assert.True(converter.UsedOnly<BigIntegerConverterFactory>());
     }
 }
+#pragma warning restore CA2263

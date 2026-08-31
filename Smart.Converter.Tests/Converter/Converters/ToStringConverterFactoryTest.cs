@@ -2,6 +2,7 @@ namespace Smart.Converter.Converters;
 
 using Smart.Converter.Types;
 
+#pragma warning disable CA2263
 public sealed class ToStringConverterFactoryTest
 {
     [Fact]
@@ -111,3 +112,4 @@ public sealed class ToStringConverterFactoryTest
         Assert.True(converter.UsedOnly<ToStringConverterFactory>());
     }
 }
+#pragma warning restore CA2263

@@ -126,7 +126,7 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
         if (type.IsArray)
         {
             sourceEnumerableType = SourceEnumerableType.Array;
-            return type.GetElementType()!;
+            return type.GetElementType();
         }
 
         var interfaceTypes = new List<Type>
@@ -135,21 +135,21 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
         };
         interfaceTypes.AddRange(type.GetInterfaces());
 
-        var interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IList<>));
+        var interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(IList<>)));
         if (interfaceType is not null)
         {
             sourceEnumerableType = SourceEnumerableType.List;
             return interfaceType.GenericTypeArguments[0];
         }
 
-        interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ICollection<>));
+        interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(ICollection<>)));
         if (interfaceType is not null)
         {
             sourceEnumerableType = SourceEnumerableType.Collection;
             return interfaceType.GenericTypeArguments[0];
         }
 
-        interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+        interfaceType = interfaceTypes.FirstOrDefault(static t => t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(IEnumerable<>)));
         if (interfaceType is not null)
         {
             sourceEnumerableType = SourceEnumerableType.Enumerable;

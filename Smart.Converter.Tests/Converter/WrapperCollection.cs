@@ -2,11 +2,10 @@ namespace Smart.Converter;
 
 using System.Collections;
 
+#pragma warning disable CA1002
 public class WrapperCollection<T> : ICollection<T>
 {
-#pragma warning disable CA1002
     protected List<T> List { get; }
-#pragma warning restore CA1002
 
     public WrapperCollection(IEnumerable<T> source)
     {
@@ -31,6 +30,7 @@ public class WrapperCollection<T> : ICollection<T>
 
     public bool IsReadOnly => false;
 }
+#pragma warning restore CA1002
 
 public sealed class WrapperList<T> : WrapperCollection<T>, IList<T>
 {

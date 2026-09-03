@@ -109,8 +109,6 @@ public sealed partial class EnumerableConverterFactory : IConverterFactory
                         converter)!).Convert;
                 }
             }
-
-            return null;
         }
 
         return null;

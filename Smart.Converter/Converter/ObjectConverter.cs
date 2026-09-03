@@ -49,6 +49,7 @@ public sealed class ObjectConverter : IObjectConverter
     private Func<object, object?>? FindConverter(Type sourceType, Type targetType)
     {
         var factoriesLocal = factories;
+        // ReSharper disable once ForCanBeConvertedToForeach
         for (var i = 0; i < factoriesLocal.Length; i++)
         {
             var converter = factoriesLocal[i].GetConverter(this, sourceType, targetType);

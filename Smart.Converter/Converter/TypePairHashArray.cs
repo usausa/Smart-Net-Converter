@@ -20,20 +20,11 @@ public sealed class TypePairHashArray
     private readonly object sync = new();
 #endif
 
-    private volatile Node[] nodes;
+    private volatile Node[] nodes = CreateInitialTable();
 
     private int depth;
 
     private int count;
-
-    //--------------------------------------------------------------------------------
-    // Constructor
-    //--------------------------------------------------------------------------------
-
-    public TypePairHashArray()
-    {
-        nodes = CreateInitialTable();
-    }
 
     //--------------------------------------------------------------------------------
     // Private
@@ -67,6 +58,7 @@ public sealed class TypePairHashArray
     private static int CalculateCount(Node[] targetNodes)
     {
         var count = 0;
+        // ReSharper disable once ForCanBeConvertedToForeach
         for (var i = 0; i < targetNodes.Length; i++)
         {
             var node = targetNodes[i];
@@ -88,6 +80,7 @@ public sealed class TypePairHashArray
     {
         var depth = 0;
 
+        // ReSharper disable once ForCanBeConvertedToForeach
         for (var i = 0; i < targetNodes.Length; i++)
         {
             var node = targetNodes[i];

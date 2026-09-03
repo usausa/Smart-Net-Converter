@@ -63,6 +63,7 @@ public sealed partial class EnumerableConverterFactory
         {
             var arraySource = (TSource[])source;
             var collection = new LinkedList<TDestination>();
+            // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < arraySource.Length; i++)
             {
                 collection.AddLast(ConvertValue<TSource, TDestination>(converter, arraySource[i]));
@@ -87,6 +88,7 @@ public sealed partial class EnumerableConverterFactory
         {
             var listSource = (IList<TSource>)source;
             var collection = new LinkedList<TDestination>();
+            // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < listSource.Count; i++)
             {
                 collection.AddLast(ConvertValue<TSource, TDestination>(converter, listSource[i]));

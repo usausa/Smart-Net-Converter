@@ -1,0 +1,108 @@
+namespace Smart.Converter.Converters;
+
+using System.Collections.ObjectModel;
+
+#pragma warning disable CA2263
+public sealed class EnumerableConverterFactoryToReadOnlyCollectionTests
+{
+    [Fact]
+    public void ArrayToSameElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 };
+        var destination = (ReadOnlyCollection<int>)converter.Convert(source, typeof(ReadOnlyCollection<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal(0, destination[0]);
+        Assert.Equal(1, destination[1]);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void ArrayToOtherElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 };
+        var destination = (ReadOnlyCollection<string>)converter.Convert(source, typeof(ReadOnlyCollection<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal("0", destination[0]);
+        Assert.Equal("1", destination[1]);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+    [Fact]
+    public void ListToSameElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperList<int>([0, 1]);
+        var destination = (ReadOnlyCollection<int>)converter.Convert(source, typeof(ReadOnlyCollection<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal(0, destination[0]);
+        Assert.Equal(1, destination[1]);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void ListToOtherElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperList<int>([0, 1]);
+        var destination = (ReadOnlyCollection<string>)converter.Convert(source, typeof(ReadOnlyCollection<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal("0", destination[0]);
+        Assert.Equal("1", destination[1]);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+    [Fact]
+    public void CollectionToSameElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperCollection<int>([0, 1]);
+        var destination = (ReadOnlyCollection<int>)converter.Convert(source, typeof(ReadOnlyCollection<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal(0, destination[0]);
+        Assert.Equal(1, destination[1]);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void CollectionToOtherElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperCollection<int>([0, 1]);
+        var destination = (ReadOnlyCollection<string>)converter.Convert(source, typeof(ReadOnlyCollection<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal("0", destination[0]);
+        Assert.Equal("1", destination[1]);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+#pragma warning disable CA1861
+    [Fact]
+    public void EnumerableToSameElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 }.Select(static x => x);
+        var destination = (ReadOnlyCollection<int>)converter.Convert(source, typeof(ReadOnlyCollection<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal(0, destination[0]);
+        Assert.Equal(1, destination[1]);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+#pragma warning restore CA1861
+
+#pragma warning disable CA1861
+    [Fact]
+    public void EnumerableToOtherElementReadOnlyCollection()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 }.Select(static x => x);
+        var destination = (ReadOnlyCollection<string>)converter.Convert(source, typeof(ReadOnlyCollection<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Equal("0", destination[0]);
+        Assert.Equal("1", destination[1]);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+#pragma warning restore CA1861
+}
+#pragma warning restore CA2263

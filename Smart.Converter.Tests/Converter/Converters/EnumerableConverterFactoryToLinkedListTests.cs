@@ -1,0 +1,106 @@
+namespace Smart.Converter.Converters;
+
+#pragma warning disable CA2263
+public sealed class EnumerableConverterFactoryToLinkedListTests
+{
+    [Fact]
+    public void ArrayToSameElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 };
+        var destination = (LinkedList<int>)converter.Convert(source, typeof(LinkedList<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void ArrayToOtherElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 };
+        var destination = (LinkedList<string>)converter.Convert(source, typeof(LinkedList<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+    [Fact]
+    public void LinkedListToSameElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperList<int>([0, 1]);
+        var destination = (LinkedList<int>)converter.Convert(source, typeof(LinkedList<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void LinkedListToOtherElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperList<int>([0, 1]);
+        var destination = (LinkedList<string>)converter.Convert(source, typeof(LinkedList<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+    [Fact]
+    public void CollectionToSameElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperCollection<int>([0, 1]);
+        var destination = (LinkedList<int>)converter.Convert(source, typeof(LinkedList<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void CollectionToOtherElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperCollection<int>([0, 1]);
+        var destination = (LinkedList<string>)converter.Convert(source, typeof(LinkedList<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+#pragma warning disable CA1861
+    [Fact]
+    public void EnumerableToSameElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 }.Select(static x => x);
+        var destination = (LinkedList<int>)converter.Convert(source, typeof(LinkedList<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+#pragma warning restore CA1861
+
+#pragma warning disable CA1861
+    [Fact]
+    public void EnumerableToOtherElementLinkedList()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 }.Select(static x => x);
+        var destination = (LinkedList<string>)converter.Convert(source, typeof(LinkedList<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+#pragma warning restore CA1861
+}
+#pragma warning restore CA2263

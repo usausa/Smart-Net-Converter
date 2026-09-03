@@ -1,0 +1,106 @@
+namespace Smart.Converter.Converters;
+
+#pragma warning disable CA2263
+public sealed class EnumerableConverterFactoryToQueueTests
+{
+    [Fact]
+    public void ArrayToSameElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 };
+        var destination = (Queue<int>)converter.Convert(source, typeof(Queue<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void ArrayToOtherElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 };
+        var destination = (Queue<string>)converter.Convert(source, typeof(Queue<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+    [Fact]
+    public void ListToSameElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperList<int>([0, 1]);
+        var destination = (Queue<int>)converter.Convert(source, typeof(Queue<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void ListToOtherElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperList<int>([0, 1]);
+        var destination = (Queue<string>)converter.Convert(source, typeof(Queue<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+    [Fact]
+    public void CollectionToSameElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperCollection<int>([0, 1]);
+        var destination = (Queue<int>)converter.Convert(source, typeof(Queue<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+
+    [Fact]
+    public void CollectionToOtherElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperCollection<int>([0, 1]);
+        var destination = (Queue<string>)converter.Convert(source, typeof(Queue<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+
+#pragma warning disable CA1861
+    [Fact]
+    public void EnumerableToSameElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 }.Select(static x => x);
+        var destination = (Queue<int>)converter.Convert(source, typeof(Queue<int>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains(0, destination);
+        Assert.Contains(1, destination);
+        Assert.True(converter.UsedOnly<EnumerableConverterFactory>());
+    }
+#pragma warning restore CA1861
+
+#pragma warning disable CA1861
+    [Fact]
+    public void EnumerableToOtherElementQueue()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 }.Select(static x => x);
+        var destination = (Queue<string>)converter.Convert(source, typeof(Queue<string>));
+        Assert.Equal(2, destination.Count);
+        Assert.Contains("0", destination);
+        Assert.Contains("1", destination);
+        Assert.True(converter.UsedIn(typeof(EnumerableConverterFactory), typeof(ToStringConverterFactory)));
+    }
+#pragma warning restore CA1861
+}
+#pragma warning restore CA2263

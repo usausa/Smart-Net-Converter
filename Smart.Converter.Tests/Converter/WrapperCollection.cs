@@ -9,7 +9,7 @@ public class WrapperCollection<T> : ICollection<T>
 
     public WrapperCollection(IEnumerable<T> source)
     {
-        List = source.ToList();
+        List = [.. source];
     }
 
     public IEnumerator<T> GetEnumerator() => List.GetEnumerator();

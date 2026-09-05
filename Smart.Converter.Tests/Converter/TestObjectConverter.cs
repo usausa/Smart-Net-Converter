@@ -15,7 +15,9 @@ public sealed class TestObjectConverter : IObjectConverter
 
     public TestObjectConverter(Func<IConverterFactory[], IEnumerable<IConverterFactory>> func)
     {
+#pragma warning disable IDE0028
         converterFactories = func(DefaultObjectFactories.Create()).Select(static x => new TestConverterFactory(x)).ToArray();
+#pragma warning restore IDE0028
         objectConverter = new ObjectConverter(converterFactories);
     }
 

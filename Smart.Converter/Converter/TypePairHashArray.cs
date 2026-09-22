@@ -115,8 +115,6 @@ public sealed class TypePairHashArray
         return node;
     }
 
-    // Release store: addNode is fully built before its reference becomes reachable, so a reader that sees the
-    // reference also sees the fields. x64 emits the same instruction as a plain store, Arm64 a store-release
     private static void UpdateLink(ref Node node, Node addNode)
     {
         if (node == EmptyNode)

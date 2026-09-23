@@ -113,4 +113,16 @@ public sealed class BooleanConverterFactory : IConverterFactory
 
         return null;
     }
+
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    Func<object, object?>? IConverterFactory.GetTryConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        if ((sourceType == typeof(string)) && ((targetType == typeof(bool)) || (targetType == typeof(bool?))))
+        {
+            return static x => Boolean.TryParse((string)x, out var result) ? result : ConvertFailure.Value;
+        }
+
+        return null;
+    }
 }

@@ -153,6 +153,23 @@ public sealed class EnumConverterFactory : IConverterFactory
         return null;
     }
 
+    [RequiresDynamicCode("EnumConverterFactory uses MakeGenericType at runtime.")]
+    [RequiresUnreferencedCode("EnumConverterFactory uses reflection on enum types at runtime.")]
+    Func<object, object?>? IConverterFactory.GetTryConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        if (sourceType == typeof(string))
+        {
+            // String to Enum
+            var targetEnumType = targetType.GetEnumType();
+            if (targetEnumType is not null)
+            {
+                return ((IConverter)Activator.CreateInstance(typeof(StringToEnumTryConverter<>).MakeGenericType(targetEnumType))!).Convert;
+            }
+        }
+
+        return null;
+    }
+
 #pragma warning disable CA1812
     private sealed class EnumToStringConverter<T> : IConverter
         where T : struct, Enum
@@ -171,6 +188,17 @@ public sealed class EnumConverterFactory : IConverterFactory
         public object Convert(object source)
         {
             return Enums<T>.TryParseValue((string)source, out var value) ? value : default;
+        }
+    }
+#pragma warning restore CA1812
+
+#pragma warning disable CA1812
+    private sealed class StringToEnumTryConverter<T> : IConverter
+        where T : struct, Enum
+    {
+        public object Convert(object source)
+        {
+            return Enums<T>.TryParseValue((string)source, out var value) ? value : ConvertFailure.Value;
         }
     }
 #pragma warning restore CA1812

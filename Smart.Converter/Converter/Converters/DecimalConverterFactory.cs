@@ -69,5 +69,17 @@ public sealed class DecimalConverterFactory : IConverterFactory
         var key = (sourceType, targetType);
         return Converters.GetValueOrDefault(key);
     }
+
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    Func<object, object?>? IConverterFactory.GetTryConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        if ((sourceType == typeof(string)) && ((targetType == typeof(decimal)) || (targetType == typeof(decimal?))))
+        {
+            return static x => Decimal.TryParse((string)x, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value;
+        }
+
+        return null;
+    }
 #pragma warning restore SA1501
 }

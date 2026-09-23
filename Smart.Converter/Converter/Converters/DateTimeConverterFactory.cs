@@ -340,4 +340,34 @@ public sealed class DateTimeConverterFactory : IConverterFactory
 
         return null;
     }
+
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    Func<object, object?>? IConverterFactory.GetTryConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        if (sourceType == typeof(string))
+        {
+            var underlyingTargetType = targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType;
+
+            // String to DateTime(Nullable)
+            if (underlyingTargetType == typeof(DateTime))
+            {
+                return static x => DateTime.TryParse((string)x, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : ConvertFailure.Value;
+            }
+
+            // String to DateTimeOffset(Nullable)
+            if (underlyingTargetType == typeof(DateTimeOffset))
+            {
+                return static x => DateTimeOffset.TryParse((string)x, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : ConvertFailure.Value;
+            }
+
+            // String to TimeSpan(Nullable)
+            if (underlyingTargetType == typeof(TimeSpan))
+            {
+                return static x => TimeSpan.TryParse((string)x, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value;
+            }
+        }
+
+        return null;
+    }
 }

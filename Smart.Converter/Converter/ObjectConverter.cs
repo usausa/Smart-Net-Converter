@@ -14,6 +14,8 @@ public sealed class ObjectConverter : IObjectConverter
 
     private readonly TypePairHashArray converterCache = new();
 
+    private readonly TypePairHashArray tryConverterCache = new();
+
     private IConverterFactory[] factories;
 
     [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
@@ -32,6 +34,7 @@ public sealed class ObjectConverter : IObjectConverter
     {
         factories = converterFactories.ToArray();
         converterCache.Clear();
+        tryConverterCache.Clear();
     }
 
     //--------------------------------------------------------------------------------
@@ -41,6 +44,7 @@ public sealed class ObjectConverter : IObjectConverter
     public void Reset()
     {
         converterCache.Clear();
+        tryConverterCache.Clear();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -70,6 +74,39 @@ public sealed class ObjectConverter : IObjectConverter
         if (!converterCache.TryGetValue(sourceType, targetType, out var converter))
         {
             converter = converterCache.AddIfNotExist(sourceType, targetType, FindConverter);
+        }
+
+        return converter;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    private Func<object, object?>? FindTryConverter(Type sourceType, Type targetType)
+    {
+        var factoriesLocal = factories;
+        // ReSharper disable once ForCanBeConvertedToForeach
+        for (var i = 0; i < factoriesLocal.Length; i++)
+        {
+            var factory = factoriesLocal[i];
+            var converter = factory.GetTryConverter(this, sourceType, targetType) ?? factory.GetConverter(this, sourceType, targetType);
+            if (converter is not null)
+            {
+                return converter;
+            }
+        }
+
+        return null;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    private Func<object, object?>? GetTryConverter(Type sourceType, Type targetType)
+    {
+        if (!tryConverterCache.TryGetValue(sourceType, targetType, out var converter))
+        {
+            converter = tryConverterCache.AddIfNotExist(sourceType, targetType, FindTryConverter);
         }
 
         return converter;
@@ -139,6 +176,50 @@ public sealed class ObjectConverter : IObjectConverter
         }
 
         return converter(value);
+    }
+
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    public bool TryConvert(object? value, Type targetType, out object? result)
+    {
+        // Specialized null
+        if (value is null)
+        {
+            result = null;
+            return !targetType.IsValueType || targetType.IsNullableType();
+        }
+
+        // Specialized empty string for value type
+        if ((value is string { Length: 0 }) && targetType.IsValueType)
+        {
+            result = null;
+            return targetType.IsNullableType();
+        }
+
+        // Specialized same type for performance (Nullable is excluded because operation is slow)
+        var sourceType = value.GetType();
+        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
+        {
+            result = value;
+            return true;
+        }
+
+        var converter = GetTryConverter(sourceType, targetType);
+        if (converter is null)
+        {
+            result = null;
+            return false;
+        }
+
+        var converted = converter(value);
+        if (converted == ConvertFailure.Value)
+        {
+            result = null;
+            return false;
+        }
+
+        result = converted;
+        return true;
     }
 
     [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]

@@ -78,4 +78,16 @@ public sealed class BigIntegerConverterFactory : IConverterFactory
     {
         return Converters.GetValueOrDefault((sourceType, targetType));
     }
+
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    Func<object, object?>? IConverterFactory.GetTryConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        if ((sourceType == typeof(string)) && ((targetType == typeof(BigInteger)) || (targetType == typeof(BigInteger?))))
+        {
+            return static x => BigInteger.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value;
+        }
+
+        return null;
+    }
 }

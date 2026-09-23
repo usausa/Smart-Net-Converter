@@ -31,12 +31,40 @@ public sealed class NumericParseConverterFactory : IConverterFactory
         { typeof(float?), static x => Single.TryParse((string)x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var result) ? result : default(float?) }
     };
 
+    private static readonly Dictionary<Type, Func<object, object?>> TryConverters = new()
+    {
+        { typeof(byte), static x => Byte.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(sbyte), static x => SByte.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(short), static x => Int16.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(ushort), static x => UInt16.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(int), static x => Int32.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(uint), static x => UInt32.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(long), static x => Int64.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(ulong), static x => UInt64.TryParse((string)x, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(char), static x => Char.TryParse((string)x, out var result) ? result : ConvertFailure.Value },
+        { typeof(double), static x => Double.TryParse((string)x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value },
+        { typeof(float), static x => Single.TryParse((string)x, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var result) ? result : ConvertFailure.Value }
+    };
+
     [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
     [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     public Func<object, object?>? GetConverter(IObjectConverter context, Type sourceType, Type targetType)
     {
         if ((sourceType == typeof(string)) &&
             Converters.TryGetValue(targetType, out var converter))
+        {
+            return converter;
+        }
+
+        return null;
+    }
+
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    Func<object, object?>? IConverterFactory.GetTryConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        if ((sourceType == typeof(string)) &&
+            TryConverters.TryGetValue(targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType, out var converter))
         {
             return converter;
         }

@@ -28,4 +28,16 @@ public sealed class GuidConverterFactory : IConverterFactory
 
         return null;
     }
+
+    [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
+    [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
+    Func<object, object?>? IConverterFactory.GetTryConverter(IObjectConverter context, Type sourceType, Type targetType)
+    {
+        if ((sourceType == typeof(string)) && ((targetType == typeof(Guid)) || (targetType == typeof(Guid?))))
+        {
+            return static source => Guid.TryParse((string)source, out var result) ? result : ConvertFailure.Value;
+        }
+
+        return null;
+    }
 }

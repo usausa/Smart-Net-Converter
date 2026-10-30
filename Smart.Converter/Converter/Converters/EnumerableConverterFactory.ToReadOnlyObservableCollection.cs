@@ -34,7 +34,6 @@ public sealed partial class EnumerableConverterFactory
     // Same type
     //--------------------------------------------------------------------------------
 
-#pragma warning disable IDE0028
 #pragma warning disable CA1812
     private sealed class SameTypeReadOnlyObservableCollectionFromEnumerableConverter<TDestination> : IConverter
     {
@@ -44,13 +43,11 @@ public sealed partial class EnumerableConverterFactory
         }
     }
 #pragma warning restore CA1812
-#pragma warning restore IDE0028
 
     //--------------------------------------------------------------------------------
     // Other type
     //--------------------------------------------------------------------------------
 
-#pragma warning disable IDE0028
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyObservableCollectionFromArrayConverter<TSource, TDestination> : IConverter
     {
@@ -67,9 +64,7 @@ public sealed partial class EnumerableConverterFactory
         }
     }
 #pragma warning restore CA1812
-#pragma warning restore IDE0028
 
-#pragma warning disable IDE0028
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyObservableCollectionFromListConverter<TSource, TDestination> : IConverter
     {
@@ -86,9 +81,7 @@ public sealed partial class EnumerableConverterFactory
         }
     }
 #pragma warning restore CA1812
-#pragma warning restore IDE0028
 
-#pragma warning disable IDE0028
 #pragma warning disable CA1812
     private sealed class OtherTypeReadOnlyObservableCollectionFromCollectionConverter<TSource, TDestination> : IConverter
     {
@@ -120,5 +113,4 @@ public sealed partial class EnumerableConverterFactory
         }
     }
 #pragma warning restore CA1812
-#pragma warning restore IDE0028
 }

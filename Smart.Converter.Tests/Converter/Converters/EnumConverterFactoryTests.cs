@@ -199,6 +199,14 @@ public sealed class EnumConverterFactoryTests
     }
 
     [Fact]
+    public void StringToFlagsEnum()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal(FlagsEnum2Type.Value1 | FlagsEnum2Type.Value2, converter.Convert("Value1, Value2", typeof(FlagsEnum2Type)));
+        Assert.True(converter.UsedOnly<EnumConverterFactory>());
+    }
+
+    [Fact]
     public void CanNotConvertToEnum()
     {
         var converter = new TestObjectConverter();
@@ -359,6 +367,30 @@ public sealed class EnumConverterFactoryTests
         var converter = new TestObjectConverter();
         Assert.Equal("Zero", converter.Convert(Enum1Type.Zero, typeof(string)));
         Assert.Equal("One", converter.Convert(Enum1Type.One, typeof(string)));
+        Assert.True(converter.UsedOnly<EnumConverterFactory>());
+    }
+
+    [Fact]
+    public void UndefinedEnumToString()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal("9", converter.Convert((Enum1Type)9, typeof(string)));
+        Assert.True(converter.UsedOnly<EnumConverterFactory>());
+    }
+
+    [Fact]
+    public void FlagsEnumToString()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal("Value1, Value2", converter.Convert(FlagsEnum2Type.Value1 | FlagsEnum2Type.Value2, typeof(string)));
+        Assert.True(converter.UsedOnly<EnumConverterFactory>());
+    }
+
+    [Fact]
+    public void AliasEnumToString()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal(Enums<AliasEnumType>.GetName(AliasEnumType.One), converter.Convert(AliasEnumType.One, typeof(string)));
         Assert.True(converter.UsedOnly<EnumConverterFactory>());
     }
 

@@ -1,6 +1,7 @@
 namespace Smart.Converter.Converters;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 public sealed class EnumConverterFactory : IConverterFactory
 {
@@ -121,7 +122,13 @@ public sealed class EnumConverterFactory : IConverterFactory
             // String to Enum
             if (sourceType == typeof(string))
             {
-                return ((IConverter)Activator.CreateInstance(typeof(StringToEnumConverter<>).MakeGenericType(targetEnumType))!).Convert;
+                if (RuntimeFeature.IsDynamicCodeSupported)
+                {
+                    return ((IConverter)Activator.CreateInstance(typeof(StringToEnumConverter<>).MakeGenericType(targetEnumType))!).Convert;
+                }
+
+                var defaultValue = Enum.ToObject(targetEnumType, 0);
+                return source => Enum.TryParse(targetEnumType, (string)source, out var value) ? value : defaultValue;
             }
 
             // Assignable
@@ -141,7 +148,29 @@ public sealed class EnumConverterFactory : IConverterFactory
             // Enum to String
             if (targetType == typeof(string))
             {
-                return ((IConverter)Activator.CreateInstance(typeof(EnumToStringConverter<>).MakeGenericType(sourceEnumType))!).Convert;
+                if (RuntimeFeature.IsDynamicCodeSupported)
+                {
+                    return ((IConverter)Activator.CreateInstance(typeof(EnumToStringConverter<>).MakeGenericType(sourceEnumType))!).Convert;
+                }
+
+                var aliases = FindAliases(sourceEnumType);
+                if (aliases is null)
+                {
+                    return static source => source.ToString();
+                }
+
+                return source =>
+                {
+                    foreach (var alias in aliases)
+                    {
+                        if (alias.Key.Equals(source))
+                        {
+                            return alias.Value;
+                        }
+                    }
+
+                    return source.ToString();
+                };
             }
 
             // Enum to Numeric
@@ -163,11 +192,71 @@ public sealed class EnumConverterFactory : IConverterFactory
             var targetEnumType = targetType.GetEnumType();
             if (targetEnumType is not null)
             {
-                return ((IConverter)Activator.CreateInstance(typeof(StringToEnumTryConverter<>).MakeGenericType(targetEnumType))!).Convert;
+                if (RuntimeFeature.IsDynamicCodeSupported)
+                {
+                    return ((IConverter)Activator.CreateInstance(typeof(StringToEnumTryConverter<>).MakeGenericType(targetEnumType))!).Convert;
+                }
+
+                return source => Enum.TryParse(targetEnumType, (string)source, out var value) ? value : ConvertFailure.Value;
             }
         }
 
         return null;
+    }
+
+    private static KeyValuePair<object, string>[]? FindAliases(Type enumType)
+    {
+        return Enum.GetValuesAsUnderlyingType(enumType) switch
+        {
+            byte[] values => FindAliases(enumType, values),
+            sbyte[] values => FindAliases(enumType, values),
+            short[] values => FindAliases(enumType, values),
+            ushort[] values => FindAliases(enumType, values),
+            int[] values => FindAliases(enumType, values),
+            uint[] values => FindAliases(enumType, values),
+            long[] values => FindAliases(enumType, values),
+            ulong[] values => FindAliases(enumType, values),
+            char[] values => FindAliases(enumType, values),
+            _ => null
+        };
+    }
+
+    private static KeyValuePair<object, string>[]? FindAliases<T>(Type enumType, T[] values)
+        where T : struct, IEquatable<T>
+    {
+        var count = 0;
+        for (var i = 1; i < values.Length; i++)
+        {
+            if (IsLastAlias(values, i))
+            {
+                count++;
+            }
+        }
+
+        if (count == 0)
+        {
+            return null;
+        }
+
+        var names = Enum.GetNames(enumType);
+        var aliases = new KeyValuePair<object, string>[count];
+        var index = 0;
+        for (var i = 1; i < values.Length; i++)
+        {
+            if (IsLastAlias(values, i))
+            {
+                aliases[index] = new KeyValuePair<object, string>(Enum.ToObject(enumType, values[i]), names[i]);
+                index++;
+            }
+        }
+
+        return aliases;
+    }
+
+    private static bool IsLastAlias<T>(T[] values, int index)
+        where T : struct, IEquatable<T>
+    {
+        return values[index].Equals(values[index - 1]) && ((index == values.Length - 1) || !values[index + 1].Equals(values[index]));
     }
 
 #pragma warning disable CA1812

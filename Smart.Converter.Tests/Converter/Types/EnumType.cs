@@ -31,3 +31,10 @@ public enum FlagsEnum2Type
     Value2 = 0x02,
     Value8 = 0x08
 }
+
+public enum AliasEnumType
+{
+    Zero,
+    One,
+    Uno = One
+}

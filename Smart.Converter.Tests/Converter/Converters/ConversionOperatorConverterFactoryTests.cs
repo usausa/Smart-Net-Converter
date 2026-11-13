@@ -125,4 +125,25 @@ public sealed class ConversionOperatorConverterFactoryTests
         Assert.Equal(1, converter.Convert<NullableExplicitType?>(1)?.Value);
         Assert.True(converter.UsedOnly<ConversionOperatorConverterFactory>());
     }
+
+    //--------------------------------------------------------------------------------
+    // Other
+    //--------------------------------------------------------------------------------
+
+    [Fact]
+    public void ConvertInParameterImplicitToInt()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal(1, converter.Convert<int>(new InParameterImplicitType { Value = 1 }));
+        Assert.Equal(2, converter.Convert<int>(new InParameterImplicitType { Value = 2 }));
+        Assert.True(converter.UsedOnly<ConversionOperatorConverterFactory>());
+    }
+
+    [Fact]
+    public void ConvertWithThrowingOperatorReturnsDefault()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal(0, converter.Convert<ThrowingExplicitType>(1L).Value);
+        Assert.True(converter.UsedOnly<ConversionOperatorConverterFactory>());
+    }
 }

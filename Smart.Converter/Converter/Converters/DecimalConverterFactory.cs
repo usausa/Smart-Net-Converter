@@ -5,6 +5,8 @@ using System.Globalization;
 
 public sealed class DecimalConverterFactory : IConverterFactory
 {
+    private const double DecimalLimit = 79228162514264337593543950336d;
+
 #pragma warning disable SA1501
     private static readonly Dictionary<(Type, Type), Func<object, object?>> Converters = new()
     {
@@ -43,9 +45,8 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(long), typeof(decimal)), static x => new decimal((long)x) },
         { (typeof(ulong), typeof(decimal)), static x => new decimal((ulong)x) },
         { (typeof(char), typeof(decimal)), static x => new decimal((char)x) },
-        // double/float to decimal (kept as try/catch: new decimal(double/float) throws when out of range
-        { (typeof(double), typeof(decimal)), static x => { try { return new decimal((double)x); } catch (OverflowException) { return default(decimal); } } },
-        { (typeof(float), typeof(decimal)), static x => { try { return new decimal((float)x); } catch (OverflowException) { return default(decimal); } } },
+        { (typeof(double), typeof(decimal)), static x => Math.Abs((double)x) < DecimalLimit ? new decimal((double)x) : default },
+        { (typeof(float), typeof(decimal)), static x => Math.Abs((float)x) < DecimalLimit ? new decimal((float)x) : default },
         { (typeof(string), typeof(decimal)), static x => Decimal.TryParse((string)x, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : default },
         // To Decimal?
         { (typeof(byte), typeof(decimal?)), static x => new decimal((byte)x) },
@@ -57,8 +58,8 @@ public sealed class DecimalConverterFactory : IConverterFactory
         { (typeof(long), typeof(decimal?)), static x => new decimal((long)x) },
         { (typeof(ulong), typeof(decimal?)), static x => new decimal((ulong)x) },
         { (typeof(char), typeof(decimal?)), static x => new decimal((char)x) },
-        { (typeof(double), typeof(decimal?)), static x => { try { return new decimal((double)x); } catch (OverflowException) { return default(decimal?); } } },
-        { (typeof(float), typeof(decimal?)), static x => { try { return new decimal((float)x); } catch (OverflowException) { return default(decimal?); } } },
+        { (typeof(double), typeof(decimal?)), static x => Math.Abs((double)x) < DecimalLimit ? new decimal((double)x) : default(decimal?) },
+        { (typeof(float), typeof(decimal?)), static x => Math.Abs((float)x) < DecimalLimit ? new decimal((float)x) : default(decimal?) },
         { (typeof(string), typeof(decimal?)), static x => Decimal.TryParse((string)x, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : default(decimal?) }
     };
 

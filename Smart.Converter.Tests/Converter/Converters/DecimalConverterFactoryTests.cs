@@ -435,6 +435,56 @@ public sealed class DecimalConverterFactoryTests
     }
 
     [Fact]
+    public void NonFiniteDoubleToDecimal()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal(default(decimal), converter.Convert(Double.NaN, typeof(decimal)));
+        Assert.Equal(default(decimal), converter.Convert(Double.PositiveInfinity, typeof(decimal)));
+        Assert.Equal(default(decimal), converter.Convert(Double.NegativeInfinity, typeof(decimal)));
+        Assert.Null(converter.Convert(Double.NaN, typeof(decimal?)));
+        Assert.Null(converter.Convert(Double.PositiveInfinity, typeof(decimal?)));
+        Assert.Null(converter.Convert(Double.NegativeInfinity, typeof(decimal?)));
+        Assert.True(converter.UsedOnly<DecimalConverterFactory>());
+    }
+
+    [Fact]
+    public void NonFiniteFloatToDecimal()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal(default(decimal), converter.Convert(Single.NaN, typeof(decimal)));
+        Assert.Equal(default(decimal), converter.Convert(Single.PositiveInfinity, typeof(decimal)));
+        Assert.Equal(default(decimal), converter.Convert(Single.NegativeInfinity, typeof(decimal)));
+        Assert.Null(converter.Convert(Single.NaN, typeof(decimal?)));
+        Assert.Null(converter.Convert(Single.PositiveInfinity, typeof(decimal?)));
+        Assert.Null(converter.Convert(Single.NegativeInfinity, typeof(decimal?)));
+        Assert.True(converter.UsedOnly<DecimalConverterFactory>());
+    }
+
+    [Fact]
+    public void DoubleToDecimalAroundLimit()
+    {
+        var converter = new TestObjectConverter();
+        const double limit = 79228162514264337593543950336d;
+        Assert.Equal(79228162514264300000000000000m, converter.Convert(Math.BitDecrement(limit), typeof(decimal)));
+        Assert.Equal(-79228162514264300000000000000m, converter.Convert(-Math.BitDecrement(limit), typeof(decimal?)));
+        Assert.Equal(default(decimal), converter.Convert(limit, typeof(decimal)));
+        Assert.Null(converter.Convert(-limit, typeof(decimal?)));
+        Assert.True(converter.UsedOnly<DecimalConverterFactory>());
+    }
+
+    [Fact]
+    public void FloatToDecimalAroundLimit()
+    {
+        var converter = new TestObjectConverter();
+        const float limit = 79228162514264337593543950336f;
+        Assert.Equal(79228160000000000000000000000m, converter.Convert(MathF.BitDecrement(limit), typeof(decimal)));
+        Assert.Equal(-79228160000000000000000000000m, converter.Convert(-MathF.BitDecrement(limit), typeof(decimal?)));
+        Assert.Equal(default(decimal), converter.Convert(limit, typeof(decimal)));
+        Assert.Null(converter.Convert(-limit, typeof(decimal?)));
+        Assert.True(converter.UsedOnly<DecimalConverterFactory>());
+    }
+
+    [Fact]
     public void StringToDecimal()
     {
         var converter = new TestObjectConverter();

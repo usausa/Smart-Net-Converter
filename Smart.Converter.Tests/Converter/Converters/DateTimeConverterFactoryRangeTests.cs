@@ -32,8 +32,7 @@ public sealed class DateTimeConverterFactoryRangeTests
     }
 
     //--------------------------------------------------------------------------------
-    // Numeric to DateTimeOffset (range boundary; the local-offset boundary near Min/MaxValue is
-    // time-zone dependent, so only the tick pre-check (clearly out-of-range) is asserted here)
+    // DateTime/Numeric to DateTimeOffset (range boundary)
     //--------------------------------------------------------------------------------
 
     [Fact]
@@ -59,6 +58,32 @@ public sealed class DateTimeConverterFactoryRangeTests
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
     }
 
+    [Fact]
+    public void DateTimeToDateTimeOffsetAroundLocalOffsetBoundary()
+    {
+        var converter = new TestObjectConverter();
+        foreach (var value in LocalOffsetBoundaryValues())
+        {
+            Assert.Equal(CreateOrDefault(value), converter.Convert(value, typeof(DateTimeOffset)));
+            Assert.Equal(CreateOrNull(value), converter.Convert(value, typeof(DateTimeOffset?)));
+        }
+
+        Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
+    }
+
+    [Fact]
+    public void LongToDateTimeOffsetAroundLocalOffsetBoundary()
+    {
+        var converter = new TestObjectConverter();
+        foreach (var value in LocalOffsetBoundaryValues().Where(static x => x.Kind == DateTimeKind.Unspecified))
+        {
+            Assert.Equal(CreateOrDefault(value), converter.Convert(value.Ticks, typeof(DateTimeOffset)));
+            Assert.Equal(CreateOrNull(value), converter.Convert(value.Ticks, typeof(DateTimeOffset?)));
+        }
+
+        Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
+    }
+
     //--------------------------------------------------------------------------------
     // Numeric to TimeSpan (every long is accepted; new TimeSpan(long) never throws)
     //--------------------------------------------------------------------------------
@@ -81,6 +106,36 @@ public sealed class DateTimeConverterFactoryRangeTests
         Assert.Equal(TimeSpan.MaxValue, converter.Convert(long.MaxValue, typeof(TimeSpan?)));
         Assert.Equal(TimeSpan.MinValue, converter.Convert(long.MinValue, typeof(TimeSpan?)));
         Assert.True(converter.UsedOnly<DateTimeConverterFactory>());
+    }
+
+    private static IEnumerable<DateTime> LocalOffsetBoundaryValues()
+    {
+        const long margin = TimeSpan.TicksPerHour * 14;
+        var max = DateTime.MaxValue.Ticks;
+        var low = TimeZoneInfo.Local.GetUtcOffset(DateTime.MinValue).Ticks;
+        var high = max + TimeZoneInfo.Local.GetUtcOffset(DateTime.MaxValue).Ticks;
+        long[] candidates = [0, 1, low - 1, low, low + 1, margin - 1, margin, max - margin, max - margin + 1, high - 1, high, high + 1, max - 1, max];
+        foreach (var kind in (DateTimeKind[])[DateTimeKind.Unspecified, DateTimeKind.Local, DateTimeKind.Utc])
+        {
+            foreach (var ticks in candidates.Where(x => (x >= 0) && (x <= max)))
+            {
+                yield return new DateTime(ticks, kind);
+            }
+        }
+    }
+
+    private static DateTimeOffset CreateOrDefault(DateTime value) => CreateOrNull(value) ?? default;
+
+    private static DateTimeOffset? CreateOrNull(DateTime value)
+    {
+        try
+        {
+            return new DateTimeOffset(value);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return null;
+        }
     }
 }
 #pragma warning restore CA2263

@@ -89,8 +89,6 @@ public sealed class DateTimeConverterFactory : IConverterFactory
         { typeof(decimal), static x => NullableDateTimeFromTicks((long)(decimal)x) }
     };
 
-    // Numeric to DateTimeOffset: the DateTime ticks are pre-checked to remove the bulk of the
-    // out-of-range exceptions; a thin catch remains only for the local-offset boundary (see helper).
     private static readonly Dictionary<Type, Func<object, object?>> DateTimeOffsetFromTickConverter = new()
     {
         { typeof(byte), static x => DateTimeOffsetFromTicks((byte)x) },
@@ -167,38 +165,23 @@ public sealed class DateTimeConverterFactory : IConverterFactory
     private static DateTime? NullableDateTimeFromTicks(long ticks) =>
         (ulong)ticks <= (ulong)DateTimeMaxTicks ? new DateTime(ticks) : default(DateTime?);
 
-    private static DateTimeOffset DateTimeOffsetFromTicks(long ticks)
+    private static DateTimeOffset DateTimeOffsetFromTicks(long ticks) =>
+        ((ulong)ticks <= (ulong)DateTimeMaxTicks) && TryCreateDateTimeOffset(new DateTime(ticks), out var result) ? result : default;
+
+    private static DateTimeOffset? NullableDateTimeOffsetFromTicks(long ticks) =>
+        ((ulong)ticks <= (ulong)DateTimeMaxTicks) && TryCreateDateTimeOffset(new DateTime(ticks), out var result) ? result : default(DateTimeOffset?);
+
+    private static bool TryCreateDateTimeOffset(DateTime value, out DateTimeOffset result)
     {
-        if ((ulong)ticks > (ulong)DateTimeMaxTicks)
+        var offset = value.Kind == DateTimeKind.Utc ? TimeSpan.Zero : TimeZoneInfo.Local.GetUtcOffset(value);
+        if ((ulong)(value.Ticks - offset.Ticks) > (ulong)DateTimeMaxTicks)
         {
-            return default;
+            result = default;
+            return false;
         }
 
-        try
-        {
-            return new DateTimeOffset(new DateTime(ticks));
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            return default;
-        }
-    }
-
-    private static DateTimeOffset? NullableDateTimeOffsetFromTicks(long ticks)
-    {
-        if ((ulong)ticks > (ulong)DateTimeMaxTicks)
-        {
-            return default;
-        }
-
-        try
-        {
-            return new DateTimeOffset(new DateTime(ticks));
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            return default;
-        }
+        result = new DateTimeOffset(value.Ticks, offset);
+        return true;
     }
 
     [RequiresDynamicCode("Converter factories use MakeGenericType/MakeGenericMethod at runtime.")]
@@ -220,17 +203,7 @@ public sealed class DateTimeConverterFactory : IConverterFactory
             if (underlyingTargetType == typeof(DateTimeOffset))
             {
                 var defaultValue = targetType.IsNullableType() ? null : (object)default(DateTimeOffset);
-                return x =>
-                {
-                    try
-                    {
-                        return new DateTimeOffset((DateTime)x);
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        return defaultValue;
-                    }
-                };
+                return x => TryCreateDateTimeOffset((DateTime)x, out var result) ? result : defaultValue;
             }
 
             // DateTime to numeric

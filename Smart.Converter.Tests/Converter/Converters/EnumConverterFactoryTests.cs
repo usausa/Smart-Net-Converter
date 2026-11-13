@@ -199,6 +199,16 @@ public sealed class EnumConverterFactoryTests
     }
 
     [Fact]
+    public void InvalidStringToEnum()
+    {
+        var converter = new TestObjectConverter();
+        Assert.Equal(Enum1Type.Zero, converter.Convert("invalid", typeof(Enum1Type)));
+        Assert.Null(converter.Convert("invalid", typeof(Enum1Type?)));
+        Assert.Equal(Enum1Type.One, converter.Convert("One", typeof(Enum1Type?)));
+        Assert.True(converter.UsedOnly<EnumConverterFactory>());
+    }
+
+    [Fact]
     public void StringToFlagsEnum()
     {
         var converter = new TestObjectConverter();

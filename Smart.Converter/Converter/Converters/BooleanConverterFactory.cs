@@ -107,6 +107,11 @@ public sealed class BooleanConverterFactory : IConverterFactory
 
             if (sourceType == typeof(string))
             {
+                if (targetType == typeof(bool))
+                {
+                    return static x => Boolean.TryParse((string)x, out var result) && result;
+                }
+
                 return static x => Boolean.TryParse((string)x, out var result) ? result : null;
             }
         }

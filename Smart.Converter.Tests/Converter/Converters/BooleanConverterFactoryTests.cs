@@ -476,5 +476,14 @@ public sealed class BooleanConverterFactoryTests
         Assert.True((bool)converter.Convert("True", typeof(bool?)));
         Assert.True(converter.UsedOnly<BooleanConverterFactory>());
     }
+
+    [Fact]
+    public void InvalidStringToBool()
+    {
+        var converter = new TestObjectConverter();
+        Assert.False((bool)converter.Convert("invalid", typeof(bool)));
+        Assert.Null(converter.Convert("invalid", typeof(bool?)));
+        Assert.True(converter.UsedOnly<BooleanConverterFactory>());
+    }
 }
 #pragma warning restore CA2263

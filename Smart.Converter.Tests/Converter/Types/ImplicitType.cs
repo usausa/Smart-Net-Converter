@@ -25,3 +25,14 @@ public readonly struct NullableImplicitType
 }
 #pragma warning restore CA2225
 #pragma warning restore CA1815
+
+#pragma warning disable CA1815
+#pragma warning disable CA2225
+public readonly struct InParameterImplicitType
+{
+    public int Value { get; init; }
+
+    public static implicit operator int(in InParameterImplicitType value) => value.Value;
+}
+#pragma warning restore CA2225
+#pragma warning restore CA1815

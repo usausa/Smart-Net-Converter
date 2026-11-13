@@ -54,6 +54,34 @@ public sealed class EnumerableConverterFactoryToReadOnlyCollectionTests
     }
 
     [Fact]
+    public void ArrayToOtherElementReadOnlyCollectionKeepsConvertedElements()
+    {
+        var converter = new TestObjectConverter();
+        var source = new[] { 0, 1 };
+        var destination = (ReadOnlyCollection<string>)converter.Convert(source, typeof(ReadOnlyCollection<string>));
+        var element = destination[1];
+        source[0] = 9;
+        Assert.Equal("0", destination[0]);
+        Assert.Same(element, destination[1]);
+        Assert.Contains("1", destination);
+        Assert.Equal(1, destination.IndexOf("1"));
+    }
+
+    [Fact]
+    public void ListToOtherElementReadOnlyCollectionKeepsConvertedElements()
+    {
+        var converter = new TestObjectConverter();
+        var source = new WrapperList<int>([0, 1]);
+        var destination = (ReadOnlyCollection<string>)converter.Convert(source, typeof(ReadOnlyCollection<string>));
+        var element = destination[1];
+        source.Add(2);
+        Assert.Equal(2, destination.Count);
+        Assert.Same(element, destination[1]);
+        Assert.Contains("1", destination);
+        Assert.Equal(1, destination.IndexOf("1"));
+    }
+
+    [Fact]
     public void CollectionToSameElementReadOnlyCollection()
     {
         var converter = new TestObjectConverter();

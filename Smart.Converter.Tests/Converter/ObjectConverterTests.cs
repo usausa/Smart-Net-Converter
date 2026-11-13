@@ -605,5 +605,15 @@ public sealed class ObjectConverterTests
         Assert.Equal(2, target.Y);
         Assert.True(converter.NotUsed());
     }
+
+    [Fact]
+    public void IntToNullableIntWithoutFactories()
+    {
+        var converter = new ObjectConverter([]);
+        Assert.Equal(1, converter.Convert(1, typeof(int?)));
+        Assert.True(converter.CanConvert(1, typeof(int?)));
+        Assert.True(converter.CanConvert(typeof(int), typeof(int?)));
+        Assert.Equal(1, converter.CreateConverter(typeof(int), typeof(int?))!(1));
+    }
 }
 #pragma warning restore CA2263

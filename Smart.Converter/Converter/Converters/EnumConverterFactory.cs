@@ -124,10 +124,11 @@ public sealed class EnumConverterFactory : IConverterFactory
             {
                 if (RuntimeFeature.IsDynamicCodeSupported)
                 {
-                    return ((IConverter)Activator.CreateInstance(typeof(StringToEnumConverter<>).MakeGenericType(targetEnumType))!).Convert;
+                    var converterType = targetType.IsNullableType() ? typeof(StringToNullableEnumConverter<>) : typeof(StringToEnumConverter<>);
+                    return ((IConverter)Activator.CreateInstance(converterType.MakeGenericType(targetEnumType))!).Convert;
                 }
 
-                var defaultValue = Enum.ToObject(targetEnumType, 0);
+                var defaultValue = targetType.IsNullableType() ? null : Enum.ToObject(targetEnumType, 0);
                 return source => Enum.TryParse(targetEnumType, (string)source, out var value) ? value : defaultValue;
             }
 
@@ -277,6 +278,17 @@ public sealed class EnumConverterFactory : IConverterFactory
         public object Convert(object source)
         {
             return Enums<T>.TryParseValue((string)source, out var value) ? value : default;
+        }
+    }
+#pragma warning restore CA1812
+
+#pragma warning disable CA1812
+    private sealed class StringToNullableEnumConverter<T> : IConverter
+        where T : struct, Enum
+    {
+        public object? Convert(object source)
+        {
+            return Enums<T>.TryParseValue((string)source, out var value) ? value : null;
         }
     }
 #pragma warning restore CA1812

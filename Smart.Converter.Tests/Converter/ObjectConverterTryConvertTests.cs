@@ -158,8 +158,8 @@ public sealed class ObjectConverterTryConvertTests
         var converter = new ObjectConverter();
         Assert.Equal(0, converter.Convert("invalid", typeof(int)));
         Assert.Null(converter.Convert("invalid", typeof(int?)));
-        Assert.Null(converter.Convert("invalid", typeof(bool)));
-        Assert.Equal(Enum1Type.Zero, converter.Convert("invalid", typeof(Enum1Type?)));
+        Assert.False((bool)converter.Convert("invalid", typeof(bool))!);
+        Assert.Null(converter.Convert("invalid", typeof(Enum1Type?)));
     }
 
     //--------------------------------------------------------------------------------
@@ -170,6 +170,14 @@ public sealed class ObjectConverterTryConvertTests
     public void SameTypeSucceeds()
     {
         var converter = new ObjectConverter();
+        Assert.True(converter.TryConvert(1, typeof(int?), out var result));
+        Assert.Equal(1, result);
+    }
+
+    [Fact]
+    public void SameTypeWithoutFactoriesSucceeds()
+    {
+        var converter = new ObjectConverter([]);
         Assert.True(converter.TryConvert(1, typeof(int?), out var result));
         Assert.Equal(1, result);
     }

@@ -25,3 +25,14 @@ public readonly struct NullableExplicitType
 }
 #pragma warning restore CA2225
 #pragma warning restore CA1815
+
+#pragma warning disable CA1815
+#pragma warning disable CA2225
+public readonly struct ThrowingExplicitType
+{
+    public int Value { get; init; }
+
+    public static explicit operator ThrowingExplicitType(long value) => throw new InvalidOperationException();
+}
+#pragma warning restore CA2225
+#pragma warning restore CA1815

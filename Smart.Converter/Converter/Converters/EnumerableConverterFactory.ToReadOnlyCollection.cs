@@ -1,6 +1,8 @@
 namespace Smart.Converter.Converters;
 
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 public sealed partial class EnumerableConverterFactory
 {
@@ -75,7 +77,16 @@ public sealed partial class EnumerableConverterFactory
 
         public object Convert(object source)
         {
-            return new ReadOnlyCollection<TDestination>(new ArrayConvertList<TSource, TDestination>((TSource[])source, converter));
+            var sourceArray = (TSource[])source;
+            var array = new TDestination[sourceArray.Length];
+            ref var sourceReference = ref MemoryMarshal.GetArrayDataReference(sourceArray);
+            ref var destinationReference = ref MemoryMarshal.GetArrayDataReference(array);
+            for (var i = 0; i < sourceArray.Length; i++)
+            {
+                Unsafe.Add(ref destinationReference, i) = ConvertValue<TSource, TDestination>(converter, Unsafe.Add(ref sourceReference, i));
+            }
+
+            return new ReadOnlyCollection<TDestination>(array);
         }
     }
 #pragma warning restore CA1812
@@ -92,7 +103,15 @@ public sealed partial class EnumerableConverterFactory
 
         public object Convert(object source)
         {
-            return new ReadOnlyCollection<TDestination>(new ListConvertList<TSource, TDestination>((IList<TSource>)source, converter));
+            var sourceList = (IList<TSource>)source;
+            var count = sourceList.Count;
+            var array = new TDestination[count];
+            for (var i = 0; i < count; i++)
+            {
+                array[i] = ConvertValue<TSource, TDestination>(converter, sourceList[i]);
+            }
+
+            return new ReadOnlyCollection<TDestination>(array);
         }
     }
 #pragma warning restore CA1812

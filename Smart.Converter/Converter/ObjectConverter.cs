@@ -12,6 +12,8 @@ public sealed class ObjectConverter : IObjectConverter
     [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Default instance is created intentionally with reflection-based factories.")]
     public static ObjectConverter Default { get; } = new();
 
+    private static readonly Func<object, object?> IdentityConverter = static x => x;
+
     private readonly TypePairHashArray converterCache = new();
 
     private readonly TypePairHashArray tryConverterCache = new();
@@ -52,6 +54,11 @@ public sealed class ObjectConverter : IObjectConverter
     [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     private Func<object, object?>? FindConverter(Type sourceType, Type targetType)
     {
+        if (IsUnderlyingType(sourceType, targetType))
+        {
+            return IdentityConverter;
+        }
+
         var factoriesLocal = factories;
         // ReSharper disable once ForCanBeConvertedToForeach
         for (var i = 0; i < factoriesLocal.Length; i++)
@@ -84,6 +91,11 @@ public sealed class ObjectConverter : IObjectConverter
     [RequiresUnreferencedCode("Converter factories use reflection to discover types at runtime.")]
     private Func<object, object?>? FindTryConverter(Type sourceType, Type targetType)
     {
+        if (IsUnderlyingType(sourceType, targetType))
+        {
+            return IdentityConverter;
+        }
+
         var factoriesLocal = factories;
         // ReSharper disable once ForCanBeConvertedToForeach
         for (var i = 0; i < factoriesLocal.Length; i++)
@@ -129,7 +141,7 @@ public sealed class ObjectConverter : IObjectConverter
         }
 
         var sourceType = value.GetType();
-        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
+        if (sourceType == targetType)
         {
             return true;
         }
@@ -164,7 +176,7 @@ public sealed class ObjectConverter : IObjectConverter
 
         // Specialized same type for performance (Nullable is excluded because operation is slow)
         var sourceType = value.GetType();
-        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
+        if (sourceType == targetType)
         {
             return value;
         }
@@ -198,7 +210,7 @@ public sealed class ObjectConverter : IObjectConverter
 
         // Specialized same type for performance (Nullable is excluded because operation is slow)
         var sourceType = value.GetType();
-        if (sourceType == (targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType) : targetType))
+        if (sourceType == targetType)
         {
             result = value;
             return true;
@@ -237,6 +249,9 @@ public sealed class ObjectConverter : IObjectConverter
             targetType.IsNullableType() ? Nullable.GetUnderlyingType(targetType)! : targetType,
             converter);
     }
+
+    private static bool IsUnderlyingType(Type sourceType, Type targetType) =>
+        targetType.IsNullableType() && (Nullable.GetUnderlyingType(targetType) == sourceType);
 
     private static Func<object?, object?> CreateConverter(object? defaultValue, Type targetType, Func<object, object?> converter)
     {

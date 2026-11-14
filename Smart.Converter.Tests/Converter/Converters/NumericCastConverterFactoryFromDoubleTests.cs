@@ -25,8 +25,8 @@ public sealed class NumericCastConverterFactoryFromDoubleTests
     public void DoubleToSByte()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal((sbyte)0, converter.Convert(Double.MinValue, typeof(sbyte)));
-        Assert.Equal((sbyte)-1, converter.Convert(Double.MaxValue, typeof(sbyte)));
+        Assert.Equal(SByte.MinValue, converter.Convert(Double.MinValue, typeof(sbyte)));
+        Assert.Equal(SByte.MaxValue, converter.Convert(Double.MaxValue, typeof(sbyte)));
         Assert.True(converter.UsedOnly<NumericCastConverterFactory>());
     }
 
@@ -34,8 +34,8 @@ public sealed class NumericCastConverterFactoryFromDoubleTests
     public void DoubleToNullableSByte()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal((sbyte)0, converter.Convert(Double.MinValue, typeof(sbyte?)));
-        Assert.Equal((sbyte)-1, converter.Convert(Double.MaxValue, typeof(sbyte?)));
+        Assert.Equal(SByte.MinValue, converter.Convert(Double.MinValue, typeof(sbyte?)));
+        Assert.Equal(SByte.MaxValue, converter.Convert(Double.MaxValue, typeof(sbyte?)));
         Assert.True(converter.UsedOnly<NumericCastConverterFactory>());
     }
 
@@ -43,8 +43,8 @@ public sealed class NumericCastConverterFactoryFromDoubleTests
     public void DoubleToShort()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal((short)0, converter.Convert(Double.MinValue, typeof(short)));
-        Assert.Equal((short)-1, converter.Convert(Double.MaxValue, typeof(short)));
+        Assert.Equal(Int16.MinValue, converter.Convert(Double.MinValue, typeof(short)));
+        Assert.Equal(Int16.MaxValue, converter.Convert(Double.MaxValue, typeof(short)));
         Assert.True(converter.UsedOnly<NumericCastConverterFactory>());
     }
 
@@ -52,8 +52,8 @@ public sealed class NumericCastConverterFactoryFromDoubleTests
     public void DoubleToNullableShort()
     {
         var converter = new TestObjectConverter();
-        Assert.Equal((short)0, converter.Convert(Double.MinValue, typeof(short?)));
-        Assert.Equal((short)-1, converter.Convert(Double.MaxValue, typeof(short?)));
+        Assert.Equal(Int16.MinValue, converter.Convert(Double.MinValue, typeof(short?)));
+        Assert.Equal(Int16.MaxValue, converter.Convert(Double.MaxValue, typeof(short?)));
         Assert.True(converter.UsedOnly<NumericCastConverterFactory>());
     }
 

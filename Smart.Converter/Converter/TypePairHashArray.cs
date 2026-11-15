@@ -14,11 +14,7 @@ public sealed class TypePairHashArray
 
     private static readonly Node EmptyNode = new(typeof(EmptyKey), typeof(EmptyKey), default);
 
-#if NET9_0_OR_GREATER
     private readonly Lock sync = new();
-#else
-    private readonly object sync = new();
-#endif
 
     private volatile Node[] nodes = CreateInitialTable();
 
